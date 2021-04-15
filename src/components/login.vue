@@ -9,6 +9,7 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="formdata.password" type="password" placeholder="请输入密码" prefix-icon="el-icon-lock" show-password clearable></el-input>
         </el-form-item>
+        <jcrange :successFun="rangeSuccess"></jcrange>
         <el-form-item>
           <el-button type="primary" icon="el-icon-upload" @click="submitForm('ruleForm')" round>登录</el-button>
         </el-form-item>
@@ -19,14 +20,20 @@
 </template>
 
 <script>
+import jcrange from "@/components/jcrange";
 export default {
   name: 'login',
+  components:{
+    // eslint-disable-next-line vue/no-unused-components
+    jcrange
+  },
   data: function () {
     return {
+      status:false,
       formdata:{
         username: '',
         password: '',
-        tips: ''
+        tips: '',
       },
       rules: {
         username: [{required: true, message: '请输入您的用户名', trigger: 'blur'}],
@@ -66,12 +73,23 @@ export default {
     submitForm(formName){
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.login();
+          if(this.status) {
+            this.login();
+          }
+          else{
+            this.$alert('请进行滑块验证', '登录错误', {
+              confirmButtonText: '确定',
+              center:true,
+              })
+          }
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+    },
+    rangeSuccess(){
+      this.status=true;
     }
   }
 }
@@ -88,7 +106,7 @@ export default {
 }
 .loginform{
   width: 400px;
-  height: 300px;
+  height: 350px;
   background-color: rgba(220,220,250,0.6);
   margin: 0 auto;
   position: absolute;
@@ -106,7 +124,7 @@ export default {
   box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);
 }
 .el-form .el-form-item__label{
-  font-size: 15px;
+  font-size: 16px;
 }
 .loginform .el-input{
   font-size: 15px;

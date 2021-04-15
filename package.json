@@ -14,6 +14,7 @@
     "vue": "^2.6.11",
     "vue-axios": "^3.2.4",
     "vue-resource": "^1.5.2",
+    "vue-social-captcha": "^0.1.1",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

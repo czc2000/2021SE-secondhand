@@ -18,6 +18,9 @@
         <el-form-item label="手机号码" prop="userphonenumber" >
           <el-input v-model="formdata.userphonenumber" placeholder="请输入正确的手机号码" prefix-icon="el-icon-mobile-phone" clearable></el-input>
         </el-form-item>
+        <div class="jc">
+          <jcrange :successFun="rangeSuccess"></jcrange>
+        </div>
         <el-form-item>
           <el-button type="primary" icon="el-icon-upload" @click="submitForm('ruleForm')" round>注册</el-button>
           <el-button type="danger" icon="el-icon-delete" round @click="resetForm('ruleForm')">重置</el-button></el-form-item>
@@ -27,8 +30,12 @@
 </template>
 
 <script>
+import jcrange from "@/components/jcrange";
 export default {
   name: "register",
+  components:{
+    jcrange
+  },
   data:function(){
     var validatePass=(rule,value,callback)=>{
       if (value === '') {
@@ -69,6 +76,7 @@ export default {
       }
     };
     return {
+      status:false,
       formdata:{
         password: '',
         password2:'',
@@ -128,7 +136,15 @@ export default {
     submitForm(formName){
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.Register();
+          if(this.status) {
+            this.Register();
+          }
+          else{
+            this.$alert('请进行滑块验证', '注册错误', {
+              confirmButtonText: '确定',
+              center:true,
+            })
+          }
         } else {
           console.log('error submit!!');
           return false;
@@ -137,6 +153,9 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    rangeSuccess() {
+      this.status=true;
     }
   }
 }
@@ -153,12 +172,12 @@ export default {
   }
   .kuang{
     width: 500px;
-    height: 450px;
+    height: 550px;
     background-color: rgba(	220,220,250,0.6);
     margin: 0 auto;
     position: absolute;
     left:37%;
-    top:25%;
+    top:20%;
   }
   .kuang h1{
     margin: 20px;
@@ -178,5 +197,8 @@ export default {
   }
   .kuang .el-form{
     padding: 0px 40px 0px 20px;
+  }
+  .jc{
+    margin-left: 90px;
   }
 </style>
