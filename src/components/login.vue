@@ -50,9 +50,7 @@ export default {
           username:this.formdata.username
         }
       }).then((response) => {
-            console.log(response);
             this.$store.commit('login', response.data.Authorization)
-            console.log(this.$store.state.Authorization)
             this.tips = 'post成功'
             this.$alert('快去寻找你想要的商品吧！', '登录成功', {
               confirmButtonText: '确定',

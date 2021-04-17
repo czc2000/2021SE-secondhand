@@ -9,8 +9,8 @@ const state = {
 const mutations = {
     login(state,Au) {
         state.Authorization=Au;
+        window.sessionStorage.setItem('Authorization',Au);
     }
-
 }
 export default new Vuex.Store({
     state,

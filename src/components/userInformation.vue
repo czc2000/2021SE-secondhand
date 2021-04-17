@@ -8,7 +8,12 @@
 
 <script>
 export default {
-  name: "userSpace",
+  name: "userInformation",
+  data:function () {
+    return{
+      userdata:{}
+    }
+  },
   created:function (){
     var url='http://123.56.42.47:10492/WhoAmI'
     this.axios.get(url,{

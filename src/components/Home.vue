@@ -37,14 +37,6 @@ export default {
       this.good = response.data.good
       this.good.goodpicurl = 'http://123.56.42.47:10492' + this.good.goodpicurl
     })
-    // var url = 'http://123.56.42.47:10492/getRandomGoods?number=16'
-    // this.axios.get(url).then((response) => {
-    //   console.log(response.data.GoodList);
-    //   this.goodlist = response.data.GoodList;
-    //   for(var i=0;i<this.goodlist.length;i++) {
-    //     this.goodlist[i].goodpicurl = 'http://123.56.42.47:10492' + this.goodlist[i].goodpicurl
-    //   }
-    // })
   },
   methods: {
     test: function () {

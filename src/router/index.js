@@ -4,8 +4,8 @@ import VueRouter from "vue-router";
 import login from "@/components/login";
 import Home from "@/components/Home";
 import register from "@/components/register";
-import userSpace from "@/components/userSpace";
 import store from "@/Vuex/store";
+import userInformation from "@/components/userInformation";
 import { Message } from 'element-ui';
 Vue.use(VueRouter);
 const routes=[
@@ -26,8 +26,11 @@ const routes=[
         component:register
     },
     {
-        path: '/userSpace',
-        component: userSpace
+        path: '/userinfo',
+        component: userInformation,
+        meta:{
+            requireAuth:true
+        }
     }
 ]
 const vueRouter = new VueRouter({
@@ -35,11 +38,8 @@ const vueRouter = new VueRouter({
     mode:'history'
 });
 vueRouter.beforeEach((to,from,next)=>{
-    if(to.path==='/login'||to.path==='/register'||to.path==='/home'||to.path==='/'){
-        console.log(1);
-        next();
-    }
-    else{
+    store.state.Authorization=store.state.Authorization?store.state.Authorization:window.sessionStorage.getItem("Authorization")
+    if(to.meta.requireAuth){
         let token=store.state.Authorization;
         if(token===null||token===''){
             Message({
@@ -50,6 +50,9 @@ vueRouter.beforeEach((to,from,next)=>{
         }else{
             next();
         }
+    }
+    else{
+        next();
     }
 });
 export default vueRouter;
