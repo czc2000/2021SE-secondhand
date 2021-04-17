@@ -57,12 +57,6 @@ export default {
             this.$alert('快去寻找你想要的商品吧！', '登录成功', {
               confirmButtonText: '确定',
               center:true,
-              callback: action => {
-              this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-              });
-              }
             });
             this.$router.push('/home');
           })
@@ -95,7 +89,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .background{
   position: relative;
   width: 100%;

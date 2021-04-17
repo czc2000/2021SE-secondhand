@@ -23,7 +23,7 @@
         </div>
         <el-form-item>
           <el-button type="primary" icon="el-icon-upload" @click="submitForm('ruleForm')" round>注册</el-button>
-          <el-button type="danger" icon="el-icon-delete" round @click="resetForm('ruleForm')">重置</el-button></el-form-item>
+          <el-button class="reset" type="danger" icon="el-icon-delete" round @click="resetForm('ruleForm')">重置</el-button></el-form-item>
       </el-form>
       </div>
     </div>
@@ -185,6 +185,9 @@ export default {
     font-weight: 700;
     font-size: 40px;
   }
+  .el-form .el-form-item__content .reset{
+    margin-left: 160px;
+  }
   .el-form .el-form-item__label{
     font-size: 15px;
   }
@@ -199,6 +202,9 @@ export default {
     padding: 0px 40px 0px 20px;
   }
   .jc{
-    margin-left: 90px;
+    margin-left: 80px;
+  }
+  .jc .jc-range{
+    width: 320px;
   }
 </style>

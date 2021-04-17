@@ -4,6 +4,7 @@
     <el-button @click="homeClick" type="primary" icon="el-icon-s-home" >首页</el-button>
     <el-button @click="loginClick" type="primary" icon="el-icon-user-solid" >登录</el-button>
     <el-button @click="registerClick" type="primary" icon="el-icon-s-custom" >注册</el-button>
+    <el-button @click="spaceClick" type="primary" icon="el-icon-s-custom" >空间</el-button>
     </el-header>
     <el-main>
     <router-view></router-view>
@@ -62,6 +63,9 @@ export default {
     },
     registerClick:function (){
       this.$router.push('/register');
+    },
+    spaceClick:function (){
+      this.$router.push('/userSpace');
     }
   }
 }
