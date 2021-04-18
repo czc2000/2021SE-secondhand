@@ -38,6 +38,9 @@ export default {
       rules: {
         username: [{required: true, message: '请输入您的用户名', trigger: 'blur'}],
         password: [{required: true,message: '请输入您的密码', trigger: 'blur'}],
+      },
+      userdata:{
+
       }
     }
   },
@@ -56,6 +59,7 @@ export default {
               confirmButtonText: '确定',
               center:true,
             });
+            this.afterlogin()
             this.$router.push('/home');
           })
           .catch(function (error) {
@@ -82,6 +86,18 @@ export default {
     },
     rangeSuccess(){
       this.status=true;
+    },
+    afterlogin(){
+      var url='http://123.56.42.47:10492/WhoAmI'
+      this.axios.get(url,{
+        headers:{
+          'Authorization':this.$store.state.Authorization
+        }
+      }).then(response=>{
+        this.userdata=response.data.WhoAmI
+        this.userdata.useravatarurl='http://123.56.42.47:10492'+this.userdata.useravatarurl
+        this.$store.commit("saveuserinfo",this.userdata.useravatarurl)
+      })
     }
   }
 }
