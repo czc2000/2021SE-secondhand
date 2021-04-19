@@ -16,6 +16,18 @@ export default {
       avatarurl:require('../assets/unlogin.png')
     }
   },
+  created:function (){
+    if(this.$store.state.Authorization!=null) {
+      var url = 'http://123.56.42.47:10492/WhoAmI'
+      this.axios.get(url, {
+        headers: {
+          'Authorization': this.$store.state.Authorization
+        }
+      }).then(response => {
+        this.avatarurl = 'http://123.56.42.47:10492' + response.data.WhoAmI.useravatarurl
+      })
+    }
+  },
   computed:{
     getUseravatar(){
       return this.$store.state.useravatar

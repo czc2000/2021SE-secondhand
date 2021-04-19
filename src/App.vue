@@ -1,11 +1,6 @@
 <template>
   <el-container>
-    <el-header height="100px">
-<!--      <div class="header flex " @click="infoClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>个人信息</div></div>-->
-<!--      <div class="header flex " @click="registerClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>注册</div></div>-->
-<!--      <div class="header flex " @click="loginClick"><div class="borderLeftRight"><i class="el-icon-user-solid"></i>登录</div></div>-->
-<!--      <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>-->
-<!--      <img :src="avatarurl" alt="" class="circleImg">-->
+    <el-header height="70px">
       <appheader></appheader>
     </el-header>
     <el-main>

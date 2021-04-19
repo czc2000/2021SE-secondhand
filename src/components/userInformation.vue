@@ -20,16 +20,26 @@ export default {
       userdata:{}
     }
   },
+  computed:{
+    getUseravatar(){
+      return this.$store.state.useravatar
+    }
+  },
+  watch:{
+    getUseravatar(val){
+      this.userdata.useravatarurl=val;
+    }
+  },
   created:function (){
-    var url='http://123.56.42.47:10492/WhoAmI'
-    this.axios.get(url,{
-      headers:{
-        'Authorization':this.$store.state.Authorization
-      }
-    }).then(response=>{
-      this.userdata=response.data.WhoAmI
-      this.userdata.useravatarurl='http://123.56.42.47:10492'+this.userdata.useravatarurl
-    })
+      var url='http://123.56.42.47:10492/WhoAmI'
+      this.axios.get(url, {
+        headers: {
+          'Authorization': this.$store.state.Authorization
+        }
+      }).then(response => {
+        this.userdata = response.data.WhoAmI
+        this.userdata.useravatarurl = 'http://123.56.42.47:10492' + this.userdata.useravatarurl
+      })
   },
   methods:{
     changeAvatar:function (){

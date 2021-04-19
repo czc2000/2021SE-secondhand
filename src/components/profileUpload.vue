@@ -62,6 +62,7 @@ export default {
     cropUploadSuccess(jsonData, field){
       console.log('-------- upload success --------');
       console.log(jsonData);
+      this.$store.commit('saveuserinfo','http://123.56.42.47:10492'+jsonData.avatarurl)
       console.log('field: ' + field);
     },
     /**
@@ -73,6 +74,7 @@ export default {
     cropUploadFail(status, field){
       console.log('-------- upload fail --------');
       console.log(status);
+      console.log(status.avatarurl);
       console.log('field: ' + field);
     },
   }
