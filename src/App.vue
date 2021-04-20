@@ -23,6 +23,8 @@ export default {
   background-color: rgba(	240,248,255,0.9);
   color: #333;
   text-align: right;
+  z-index: 1;
+  padding: 0px 0px !important;
 }
 .el-main {
   background-color: #f5f5f5;

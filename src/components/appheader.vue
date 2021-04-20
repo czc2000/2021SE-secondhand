@@ -1,11 +1,53 @@
 <template>
-  <div>
-  <div class="header flex " @click="infoClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>个人信息</div></div>
-  <div class="header flex " @click="registerClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>注册</div></div>
-  <div class="header flex " @click="loginClick"><div class="borderLeftRight"><i class="el-icon-user-solid"></i>登录</div></div>
-  <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
-    <img :src="avatarurl" alt="" class="circleImg">
-  </div>
+    <div class="navbar">
+      <div class="nav">
+        <ul>
+          <li>
+            <div class="header"><img :src="avatarurl" alt="" class="circleImg"></div>
+            <ol>
+              <li><a href="javascript:;">登录</a></li>
+              <li><a href="javascript:;">注册</a></li>
+              <li><a href="javascript:;">个人信息</a></li>
+            </ol>
+          </li>
+          <li>
+            <div class="header flex " @click="infoClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>个人信息</div></div>
+          </li>
+          <li>
+            <div class="header flex " @click="registerClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>注册</div></div>
+            <ol>
+              <li><a href="javascript:;">二级菜单1</a></li>
+              <li><a href="javascript:;">二级菜单2</a></li>
+              <li><a href="javascript:;">二级菜单3</a></li>
+              <li><a href="javascript:;">二级菜单4</a></li>
+              <li><a href="javascript:;">二级菜单5</a></li>
+              <li><a href="javascript:;">二级菜单6</a></li>
+            </ol>
+          </li>
+          <li>
+            <div class="header flex " @click="loginClick"><div class="borderLeftRight"><i class="el-icon-user-solid"></i>登录</div></div>
+            <ol>
+              <li><a href="javascript:;">二级菜单1</a></li>
+              <li><a href="javascript:;">二级菜单2</a></li>
+              <li><a href="javascript:;">二级菜单3</a></li>
+              <li><a href="javascript:;">二级菜单4</a></li>
+              <li><a href="javascript:;">二级菜单5</a></li>
+              <li><a href="javascript:;">二级菜单6</a></li>
+            </ol>
+          </li>
+          <li>
+            <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
+          </li>
+          <!-- 这个元素来定义滑动的线条 -->
+          <li class="underline"></li>
+        </ul>
+      </div>
+    </div>
+<!--  <div class="header flex " @click="infoClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>个人信息</div></div>-->
+<!--  <div class="header flex " @click="registerClick"><div class="borderLeftRight"><i class="el-icon-s-custom"></i>注册</div></div>-->
+<!--  <div class="header flex " @click="loginClick"><div class="borderLeftRight"><i class="el-icon-user-solid"></i>登录</div></div>-->
+<!--  <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>-->
+<!--    <img :src="avatarurl" alt="" class="circleImg">-->
 </template>
 
 <script>
@@ -13,7 +55,8 @@ export default {
   name: "appheader",
   data:function (){
     return{
-      avatarurl:require('../assets/unlogin.png')
+      avatarurl:require('../assets/unlogin.png'),
+      activeIndex:"2"
     }
   },
   created:function (){
@@ -59,44 +102,5 @@ export default {
 </script>
 
 <style scoped>
-.flex{
-  float: right;
-}
-.header{
-  cursor: pointer;
-  height: 42px;
-  margin-left: 20px;
-  margin-top:15px;
-  font-size: 17px;
-}
-.borderLeftRight {
-  display: inline-block;
-  position: relative;
-  color: hsl(222, 25%, 14%);
-}
-
-.borderLeftRight::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  transform: scaleX(0);
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: hsl(243, 80%, 62%);
-  transform-origin: bottom right;
-  transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
-}
-
-.borderLeftRight:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
-.circleImg{
-  margin-top: 5px;
-  background-color: white;
-  border-radius: 25px;
-  width:50px;
-  height:50px;
-}
+@import "../assets/appheader.css";
 </style>
