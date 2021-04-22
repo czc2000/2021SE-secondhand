@@ -1,10 +1,40 @@
 <template>
   <div>
-    <h1>个人空间</h1>
-    <div class="cursor-pointer"><div class="slideUpBtn" @click="changeAvatar"><span>更换头像</span></div></div>
-    <profileUpload ref="avatar"></profileUpload>
-    <p>当前头像</p>
-    <img :src="userdata.useravatarurl" alt="">
+		<div class="main">
+			<ul class="menu1">
+				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
+				<li @click="modeTo('collection')" :style="isChoosen('collection')">收藏</li>
+				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>
+				<li @click="modeTo('info')" :style="isChoosen('info')">资料</li>
+			</ul>
+			<div class="body" v-show="isMode('info')">
+				<div class="info-body">
+					<ul>
+						<li>ID：xxxxxxxx</li>
+						<li>用户名：xxxxxxxx</li>
+						<li>性别：xxxxxxxx</li>
+						<li>绑定手机：xxxxxxxxxxx</li>
+						<li>绑定邮箱：xxxxxxxxxxx</li>
+						<li>更改密码：xxxxxxxxxxx</li>
+						<li>新密码：xxxxxxxx</li>
+					</ul>
+				</div>
+				<div class="info-head">
+					<profileUpload ref="avatar"></profileUpload>
+					<img :src="userdata.useravatarurl" alt="">
+					<div class="imgCover" @click="changeAvatar"><p>更换我的头像</p></div>
+				</div>
+			</div>
+			<div v-show="isMode('order')">
+				<p>order</p>
+			</div>
+			<div v-show="isMode('collection')">
+				<p>collection</p>
+			</div>
+			<div v-show="isMode('demand')">
+				<p>demand</p>
+			</div>
+		</div>
   </div>
 </template>
 
@@ -17,13 +47,31 @@ export default {
   },
   data:function () {
     return{
-      userdata:{}
+      userdata:{},
+			mode:"info",
+			menu1ChoosenOptionSytle:{
+				"background-color": "#747474",
+				"color": "white"
+			}
     }
   },
   computed:{
     getUseravatar(){
       return this.$store.state.useravatar
-    }
+    },
+		isMode(){
+			return(pattern)=>{
+				return pattern==this.mode
+			}
+		},
+		isChoosen(){
+			return(pattern)=>{
+				if(this.isMode(pattern)){
+					return this.menu1ChoosenOptionSytle
+				}
+				return {}
+			}
+		}
   },
   watch:{
     getUseravatar(val){
@@ -44,79 +92,14 @@ export default {
   methods:{
     changeAvatar:function (){
       this.$refs.avatar.toggleShow();
-    }
+			},
+    modeTo:function(pattern){
+			this.mode=pattern; 
+		}
   }
 }
 </script>
 
 <style scoped>
-h1{
-  margin-bottom: 30px;
-}
-.cursor-pointer{
-  height: 48px;
-  width: 130px;
-  margin: 0 auto;
-  cursor: pointer;
-}
-
-.slideUpBtn {
-  padding: 12px 24px;
-  background-color: transparent;
-  border: 2px solid hsl(243, 80%, 62%);
-  border-radius: 6px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.25s cubic-bezier(1,.15,.34,.92)
-}
-
-.slideUpBtn span {
-  display: inline-block;
-  transition: inherit;
-  color: hsl(243, 80%, 62%);
-}
-
-.slideUpBtn:hover span {
-  opacity: 0;
-  transform: translateY(-100%)
-}
-
-.slideUpBtn::before {
-  content: "";
-  background-color: hsl(243, 80%, 62%);;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  transform: translateY(100%);
-  transition: inherit;
-  width: 100%;
-  transition: transform 0.25s cubic-bezier(1,.15,.34,.92)
-}
-
-.slideUpBtn::after {
-  content: '更换头像';
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  left: 0;
-  position: absolute;
-  top: 0;
-  transition: inherit;
-  transform: translateY(100%);
-  width: 100%;
-
-}
-
-.slideUpBtn:hover::before {
-  transform: translateY(0) scale(3);
-  transition-delay: .025s;
-}
-
-.slideUpBtn:hover::after {
-  opacity: 1;
-  color: hsl(222, 100%, 95%);
-  transform: translateY(0);
-}
+@import "../assets/userInformation.css";
 </style>

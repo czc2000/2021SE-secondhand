@@ -61,7 +61,7 @@ a {
     width: 600px;
     height: 100%;
     /* 让元素自动水平居中 */
-    margin: 0 75%;
+    margin: 0 60%;
 }
 .navbar .nav ul {
     /* 相对定位 */
