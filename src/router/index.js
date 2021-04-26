@@ -6,6 +6,7 @@ import Home from "@/components/Home";
 import register from "@/components/register";
 import store from "@/Vuex/store";
 import userInformation from "@/components/userInformation";
+import needPost from "@/components/needPost";
 import { Message } from 'element-ui';
 Vue.use(VueRouter);
 const routes=[
@@ -31,11 +32,18 @@ const routes=[
         meta:{
             requireAuth:true
         }
+    },
+    {
+        path: '/needpost',
+        component: needPost,
+        meta: {
+            requireAuth: true
+        }
     }
 ]
 const vueRouter = new VueRouter({
     routes,
-    mode:'history'
+    mode:'hash'
 });
 vueRouter.beforeEach((to,from,next)=>{
     store.state.Authorization=store.state.Authorization?store.state.Authorization:window.sessionStorage.getItem("Authorization")

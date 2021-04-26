@@ -53,15 +53,24 @@ export default {
           username:this.formdata.username
         }
       }).then((response) => {
-            this.$store.commit('login', response.data.Authorization)
-            this.tips = 'post成功'
-            this.$alert('快去寻找你想要的商品吧！', '登录成功', {
-              confirmButtonText: '确定',
-              center:true,
-            });
-            this.afterlogin()
-            this.$router.push('/home');
-          })
+        if (!(response.data.status == -1)) {
+          this.$store.commit('login', response.data.Authorization)
+          this.tips = 'post成功'
+          this.$alert('快去寻找你想要的商品吧！', '登录成功', {
+            confirmButtonText: '确定',
+            center: true,
+          });
+          this.afterlogin()
+          this.$router.push('/home');
+          }
+        else{
+          this.$alert(response.data.description, '登录失败', {
+            confirmButtonText: '确定',
+            center: true,
+          });
+        }
+        }
+        )
           .catch(function (error) {
             console.log(error);
           });

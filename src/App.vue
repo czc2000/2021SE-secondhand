@@ -20,7 +20,7 @@ export default {
 
 <style>
 .el-header{
-  background-color: rgba(	240,248,255,0.9);
+  background-color: whitesmoke;
   color: #333;
   text-align: right;
   z-index: 1;

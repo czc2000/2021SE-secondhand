@@ -12,6 +12,11 @@ const mutations = {
         state.Authorization=Au;
         window.sessionStorage.setItem('Authorization',Au);
     },
+    loginout(state){
+        state.Authorization=null;
+        state.useravatar=null
+        window.sessionStorage.removeItem('Authorization');
+    },
     saveuserinfo(state,useravatar){
         state.useravatar=useravatar;
     }
