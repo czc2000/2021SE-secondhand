@@ -71,6 +71,11 @@ h1{
 	margin: 0;
 	border: 0;
 }
+.background{
+	background-image: url(city.jpg);
+	background-repeat: repeat-x;
+	background-size: 100%;
+}
 .head{
 	position: relative;
 	left: -320px;
@@ -83,8 +88,10 @@ h1{
 	left: 400px;
 	width: 810px;
 	height: 800px;
-	border-style: solid;
-	border-width: 2px;
+	/*border-style: solid;
+	border-width: 2px;*/
+	background-color: white;
+	opacity: 0.9;
 }
 .menu1{
 	background-color: #d0d0d0;
@@ -113,8 +120,8 @@ h1{
 }
 .menu1>li:hover{background-color: #afafaf;}
 .body{
-	border-width: 2px;
-	border-style: solid;
+	/*border-width: 2px;
+	border-style: solid;*/
 	height: 760px;
 }
 
@@ -132,9 +139,6 @@ h1{
 	height: 150px;
 	position: absolute;
 	right: 0;
-	border-style: solid;
-	border-color: green;
-	border-width: 2px;
 }
 .imgCover{
 	width: 150px;
@@ -162,12 +166,14 @@ h1{
 .info-body{
 	float: right;
 	position: relative;
-	width: 300px;
+	width: 400px;
 	height: 500px;
-	right: 200px;
-	top: 62px;
-	background-color: #696969;
+	right: 100px;
+	top: -80px;
 	border-style: solid;
 	border-width: 2px;
 	border-color: yellowgreen;
+}
+.info-body .e1-input{
+	width: 200px;
 }

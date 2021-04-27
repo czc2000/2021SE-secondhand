@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="background">
 		<div class="main">
 			<ul class="menu1">
 				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
@@ -8,30 +8,34 @@
 				<li @click="modeTo('info')" :style="isChoosen('info')">资料</li>
 			</ul>
 			<div class="body" v-show="isMode('info')">
-				<div class="info-body">
-					<ul>
-						<li>ID：xxxxxxxx</li>
-						<li>用户名：xxxxxxxx</li>
-						<li>性别：xxxxxxxx</li>
-						<li>绑定手机：xxxxxxxxxxx</li>
-						<li>绑定邮箱：xxxxxxxxxxx</li>
-						<li>更改密码：xxxxxxxxxxx</li>
-						<li>新密码：xxxxxxxx</li>
-					</ul>
-				</div>
 				<div class="info-head">
 					<profileUpload ref="avatar"></profileUpload>
 					<img :src="userdata.useravatarurl" alt="">
 					<div class="imgCover" @click="changeAvatar"><p>更换我的头像</p></div>
 				</div>
+				<el-form :model="form" :rules="rules" ref="ruleForm" class="info-body" label-width="65px">
+					<el-form-item label="用户id">
+						<el-input v-model="form.userid" prefix-icon="el-icon-user-solid" :disabled="true"></el-input>
+					</el-form-item>
+					<el-form-item label="用户名">
+						<el-input v-model="form.username" prefix-icon="el-icon-user"></el-input>
+					</el-form-item>
+					<el-form-item label="性别">
+						<el-select v-model="form.usersex" style="width:100%">
+							<i slot="prefix" class="el-input__incon el-icon-search"></i>
+							<el-option value=0 label="女"></el-option>
+							<el-option value=1 label="男"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-form>
 			</div>
-			<div v-show="isMode('order')">
+			<div class="body" v-show="isMode('order')">
 				<p>order</p>
 			</div>
-			<div v-show="isMode('collection')">
+			<div class="body" v-show="isMode('collection')">
 				<p>collection</p>
 			</div>
-			<div v-show="isMode('demand')">
+			<div class="body" v-show="isMode('demand')">
 				<p>demand</p>
 			</div>
 		</div>
@@ -52,7 +56,8 @@ export default {
 			menu1ChoosenOptionSytle:{
 				"background-color": "#747474",
 				"color": "white"
-			}
+			},
+			form:{}
     }
   },
   computed:{
@@ -71,6 +76,9 @@ export default {
 				}
 				return {}
 			}
+		},
+		sex(){
+			return this.userdata.usersex==0?"女":"男"
 		}
   },
   watch:{
@@ -87,7 +95,8 @@ export default {
       }).then(response => {
         this.userdata = response.data.WhoAmI
         this.userdata.useravatarurl = 'http://123.56.42.47:10492' + this.userdata.useravatarurl
-      })
+				this.form = this.userdata
+			})
   },
   methods:{
     changeAvatar:function (){
