@@ -46,7 +46,8 @@ const vueRouter = new VueRouter({
     mode:'hash'
 });
 vueRouter.beforeEach((to,from,next)=>{
-    store.state.Authorization=store.state.Authorization?store.state.Authorization:window.sessionStorage.getItem("Authorization")
+    //store.loadFromLocalStorage();
+		//store.state.Authorization=store.state.Authorization?store.state.Authorization:window.localStorage.getItem("Authorization");
     if(to.meta.requireAuth){
         let token=store.state.Authorization;
         if(token===null||token===''){

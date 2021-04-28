@@ -2,10 +2,10 @@
   <div class="background_userinfo">
 		<div class="main">
 			<ul class="menu1">
-				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
-				<li @click="modeTo('collection')" :style="isChoosen('collection')">收藏</li>
-				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>
 				<li @click="modeTo('info')" :style="isChoosen('info')">资料</li>
+				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>
+				<li @click="modeTo('collection')" :style="isChoosen('collection')">收藏</li>
+				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
 			</ul>
 			<div class="body" v-show="isMode('info')">
 				<div class="info-head">
@@ -64,8 +64,8 @@ export default {
       userdata:{},
 			mode:"info",
 			menu1ChoosenOptionSytle:{
-				"background-color": "#747474",
-				"color": "white"
+				"background-color": "#d2dede",
+				"color": "#4169e1"
 			},
 			form:{}
     }

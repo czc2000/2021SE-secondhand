@@ -54,6 +54,7 @@ export default {
         }
       }).then((response) => {
         if (!(response.data.status == -1)) {
+					
           this.$store.commit('login', response.data.Authorization)
           this.tips = 'post成功'
           this.$alert('快去寻找你想要的商品吧！', '登录成功', {
