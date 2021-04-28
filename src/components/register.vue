@@ -6,8 +6,8 @@
         <el-form-item label="用户名" prop="username" >
           <el-input v-model="formdata.username" placeholder="请输入用户名"  prefix-icon="el-icon-user" clearable></el-input>
         </el-form-item>
-				<el-form-item label="性别" prop="usersex" >
-					<el-select v-model="formdata.usersex" placeholder="请选择性别" style="width:100%">
+				<el-form-item label="性别" prop="usergender" >
+					<el-select v-model="formdata.usergender" placeholder="请选择性别" style="width:100%">
 						<i slot="prefix" class="el-input__icon el-icon-search"></i>
 						<el-option value=0 label="女"></el-option>
 						<el-option value=1 label="男"></el-option>
@@ -82,7 +82,7 @@ export default {
         callback();
       }
     };
-		var validatesex = (rule, value, callback) => {
+		var validategender = (rule, value, callback) => {
 			if (value === '') {
 				callback(new Error('请选择性别'));
 			}
@@ -98,7 +98,7 @@ export default {
         useremail: '',
         username: '',
         userphonenumber:'',
-				usersex: '',
+				usergender: '',
       },
       rules:{
         username:[{required: true, message: '请输入您的用户名', trigger: 'blur'},{min:3,max:18,message:'长度应当在3到18个字符',trigger: 'blur'}],
@@ -106,7 +106,7 @@ export default {
         password2: [{ required: true, validator: validatePass2, trigger: 'blur' }],
         useremail:[{required: true, validator: validatemail, trigger: 'blur'}],
         userphonenumber:[{required: true, validator: validatephone, trigger: 'blur'}],
-				usersex:[{required: true, validator: validatesex, trigger: 'blur'}],
+				usergender:[{required: true, validator: validategender, trigger: 'blur'}],
       }
     }
   },
@@ -120,7 +120,7 @@ export default {
                 useremail: this.formdata.useremail,
                 username: this.formdata.username,
                 userphonenumber: this.formdata.userphonenumber,
-								usersex: this.formdata.usersex,
+								usergender: this.formdata.usergender,
               }
             }
         ).then(response => {

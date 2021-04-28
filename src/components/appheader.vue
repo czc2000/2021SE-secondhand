@@ -26,10 +26,10 @@
             <div class="header flex " ><div class="borderLeftRight">购买区</div></div>
           </li>
           <li>
-            <div class="header flex "><div class="borderLeftRight">待定标签</div></div>
+            <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
           </li>
           <li>
-            <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
+            <div class="header flex "><div class="borderLeftRight">待定标签</div></div>
           </li>
           <!-- 这个元素来定义滑动的线条 -->
           <li class="underline"></li>

@@ -77,7 +77,6 @@ a {
     /* 让元素自动水平居中 */
     position: absolute;
     left:67.5%;
-    margin: 0 60%;
 }
 .navbar .nav ul {
     /* 相对定位 */
