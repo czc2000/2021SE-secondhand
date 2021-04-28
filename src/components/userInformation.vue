@@ -12,6 +12,7 @@
 					<profileUpload ref="avatar"></profileUpload>
 					<img :src="userdata.useravatarurl" alt="">
 					<div class="imgCover" @click="changeAvatar"><p>更换我的头像</p></div>
+					<p>头像</p>
 				</div>
 				<el-form :model="form" class="info-body" :rules="rules" ref="ruleForm" label-width="65px">
 					<el-form-item label="用户id">
