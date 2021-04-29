@@ -26,10 +26,10 @@
             <div class="header flex " ><div class="borderLeftRight">购买区</div></div>
           </li>
           <li>
-            <div class="header flex "><div class="borderLeftRight">待定标签</div></div>
+            <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
           </li>
           <li>
-            <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
+            <div class="header flex "><div class="borderLeftRight">待定标签</div></div>
           </li>
           <!-- 这个元素来定义滑动的线条 -->
           <li class="underline"></li>
@@ -51,15 +51,26 @@ export default {
     }
   },
   created:function (){
+		if(this.$store.state.Authorization==null){
+			this.$store.commit('loadFromLocalStorage');
+		}
+		//console.log('this.$store.state.useravatar:'+this.$store.state.useravatar+'\ngetFromLocalStorage:'+window.localStorage.getItem('useravatar'));
     if(this.$store.state.Authorization!=null) {
-      this.loginstate=true;
       var url = 'http://123.56.42.47:10492/WhoAmI'
       this.axios.get(url, {
         headers: {
           'Authorization': this.$store.state.Authorization
         }
       }).then(response => {
-        this.avatarurl = 'http://123.56.42.47:10492' + response.data.WhoAmI.useravatarurl
+				if(!(response.data.status == -1))
+				{
+					this.loginstate=true;
+					this.avatarurl=this.$store.state.useravatar;
+					//console.log("logininfo:\nlogin?:"+this.loginstate+"\nthis.token:"+this.$store.state.Authorization+"\nthis.avatarurl:"+this.avatarurl+"\nthis.$store.state.useravatar"+this.$store.state.useravatar);
+				}
+				else{
+					this.$store.commit('loginout');
+				}
       })
     }
   },

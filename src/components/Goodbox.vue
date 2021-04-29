@@ -4,11 +4,11 @@
       <div  class=box>
         <img :src="goodpicurl" alt="">
         <p class="review">{{goodname}}</p>
-        <p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>
+        <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
-        <el-button type="success" icon="el-icon-shopping-cart-1" circle></el-button>
-        <el-button type="warning" icon="el-icon-star-off" circle></el-button>
-        <el-button type="danger"  icon="el-icon-delete"  circle @click="show = !show"></el-button>
+        <el-button type="success" icon="el-icon-shopping-cart-1" size='small' circle></el-button>
+        <el-button type="warning" icon="el-icon-star-off" size='small' circle></el-button>
+        <el-button type="danger"  icon="el-icon-delete"  size='small' circle @click="show = !show"></el-button>
       </div>
     </div>
   </transition>
@@ -34,25 +34,35 @@ export default {
 
 <style scoped>
   .goodbox{
-    height: 430px;
+		width: 236px;
+    height: 336px;
+		/*border-style: solid;
+		border-width: 2px;*/
   }
   .box{
     overflow:hidden;
     width: 220px;
-    height: 420px;
-    padding: 20px;
+    height: 325px;
+    padding: 5px;
     border-radius: 8px;
     background-color: #fff;
+		border-style: solid;
+		border-width: 3px;
+		border-color: #f5f5f5;
   }
   .box:hover{
     border:3px solid darkorange;
     box-shadow:  0 6px 12px 0 rgba(0, 0, 0, 0.1);
   }
   .box img{
-    width: 100%;
-    height: 220px;
+		width: 220px;
+		height: 220px;
+		/*border-style: solid;
+		border-width: 2px;*/
   }
   .review{
+		position: relative;
+		top: -30px;
     height: 56px;
     font-size:14px;
     margin-top: 30px;
@@ -69,10 +79,21 @@ export default {
     text-align: left;
   }
   .price{
-    height: 36px;
+		position: relative;
+		top: -17px;
+		font-size: 14px;
+    height: 20px;
+		width: 130px;
     font-size: 20px;
     font-weight: bolder;
     color: coral;
     text-align: left;
+		/*border-style: solid;
+		border-width: 2px;*/
   }
+	.box .el-button{
+		position: relative;
+		top: -40px;
+		left: 50px;
+	}
 </style>
