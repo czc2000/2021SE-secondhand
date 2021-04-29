@@ -1,13 +1,13 @@
 <template>
   <div class="formbox">
-  <el-form ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
+  <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
     <el-form-item label="需求标题" prop="needname">
       <el-input v-model="form.needname"></el-input>
     </el-form-item>
     <el-form-item label="需求描述" prop="needdescription">
       <el-input type="textarea" v-model="form.needdescription"></el-input>
     </el-form-item>
-    <el-form-item label="需求类型" prop="needcategory">
+    <el-form-item class="needcategory" label="需求类型" prop="needcategory">
       <el-radio-group v-model="form.needcategory" placeholder="生活用品">
         <el-radio :label="1">生活用品</el-radio>
         <el-radio :label="2">电子产品</el-radio>
@@ -15,22 +15,35 @@
         <el-radio :label="4">其他</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item prop="file" class="upload-img-form" >
-      <el-upload
+      <div class="uploadImage">
+    <el-upload
           action="#"
           :limit="1"
-          :auto-upload="false"
-          :on-change="getLocalImg">
-        <div class="logo_upload_xuan">
-          <i slot="default" class="el-icon-circle-plus-outline"></i>
-          <span>选择图片</span>
+          :before-upload="beforeUpload"
+          :on-change="getLocalImg"
+          list-type="picture-card"
+          v-show="!form.needpic">
+        <div class="need_upload">
+          <i slot="default" class="el-icon-plus"></i>
         </div>
       </el-upload>
-      <div class="logo_img">
-        <div v-if="isHidden" class="logo_img_title">上传图片</div>
-        <img v-else :src="form.needpic" />
+        <transition name="el-zoom-in-top">
+      <div v-show="form.needpic" class="need_img">
+        <img :src="form.needpic" />
+        <i class="el-icon-delete-solid" @click="removePic"></i>
       </div>
-     </el-form-item>
+        </transition>
+        <transition name="el-fade-in">
+    <el-alert
+        title="请上传一张图片哟"
+        type="error"
+        description="上传一张图片可以让大家更好的明白你的需求"
+        show-icon
+        v-show="nopicWarning"
+        @close="closeAlert">
+    </el-alert>
+        </transition>
+    </div>
   </el-form>
     <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
     <el-button @click="resetForm('ruleForm1')">重置</el-button>
@@ -46,7 +59,7 @@ export default {
         needcategory:1,
         needdescription:'',
         needname:'',
-        needpic:''
+        needpic:null
       },
       isHidden:true,
       rules:{
@@ -61,21 +74,30 @@ export default {
           {required:true,message:'请输入需求描述',trigger:'blur'},
           {min:10,max:200,message: '长度在10到200个字符之间',trigger: 'blur'}
         ],
-        file:[{required:true,message:'请上传一张图片',trigger:'blur'}]
       },
-      previewurl:'',
+      nopicWarning:false,
       formData:new FormData()
     }
   },
   methods:{
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.nopicWarning=false;
+      this.removePic();
     },
     beforeUpload(file){
       this.formData.append('needpic',file)
+      this.nopicWarning=false;
       return false;//禁止elementUI的组件自动上传
     },
+    closeAlert(){
+      this.nopicWarning=false;
+    },
     submitForm(formName){
+      if(!this.form.needpic) {
+        this.nopicWarning=true
+        return;
+      }
       this.$refs[formName].validate(valid=>{
         if (valid){
           this.formData.append('needcategory',this.form.needcategory)
@@ -88,7 +110,12 @@ export default {
               'Authorization': this.$store.state.Authorization
             }
           }).then(response=>{
-            console.log(response)
+              if(response.data.msg==200){
+                this.$alert("发布需求成功", '发布成功', {
+                  confirmButtonText: '确定',
+                  center: true,
+                });
+              }
           })
         }
       })
@@ -105,14 +132,69 @@ export default {
       }
       this.form.needpic = url;
       this.isHidden = false;
+    },
+    removePic(){
+      this.form.needpic=null;
+      this.formData.delete('needpic');
     }
   }
 }
 </script>
 
-<style scoped>
+<style >
 .formbox{
-  width: 50%;
+  width: 35%;
   margin:0 auto;
+  background-color: white;
+  padding-top:50px;
+  padding-bottom: 50px;
 }
+.formbox .el-form-item{
+  padding:0px 25px;
+}
+.formbox .el-form .el-form-item__label{
+  font-size: 15px;
+}
+.formbox .needcategory .el-radio-group .el-radio__label{
+  font-size: 15px;
+}
+.formbox .uploadImage{
+  margin-bottom: 20px;
+}
+.need_img{
+  position: relative;
+  width: 90%;
+  height: 360px;
+  background-color: white;
+  box-shadow:  0 10px 9px 0 rgba(0, 0, 0, 0.2);
+  margin: 0 auto ;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+}
+.need_img img{
+  max-height: 90%;
+  max-width: 95%;
+  overflow: hidden;
+  /*margin: 3% auto;*/
+}
+.need_img i{
+  display: none;
+  position: absolute;
+  float: left;
+  font-size: 50px;
+  color: white;
+}
+.need_img:hover{
+  box-shadow:  0 10px 9px 0 rgba(0, 0, 0, 0.4);
+}
+.need_img:hover img{
+  filter: brightness(40%);
+}
+.need_img:hover i{
+  display: block;
+  cursor: pointer;
+}
+
 </style>

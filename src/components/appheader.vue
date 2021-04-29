@@ -5,18 +5,27 @@
         <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable></el-input>
       </div>
       <div class="searchbutton">
-        <el-button class="headerButton" type="primary" @click="test" circle size="medium"><i class="el-icon-search"></i></el-button>
+        <el-button class="headerButton" type="primary" circle size="medium"><i class="el-icon-search"></i></el-button>
       </div>
       <div class="nav">
         <ul>
           <li>
             <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
             <ol>
+<<<<<<< HEAD
               <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
               <li v-show="!getloginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
               <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
               <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
               <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
+=======
+              <li v-show="!loginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
+              <li v-show="!loginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
+              <li v-show="loginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
+              <li v-show="loginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
+              <li v-show="loginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
+              <li v-show="loginstate"><a href="javascript:;" @click="loginout">登出</a></li>
+>>>>>>> d2b4824787f8b9b06c926208d3341e6283734a70
             </ol>
           </li>
           <li>
@@ -98,6 +107,9 @@ export default {
     },
     needpost:function (){
       this.$router.push('/needpost')
+    },
+    goodpost:function (){
+      this.$router.push('/goodpost')
     },
     loginout:function (){
       this.$confirm('确定要退出登录吗？', '退出登录', {

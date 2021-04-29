@@ -7,6 +7,7 @@ import register from "@/components/register";
 import store from "@/Vuex/store";
 import userInformation from "@/components/userInformation";
 import needPost from "@/components/needPost";
+import goodPost from "@/components/goodPost";
 import { Message } from 'element-ui';
 Vue.use(VueRouter);
 const routes=[
@@ -39,17 +40,30 @@ const routes=[
         meta: {
             requireAuth: true
         }
+    },
+    {
+        path: '/goodpost',
+        component: goodPost,
+        meta: {
+            requireAuth: true
+        }
     }
+
 ]
 const vueRouter = new VueRouter({
     routes,
     mode:'hash'
 });
 vueRouter.beforeEach((to,from,next)=>{
+<<<<<<< HEAD
 		if(store.state.Authorization===null){
 			store.commit('loadFromLocalStorage');}
 		store.commit('checkAuValidity');
 		//console.log('from router: store.state.Authorization='+store.state.Authorization+'\nstore.state.useravatar='+store.state.useravatar+'\nstore.state.login='+store.state.login);
+=======
+    store.commit('loadFromLocalStorage');
+    console.log('from router: store.state.Authorization='+store.state.Authorization+'\nstore.state.useravatar='+store.state.useravatar);
+>>>>>>> d2b4824787f8b9b06c926208d3341e6283734a70
     if(to.meta.requireAuth){
         let token=store.state.Authorization;
         if(token===null||token===''){
