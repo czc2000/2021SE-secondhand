@@ -1,6 +1,6 @@
 <template>
   <div class="formbox">
-  <el-form ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
+  <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
     <el-form-item label="需求标题" prop="needname">
       <el-input v-model="form.needname"></el-input>
     </el-form-item>
@@ -27,10 +27,12 @@
           <i slot="default" class="el-icon-plus"></i>
         </div>
       </el-upload>
+        <transition name="el-zoom-in-top">
       <div v-show="form.needpic" class="need_img">
         <img :src="form.needpic" />
         <i class="el-icon-delete-solid" @click="removePic"></i>
       </div>
+        </transition>
         <transition name="el-fade-in">
     <el-alert
         title="请上传一张图片哟"
@@ -141,14 +143,14 @@ export default {
 
 <style >
 .formbox{
-  width: 30%;
+  width: 35%;
   margin:0 auto;
   background-color: white;
   padding-top:50px;
   padding-bottom: 50px;
 }
 .formbox .el-form-item{
-  padding:0px 20px;
+  padding:0px 25px;
 }
 .formbox .el-form .el-form-item__label{
   font-size: 15px;
@@ -156,7 +158,7 @@ export default {
 .formbox .needcategory .el-radio-group .el-radio__label{
   font-size: 15px;
 }
-.uploadImage{
+.formbox .uploadImage{
   margin-bottom: 20px;
 }
 .need_img{

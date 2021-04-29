@@ -16,6 +16,7 @@
               <li v-show="!loginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
               <li v-show="loginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
               <li v-show="loginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
+              <li v-show="loginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
               <li v-show="loginstate"><a href="javascript:;" @click="loginout">登出</a></li>
             </ol>
           </li>
@@ -115,6 +116,9 @@ export default {
     },
     needpost:function (){
       this.$router.push('/needpost')
+    },
+    goodpost:function (){
+      this.$router.push('/goodpost')
     },
     loginout:function (){
       this.$confirm('确定要退出登录吗？', '退出登录', {
