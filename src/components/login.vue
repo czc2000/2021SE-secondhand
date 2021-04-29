@@ -54,8 +54,7 @@ export default {
         }
       }).then((response) => {
         if (!(response.data.status == -1)) {
-					
-          this.$store.commit('login', response.data.Authorization)
+          this.$store.commit('saveAu', response.data.Authorization)
           this.tips = 'post成功'
           this.$alert('快去寻找你想要的商品吧！', '登录成功', {
             confirmButtonText: '确定',
@@ -106,7 +105,7 @@ export default {
       }).then(response=>{
         this.userdata=response.data.WhoAmI
         this.userdata.useravatarurl='http://123.56.42.47:10492'+this.userdata.useravatarurl
-        this.$store.commit("saveuserinfo",this.userdata.useravatarurl)
+        this.$store.commit("saveuserinfo",this.userdata)
       })
     }
   }

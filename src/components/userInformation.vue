@@ -97,17 +97,21 @@ export default {
     }
   },
   created:function (){
-      var url='http://123.56.42.47:10492/WhoAmI'
+      /*var url='http://123.56.42.47:10492/WhoAmI'
       this.axios.get(url, {
         headers: {
           'Authorization': this.$store.state.Authorization
         }
       }).then(response => {
+				console.log('userInfo loads\n');
         this.userdata = response.data.WhoAmI
         this.userdata.useravatarurl = 'http://123.56.42.47:10492' + this.userdata.useravatarurl
 				this.form = this.userdata
 				this.form.password=''
-			})
+			})*/
+			this.userdata=this.$store.state.userdata;
+			this.form=this.userdata;
+			this.form.password='';
   },
   methods:{
     changeAvatar:function (){

@@ -46,8 +46,10 @@ const vueRouter = new VueRouter({
     mode:'hash'
 });
 vueRouter.beforeEach((to,from,next)=>{
-    //store.loadFromLocalStorage();
-		//store.state.Authorization=store.state.Authorization?store.state.Authorization:window.localStorage.getItem("Authorization");
+		if(store.state.Authorization===null){
+			store.commit('loadFromLocalStorage');}
+		store.commit('checkAuValidity');
+		//console.log('from router: store.state.Authorization='+store.state.Authorization+'\nstore.state.useravatar='+store.state.useravatar+'\nstore.state.login='+store.state.login);
     if(to.meta.requireAuth){
         let token=store.state.Authorization;
         if(token===null||token===''){

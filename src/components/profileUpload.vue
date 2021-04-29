@@ -62,7 +62,7 @@ export default {
     cropUploadSuccess(jsonData, field){
       console.log('-------- upload success --------');
       console.log(jsonData);
-      this.$store.commit('saveuserinfo','http://123.56.42.47:10492'+jsonData.avatarurl)
+      this.$store.commit('uploaduseravatar','http://123.56.42.47:10492'+jsonData.avatarurl)
       console.log('field: ' + field);
     },
     /**

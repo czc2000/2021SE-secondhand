@@ -10,13 +10,13 @@
       <div class="nav">
         <ul>
           <li>
-            <div class="header"><img :src="avatarurl" alt="" class="circleImg"></div>
+            <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
             <ol>
-              <li v-show="!loginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
-              <li v-show="!loginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
-              <li v-show="loginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
-              <li v-show="loginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
-              <li v-show="loginstate"><a href="javascript:;" @click="loginout">登出</a></li>
+              <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
+              <li v-show="!getloginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
+              <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
+              <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
+              <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
             </ol>
           </li>
           <li>
@@ -44,17 +44,14 @@ export default {
   name: "appheader",
   data:function (){
     return{
-      avatarurl:require('../assets/unlogin.png'),
       activeIndex:"2",
-      loginstate:false,
       searchkey:''
     }
   },
   created:function (){
-		if(this.$store.state.Authorization==null){
+		/*if(this.$store.state.Authorization==null){
 			this.$store.commit('loadFromLocalStorage');
 		}
-		//console.log('this.$store.state.useravatar:'+this.$store.state.useravatar+'\ngetFromLocalStorage:'+window.localStorage.getItem('useravatar'));
     if(this.$store.state.Authorization!=null) {
       var url = 'http://123.56.42.47:10492/WhoAmI'
       this.axios.get(url, {
@@ -70,33 +67,19 @@ export default {
 				}
 				else{
 					this.$store.commit('loginout');
+					this.loginstate=false;
 				}
       })
-    }
+    }*/
   },
   computed:{
     getUseravatar(){
-      return this.$store.state.useravatar
+      return this.$store.state.useravatar?this.$store.state.useravatar:require('../assets/unlogin.png');
     },
     getloginstate(){
-      return this.$store.state.Authorization
+      return this.$store.state.login
     }
   },
-  watch:{
-    getUseravatar(val){
-      if(val!=null)
-        this.avatarurl=val;
-      else
-        this.avatarurl=require('../assets/unlogin.png')
-    },
-    getloginstate(val){
-      if (val!=null)
-        this.loginstate=true;
-      else
-        this.loginstate=false;
-    }
-  },
-
   methods:{
     removeItems:function (index) {
       this.goodlist.splice(index, 1);
