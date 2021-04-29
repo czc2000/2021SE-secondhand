@@ -5,7 +5,7 @@
         <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable></el-input>
       </div>
       <div class="searchbutton">
-        <el-button class="headerButton" type="primary" @click="test" circle size="medium"><i class="el-icon-search"></i></el-button>
+        <el-button class="headerButton" type="primary" circle size="medium"><i class="el-icon-search"></i></el-button>
       </div>
       <div class="nav">
         <ul>
