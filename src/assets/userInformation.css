@@ -118,7 +118,7 @@ h1{
 	border-right-style: none;
 }
 .menu1>li:hover{background-color: #d4e7e7;}
-.body{
+.info{
 	position:relative;
 	top: -150px;
 	/*border-width: 2px;
@@ -181,4 +181,51 @@ h1{
 }
 .info-body .e1-input{
 	width: 200px;
+}
+.goods{
+	float:left;
+}
+.nextPageButton{
+	position: absolute;
+	top: 590px;
+	left: 388px;
+}
+.lastPageButton{
+	position: absolute;
+	top: 590px;
+	left: 100px;
+}
+.order{
+	position:relative;
+	top: -150px;
+}
+.favorite{
+	position:relative;
+	top: -160px;
+	height: 680px;
+	width: 615px;
+	/*border-style: solid;
+	border-width:2px;*/
+}
+.favorite-goodContainer{
+	position: relative;
+	top: 50px;
+	left: 5px;
+	height: 570px;
+	overflow: scroll;
+}
+.favorite-goodContainer::-webkit-scrollbar {
+/*隐藏滚轮*/
+	display: none;
+}
+.demand{
+	position:relative;
+	top: -150px;
+}
+.el-divider{
+	margin: 0;
+}
+.favorite-divider1{
+	position: relative;
+	top: 40px;
 }

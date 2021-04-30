@@ -8,20 +8,21 @@
     </div>
     <transition name="el-zoom-in-center">
     <div class="goodcontainer" v-show="show">
-          <Goodbox class="randomgood" v-for="(item) in goodlist" v-bind:key="item.goodid"
-                   :goodpicurl="item.goodpicurl" :goodname="item.goodname" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" >
-          </Goodbox>
+          <Goodbox_goodshelf class="randomgood" v-for="(item,index) in goodlist" :key="item.goodid"
+                   :goodpicurl="item.goodpicurl" :goodname="item.goodname" :favorite="item.favorite" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" 
+										@favoriteOrNot="turnFavoriteState(index)">
+          </Goodbox_goodshelf>
     </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Goodbox from "@/components/Goodbox";
+import Goodbox_goodshelf from "@/components/Goodbox_goodshelf";
 export default {
   name: "Home",
   components:{
-    Goodbox,
+    Goodbox_goodshelf,
   },
   data: function () {
     return {
@@ -58,14 +59,37 @@ export default {
       this.axios.get(url).then((response) => {
         this.goodlist = response.data.GoodList;
         for(var i=0;i<this.goodlist.length;i++) {
-          this.goodlist[i].goodpicurl = 'http://123.56.42.47:10492' + this.goodlist[i].goodpicurl
+          this.goodlist[i].goodpicurl = 'http://123.56.42.47:10492' + this.goodlist[i].goodpicurl;
+					this.goodlist[i].favorite=false;
         }
       })
     },
     removeItems: function (index) {
       this.goodlist.splice(index, 1);
-    }
-  }
+    },
+		turnFavoriteState: function(index){
+			var temp=this.goodlist[index];
+			temp.favorite=!temp.favorite;
+			this.$set(this.goodlist,index,temp);
+		}
+  },
+	beforeRouteLeave(to,from,next){
+		if(this.$store.state.login){
+			var url='http://123.56.42.47:10492/addtoFavorite';
+			for(var i=0;i<this.goodlist.length;i++){
+				if(this.goodlist[i].favorite){
+					console.log(this.goodlist[i].goodid);
+					this.axios.post(url+'/'+this.goodlist[i].goodid,null,{
+							headers:{
+								'Authorization':this.$store.state.Authorization
+							}
+						}).then(response => {
+					})
+				}
+			}
+		}
+		next();
+	}
 }
 
 </script>

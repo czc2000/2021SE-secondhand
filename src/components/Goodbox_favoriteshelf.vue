@@ -6,9 +6,8 @@
         <p class="review">{{goodname}}</p>
         <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
-        <el-button type="success" icon="el-icon-shopping-cart-1" size='small' circle></el-button>
-        <el-button type="warning" icon="el-icon-star-off" size='small' circle></el-button>
-        <el-button type="danger"  icon="el-icon-delete"  size='small' circle @click="show = !show"></el-button>
+        <el-button type="success" icon="el-icon-shopping-cart-1" size='mini' circle></el-button>
+        <el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="show = !show"></el-button>
       </div>
     </div>
   </transition>
@@ -16,7 +15,7 @@
 
 <script>
 export default {
-  name: "Goodbox",
+  name: "Goodbox_favoriteshelf",
   props:['goodpicurl','goodname','goodprice','goodsenderid'],
   data:function(){
     return{
@@ -33,16 +32,16 @@ export default {
 </script>
 
 <style scoped>
-  .goodbox{
-		width: 236px;
-    height: 336px;
+.goodbox{
+		width: 198px;
+    height: 285px;
 		/*border-style: solid;
 		border-width: 2px;*/
   }
   .box{
     overflow:hidden;
-    width: 220px;
-    height: 325px;
+    width: 180px;
+    height: 266px;
     padding: 5px;
     border-radius: 8px;
     background-color: #fff;
@@ -55,8 +54,8 @@ export default {
     box-shadow:  0 6px 12px 0 rgba(0, 0, 0, 0.1);
   }
   .box img{
-		width: 220px;
-		height: 220px;
+		width: 180px;
+		height: 180px;
 		/*border-style: solid;
 		border-width: 2px;*/
   }
@@ -64,7 +63,7 @@ export default {
 		position: relative;
 		top: -30px;
     height: 56px;
-    font-size:14px;
+    font-size:10px;
     margin-top: 30px;
     overflow: hidden;/* 超出的文本隐藏 */
     text-overflow: ellipsis; /* 溢出用省略号显示 */
@@ -80,11 +79,10 @@ export default {
   }
   .price{
 		position: relative;
-		top: -17px;
-		font-size: 14px;
+		top: -25px;
+		font-size: 15px;
     height: 20px;
 		width: 130px;
-    font-size: 20px;
     font-weight: bolder;
     color: coral;
     text-align: left;
@@ -93,7 +91,7 @@ export default {
   }
 	.box .el-button{
 		position: relative;
-		top: -40px;
+		top: -50px;
 		left: 50px;
 	}
 </style>

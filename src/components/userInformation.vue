@@ -4,17 +4,17 @@
 			<ul class="menu1">
 				<li @click="modeTo('info')" :style="isChoosen('info')">资料</li>
 				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>
-				<li @click="modeTo('collection')" :style="isChoosen('collection')">收藏</li>
+				<li @click="modeTo('favorite')" :style="isChoosen('favorite')">收藏</li>
 				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
 			</ul>
-			<div class="body" v-show="isMode('info')">
+			<div class="info" v-show="isMode('info')">
 				<div class="info-head">
 					<profileUpload ref="avatar"></profileUpload>
 					<img :src="userdata.useravatarurl" alt="">
 					<div class="imgCover" @click="changeAvatar"><p>更换我的头像</p></div>
 					<p>头像</p>
 				</div>
-				<el-form :model="form" class="info-body" :rules="rules" ref="ruleForm" label-width="65px">
+				<el-form :model="form" class="info-body" ref="ruleForm" label-width="65px">
 					<el-form-item label="用户id">
 						<el-input v-model="form.userid" prefix-icon="el-icon-user-solid" :disabled="true"></el-input>
 					</el-form-item>
@@ -39,13 +39,20 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="body" v-show="isMode('order')">
+			<div class="order" v-show="isMode('order')">
 				<p>order</p>
 			</div>
-			<div class="body" v-show="isMode('collection')">
-				<p>collection</p>
+			<div class="favorite" v-show="isMode('favorite')">
+				<el-divider class="favorite-divider1"></el-divider>
+				<div class="favorite-goodContainer">
+					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.favorites" :key="item.goodid"
+						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname"
+						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid">
+					</Goodbox_favoriteshelf>
+				</div>
+				<!--<el-divider></el-divider>-->
 			</div>
-			<div class="body" v-show="isMode('demand')">
+			<div class="demand" v-show="isMode('demand')">
 				<p>demand</p>
 			</div>
 		</div>
@@ -54,10 +61,12 @@
 
 <script>
 import profileUpload from "@/components/profileUpload";
+import Goodbox_favoriteshelf from "@/components/Goodbox_favoriteshelf";
 export default {
   name: "userInformation",
   components:{
-    profileUpload
+    profileUpload,
+		Goodbox_favoriteshelf,
   },
   data:function () {
     return{
@@ -67,7 +76,11 @@ export default {
 				"background-color": "#d2dede",
 				"color": "#4169e1"
 			},
-			form:{}
+			form:{},
+			fPage:0,
+			fVolume:6,
+			deleleFavorites:new Array(),
+			deleteNum:0
     }
   },
   computed:{
@@ -97,21 +110,12 @@ export default {
     }
   },
   created:function (){
-      /*var url='http://123.56.42.47:10492/WhoAmI'
-      this.axios.get(url, {
-        headers: {
-          'Authorization': this.$store.state.Authorization
-        }
-      }).then(response => {
-				console.log('userInfo loads\n');
-        this.userdata = response.data.WhoAmI
-        this.userdata.useravatarurl = 'http://123.56.42.47:10492' + this.userdata.useravatarurl
-				this.form = this.userdata
-				this.form.password=''
-			})*/
+			this.$store.commit('loadUserdataFromLocalStorage');
+			this.$store.commit('loadUserspaceFromNet');
 			this.userdata=this.$store.state.userdata;
 			this.form=this.userdata;
 			this.form.password='';
+			//console.log(this.$store.state.favorites.length);
   },
   methods:{
     changeAvatar:function (){
