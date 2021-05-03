@@ -47,7 +47,7 @@
 				<div class="favorite-goodContainer">
 					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.favorites" :key="item.goodid"
 						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname"
-						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid">
+						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="recordCancel(index)">
 					</Goodbox_favoriteshelf>
 				</div>
 				<!--<el-divider></el-divider>-->
@@ -80,7 +80,8 @@ export default {
 			fPage:0,
 			fVolume:6,
 			deleleFavorites:new Array(),
-			deleteNum:0
+			deleteNum:0,
+			tobeCancelled:[]
     }
   },
   computed:{
@@ -123,8 +124,31 @@ export default {
 			},
     modeTo:function(pattern){
 			this.mode=pattern; 
+		},
+		recordCancel:function(index){
+			this.tobeCancelled.push(this.$store.state.favorites[index].goodid);
+			 this.$message(
+				{
+			    message: '取消收藏成功',
+			    type: 'success',
+					offset: 50
+			  });
 		}
-  }
+  },
+	beforeRouteLeave(to,from,next){
+		if(this.$store.state.login){
+			var url='http://123.56.42.47:10492/removeFavorite';
+			for(var i=0;i<this.tobeCancelled.length;i++){
+				console.log(this.tobeCancelled[i]);
+				this.axios.post(url+'/'+this.tobeCancelled[i],null,{
+						headers:{
+							'Authorization':this.$store.state.Authorization
+						}
+					})
+			}
+		}
+		next();
+	}
 }
 </script>
 

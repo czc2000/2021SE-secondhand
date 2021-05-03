@@ -7,7 +7,7 @@
         <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
         <el-button type="success" icon="el-icon-shopping-cart-1" size='mini' circle></el-button>
-        <el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="show = !show"></el-button>
+        <el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="$emit('cancelFavorite');show = !show"></el-button>
       </div>
     </div>
   </transition>
