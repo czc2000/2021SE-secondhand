@@ -4,6 +4,7 @@
       <div  class=box>
         <img :src="goodpicurl" alt="">
         <p class="review">{{goodname}}</p>
+				<!--<p class="Id">{{goodid}}</p>-->
         <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
         <el-button type="success" icon="el-icon-shopping-cart-1" size='small' circle></el-button>
@@ -17,7 +18,7 @@
 <script>
 export default {
   name: "Goodbox_goodshelf",
-  props:['goodpicurl','goodname','goodprice','goodsenderid','favorite'],
+  props:['goodpicurl','goodname','goodprice','goodsenderid','favorite','goodid'],
   data:function(){
     return{
       isActive:true,
@@ -101,4 +102,11 @@ export default {
 		top: -40px;
 		left: 50px;
 	}
+.Id{
+	position:relative;
+	top:-30px;
+	font-size:5px;
+	border-style:solid;
+	border-width:2px;
+}
 </style>

@@ -10,7 +10,7 @@
     <div class="goodcontainer" v-show="show">
           <Goodbox_goodshelf class="randomgood" v-for="(item,index) in goodlist" :key="item.goodid"
                    :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" 
-										@favoriteOrNot="turnFavoriteState(index)">
+										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
           </Goodbox_goodshelf>
     </div>
     </transition>
@@ -60,47 +60,56 @@ export default {
 			var urlAdd='http://123.56.42.47:10492/addtoFavorite';
 			var urlCancel='http://123.56.42.47:10492/removeFavorite';
 			let vm=this;
-			new Promise(function(resolve,reject){
-				if(vm.goodlist.length==0)
-					resolve();
-				if(vm.$store.state.login){
-					for(var i=0;i<vm.goodlist.length;i++)
-					{
-						if(!vm.goodlist[i].favorite&&vm.goodlist[i].favoriteNow){
-							console.log('add '+vm.goodlist[i].goodid);
-							vm.axios.post(urlAdd+'/'+vm.goodlist[i].goodid,null,{
-									headers:{'Authorization':vm.$store.state.Authorization}
-							})}
-						else if(vm.goodlist[i].favorite&&!vm.goodlist[i].favoriteNow){
-							console.log('cancel '+vm.goodlist[i].goodid);
-							vm.axios.post(urlCancel+'/'+vm.goodlist[i].goodid,null,{
-									headers:{'Authorization':vm.$store.state.Authorization}
-							})}
+			async function test(){
+				await new Promise(function(resolve,reject){
+					if(vm.goodlist.length!=0&&vm.$store.state.login){
+						for(var i=0;i<vm.goodlist.length;i++)
+						{
+							if(!vm.goodlist[i].favorite&&vm.goodlist[i].favoriteNow){
+								//console.log('add '+vm.goodlist[i].goodid);
+								vm.axios.post(urlAdd+'/'+vm.goodlist[i].goodid,null,{
+										headers:{'Authorization':vm.$store.state.Authorization}
+								})}
+							else if(vm.goodlist[i].favorite&&!vm.goodlist[i].favoriteNow){
+								//console.log('cancel '+vm.goodlist[i].goodid);
+								vm.axios.post(urlCancel+'/'+vm.goodlist[i].goodid,null,{
+										headers:{'Authorization':vm.$store.state.Authorization}
+								})}
+						}
 					}
-				}
-				resolve();
-			}).then(function(){	
-				vm.axios.get(urlGet).then((response) => {
-					vm.goodlist = response.data.GoodList;
+					resolve();
 				})
-			}).then(function(){
-				for(var i=0;i<vm.goodlist.length;i++){
-					new Promise(function(resolve,reject){
-						var temp=vm.goodlist[i];
-						temp.favorite=false;
-						temp.favoriteNow=false;
-						resolve(temp);
-					}).then(function(temp){
-						vm.axios.post(urlCheck+'/'+vm.$store.state.userid+'/'+temp.goodid).then(function(response){
-						temp.favorite=response.data.isfavorite;
-						temp.favoriteNow=temp.favorite;
-						return temp;
+				var response=await vm.axios.get(urlGet)
+				await new Promise(function(resolve,reject){
+					vm.goodlist=response.data.GoodList;
+					resolve();
+				})
+				await new Promise(function(resolve,reject){
+					//console.log('step4 vm.goodlist.length: '+vm.goodlist.length);
+					for(var i=0;i<vm.goodlist.length;i++){
+						new Promise(function(resolve,reject){
+							var temp=vm.goodlist[i];
+							temp.favorite=false;
+							temp.favoriteNow=false;
+							temp.index=i;
+							resolve(temp);
 						}).then(function(temp){
-							vm.$set(vm.goodlist,i,temp);
+							vm.axios.post(urlCheck+'/'+vm.$store.state.userid+'/'+temp.goodid).then(function(response){
+							temp.favorite=response.data.isfavorite;
+							temp.favoriteNow=temp.favorite;
+							return temp;
+							}).then(function(temp){
+								//console.log('temp.i: '+temp.index+' temp.goodid: '+temp.goodid+' favorite: '+temp.favorite);
+								return temp;
+							}).then(function(temp){
+								vm.$set(vm.goodlist,temp.index,temp);
+							})
 						})
-					})
-				}
-			})
+					}
+					resolve();
+				})
+			}
+			test();
     },
     removeItems: function (index) {
       this.goodlist.splice(index, 1);
@@ -115,9 +124,9 @@ export default {
 		if(this.$store.state.login){
 			var urlAdd='http://123.56.42.47:10492/addtoFavorite';
 			var urlCancel='http://123.56.42.47:10492/removeFavorite';
-			console.log(this.goodlist.length);
+			/*console.log(this.goodlist.length);
 			for(var i=0;i<this.goodlist.length;i++)
-				console.log(this.goodlist[i]);
+				console.log(this.goodlist[i]);*/
 			for(var i=0;i<this.goodlist.length;i++)
 			{
 				if(!this.goodlist[i].favorite&&this.goodlist[i].favoriteNow)
