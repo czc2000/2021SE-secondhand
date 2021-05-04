@@ -10,6 +10,7 @@ import needPost from "@/components/needPost";
 import goodPost from "@/components/goodPost";
 import { Message } from 'element-ui';
 import goodsZone from "@/components/goodsZone";
+import GoodShowPage from "@/components/GoodShowPage";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -53,7 +54,11 @@ const routes=[
 			
 				path: '/goods',
 				component: goodsZone
-		}
+		},
+    {
+        path: '/goodinfo',
+        component: GoodShowPage,
+    }
 ]
 const vueRouter = new VueRouter({
     routes,
