@@ -100,6 +100,7 @@ export default {
 							temp.index=i;
 							resolve(temp);
 						}).then(function(temp){
+							if(!vm.$store.state.login) return temp;
 							vm.axios.post(urlCheck+'/'+vm.$store.state.userid+'/'+temp.goodid).then(function(response){
 							temp.favorite=response.data.isfavorite;
 							temp.favoriteNow=temp.favorite;
