@@ -4,7 +4,7 @@
       <appheader></appheader>
     </el-header>
     <el-main>
-    <router-view></router-view>
+    <router-view v-if="isRouterAlive"></router-view>
     </el-main>
   </el-container>
 </template>
@@ -14,6 +14,19 @@ import appheader from "@/components/appheader";
 export default {
   components:{
     appheader
+  },
+  data:function (){
+    return{
+      isRouterAlive:true
+    }
+  },
+  methods: {
+    reload () {
+      this.isRouterAlive = false;            //先关闭，
+      this.$nextTick(function () {
+        this.isRouterAlive = true;         //再打开
+      })
+    }
   }
 }
 </script>
@@ -27,7 +40,7 @@ export default {
   padding: 0px 0px !important;
 }
 .el-main {
-  background-color: #f5f5f5;
+  background-color: white;
   color: #333;
   text-align: center;
   padding: 0;

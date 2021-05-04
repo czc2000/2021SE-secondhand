@@ -9,6 +9,7 @@ import userInformation from "@/components/userInformation";
 import needPost from "@/components/needPost";
 import goodPost from "@/components/goodPost";
 import { Message } from 'element-ui';
+import GoodShowPage from "@/components/GoodShowPage";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -47,8 +48,11 @@ const routes=[
         meta: {
             requireAuth: true
         }
+    },
+    {
+        path: '/goodinfo',
+        component: GoodShowPage,
     }
-
 ]
 const vueRouter = new VueRouter({
     routes,
