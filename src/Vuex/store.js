@@ -73,7 +73,7 @@ const mutations = {
 				}
 				else{
 					state.login=false;
-					commit(loginout);
+					this.commit('loginout');
 				}
 				//console.log('store.state.Authorization='+state.Authorization+'\nstore.state.useravatar='+state.useravatar+'\nstore.state.login='+state.login);
 			})
