@@ -9,6 +9,7 @@ import userInformation from "@/components/userInformation";
 import needPost from "@/components/needPost";
 import goodPost from "@/components/goodPost";
 import { Message } from 'element-ui';
+import goodsZone from "@/components/goodsZone";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -47,8 +48,12 @@ const routes=[
         meta: {
             requireAuth: true
         }
-    }
-
+    },
+		{
+			
+				path: '/goods',
+				component: goodsZone
+		}
 ]
 const vueRouter = new VueRouter({
     routes,
