@@ -82,7 +82,7 @@ export default {
 			async function test(){
 				await new Promise(function(resolve,reject){
 					if(vm.goodlist.length!=0)
-						this.postChange();
+						vm.postChange();
 					resolve();
 				})
 				var response=await vm.axios.get(urlGet)
