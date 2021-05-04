@@ -4,10 +4,11 @@
       <div  class=box>
         <img :src="goodpicurl" alt="">
         <p class="review">{{goodname}}</p>
+				<!--<p class="Id">{{goodid}}</p>-->
         <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
         <el-button type="success" icon="el-icon-shopping-cart-1" size='mini' circle></el-button>
-        <el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="show = !show"></el-button>
+        <el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="$emit('cancelFavorite');show = !show"></el-button>
       </div>
     </div>
   </transition>
@@ -16,7 +17,7 @@
 <script>
 export default {
   name: "Goodbox_favoriteshelf",
-  props:['goodpicurl','goodname','goodprice','goodsenderid'],
+  props:['goodpicurl','goodname','goodprice','goodsenderid','goodid'],
   data:function(){
     return{
       isActive:true,
@@ -94,4 +95,10 @@ export default {
 		top: -50px;
 		left: 50px;
 	}
+.Id{
+	position: relative;
+	top: -20px;
+	font-size:15px;
+	border-style: solid;	border-width: 2px;
+}
 </style>

@@ -9,8 +9,8 @@
     <transition name="el-zoom-in-center">
     <div class="goodcontainer" v-show="show">
           <Goodbox_goodshelf class="randomgood" v-for="(item,index) in goodlist" :key="item.goodid"
-                   :goodpicurl="item.goodpicurl" :goodname="item.goodname" :favorite="item.favorite" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" 
-										@favoriteOrNot="turnFavoriteState(index)">
+                   :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" 
+										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
           </Goodbox_goodshelf>
     </div>
     </transition>
@@ -27,7 +27,7 @@ export default {
   data: function () {
     return {
       good: {},
-      goodlist: {},
+      goodlist: [],
       searchkey:'',
       show:false
     }
@@ -39,6 +39,9 @@ export default {
       this.good.goodpicurl = 'http://123.56.42.47:10492' + this.good.goodpicurl
     })
   },
+	mounted: function(){
+		window.addEventListener('beforeunload', e => this.postChange());
+	},
   methods: {
     test: function () {
       const url = 'http://123.56.42.47:10492/goodInfo/' + this.id
@@ -53,41 +56,79 @@ export default {
           }
       )
     },
+		postChange: function(){
+			if(this.$store.state.login){
+				var urlAdd='http://123.56.42.47:10492/addtoFavorite';
+				var urlCancel='http://123.56.42.47:10492/removeFavorite';
+				for(var i=0;i<this.goodlist.length;i++)
+				{
+					if(!this.goodlist[i].favorite&&this.goodlist[i].favoriteNow){
+						//console.log('add '+this.goodlist[i].goodid);
+						this.axios.post(urlAdd+'/'+this.goodlist[i].goodid,null,{
+								headers:{'Authorization':this.$store.state.Authorization}
+						})}
+					else if(this.goodlist[i].favorite&&!this.goodlist[i].favoriteNow){
+						//console.log('cancel '+this.goodlist[i].goodid);
+						this.axios.post(urlCancel+'/'+this.goodlist[i].goodid,null,{
+								headers:{'Authorization':this.$store.state.Authorization}
+						})}
+				}}
+		},
     getrandom: function () {
       this.show=true;
-      var url = 'http://123.56.42.47:10492/getRandomGoods?number=16'
-      this.axios.get(url).then((response) => {
-        this.goodlist = response.data.GoodList;
-        for(var i=0;i<this.goodlist.length;i++) {
-          this.goodlist[i].goodpicurl = 'http://123.56.42.47:10492' + this.goodlist[i].goodpicurl;
-					this.goodlist[i].favorite=false;
-        }
-      })
+      var urlGet = 'http://123.56.42.47:10492/getRandomGoods?number=16';
+			var urlCheck= 'http://123.56.42.47:10492/user/isfavorite';
+			let vm=this;
+			async function test(){
+				await new Promise(function(resolve,reject){
+					if(vm.goodlist.length!=0)
+						vm.postChange();
+					resolve();
+				})
+				var response=await vm.axios.get(urlGet)
+				await new Promise(function(resolve,reject){
+					vm.goodlist=response.data.GoodList;
+					resolve();
+				})
+				await new Promise(function(resolve,reject){
+					//console.log('step4 vm.goodlist.length: '+vm.goodlist.length);
+					for(var i=0;i<vm.goodlist.length;i++){
+						new Promise(function(resolve,reject){
+							var temp=vm.goodlist[i];
+							temp.favorite=false;
+							temp.favoriteNow=false;
+							temp.index=i;
+							resolve(temp);
+						}).then(function(temp){
+							if(!vm.$store.state.login) return temp;
+							vm.axios.post(urlCheck+'/'+vm.$store.state.userid+'/'+temp.goodid).then(function(response){
+							temp.favorite=response.data.isfavorite;
+							temp.favoriteNow=temp.favorite;
+							return temp;
+							}).then(function(temp){
+								//console.log('temp.i: '+temp.index+' temp.goodid: '+temp.goodid+' favorite: '+temp.favorite);
+								return temp;
+							}).then(function(temp){
+								vm.$set(vm.goodlist,temp.index,temp);
+							})
+						})
+					}
+					resolve();
+				})
+			}
+			test();
     },
     removeItems: function (index) {
       this.goodlist.splice(index, 1);
     },
 		turnFavoriteState: function(index){
 			var temp=this.goodlist[index];
-			temp.favorite=!temp.favorite;
+			temp.favoriteNow=!temp.favoriteNow;
 			this.$set(this.goodlist,index,temp);
 		}
   },
-	beforeRouteLeave(to,from,next){
-		if(this.$store.state.login){
-			var url='http://123.56.42.47:10492/addtoFavorite';
-			for(var i=0;i<this.goodlist.length;i++){
-				if(this.goodlist[i].favorite){
-					console.log(this.goodlist[i].goodid);
-					this.axios.post(url+'/'+this.goodlist[i].goodid,null,{
-							headers:{
-								'Authorization':this.$store.state.Authorization
-							}
-						}).then(response => {
-					})
-				}
-			}
-		}
+	beforeRouteLeave(to, from, next) {
+		this.postChange();
 		next();
 	}
 }

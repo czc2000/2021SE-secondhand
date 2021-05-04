@@ -54,7 +54,6 @@ export default {
         callback();
       }
     };
-
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
@@ -112,6 +111,7 @@ export default {
   },
   methods:{
     Register: function (){
+			console.log(this.formdata.usergender);
         var url = 'http://123.56.42.47:10492/register'
         this.axios.post(url, null,
             {
@@ -120,7 +120,7 @@ export default {
                 useremail: this.formdata.useremail,
                 username: this.formdata.username,
                 userphonenumber: this.formdata.userphonenumber,
-								usergender: this.formdata.usergender,
+								usersex: this.formdata.usergender,
               }
             }
         ).then(response => {

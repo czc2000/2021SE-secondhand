@@ -80,3 +80,8 @@ vueRouter.beforeEach((to,from,next)=>{
     }
 });
 export default vueRouter;
+//下面的代码作用是防止导航到当前有的页面时发生报错，具体原理暂未研究，目前来看表现就是取消导航
+const originalPush = VueRouter.prototype.push
+   VueRouter.prototype.push = function push(location) {
+   return originalPush.call(this, location).catch(err => err)
+}
