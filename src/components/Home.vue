@@ -145,6 +145,8 @@ export default {
 }
 .goodcontainer{
   margin-left: 120px;
+	position: relative;
+	top: 0px;
 }
 .el-input{
   width: 50%;

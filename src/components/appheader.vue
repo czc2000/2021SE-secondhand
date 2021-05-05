@@ -24,7 +24,7 @@
             <div class="header flex " ><div class="borderLeftRight">需求区</div></div>
           </li>
           <li>
-            <div class="header flex " ><div class="borderLeftRight">购买区</div></div>
+            <div class="header flex " @click="goodsClick"><div class="borderLeftRight">购买区</div></div>
           </li>
           <li>
             <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
@@ -88,6 +88,9 @@ export default {
     homeClick:function (){
       this.$router.push('/home');
     },
+		goodsClick:function(){
+			this.$router.push('/goods');
+		},
     loginClick:function () {
       this.$router.push('/login');
     },
