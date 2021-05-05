@@ -1,9 +1,9 @@
 <template>
   <transition name="el-zoom-in-center">
-    <div v-show="show" class="goodbox">
+    <div v-show="show" class="goodbox" >
       <div  class=box>
-        <img :src="goodpicurl" alt="">
-        <p class="review">{{goodname}}</p>
+        <img :src="goodpicurl" alt="" @click="toShowPage">
+        <p class="review" @click="toShowPage">{{goodname}}</p>
 				<!--<p class="Id">{{goodid}}</p>-->
         <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
@@ -28,6 +28,9 @@ export default {
   methods:{
     remove:function (){
       this.isActive=false;
+    },
+    toShowPage:function (){
+      this.$router.push({path:'/goodinfo',query:{goodid:this.goodid}})
     }
   },
 	computed:{
@@ -63,6 +66,7 @@ export default {
   .box img{
 		width: 220px;
 		height: 220px;
+    cursor: pointer;
 		/*border-style: solid;
 		border-width: 2px;*/
   }
@@ -78,6 +82,7 @@ export default {
     -webkit-box-orient: vertical; /*  从上到下垂直排列子元素（设置伸缩盒子的子元素排列方式） */
     -webkit-line-clamp: 3; /* 这个属性不是css的规范属性，需要组合上面两个属性，表示显示的行数 */
     text-align: left;
+    cursor: pointer;
   }
   .sender{
     font-size: 13px;

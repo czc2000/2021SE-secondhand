@@ -33,7 +33,9 @@
     <el-tabs v-model="activeName" type="border-card" >
       <el-tab-pane label="评论区" name="first">
         <commentBox v-for="(item,index) in commentlist" :key="index" :commentcontent="item.commentcontent"
-                    :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"></commentBox>
+                    :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"
+                    :username="commentsendinfo[index].username" :number="index+1">
+        </commentBox>
       </el-tab-pane>
       <el-tab-pane label="发表评论" name="second">
         <div class="postcomment">
@@ -118,7 +120,7 @@ export default {
       }
       if(this.comment){
         this.commentIsNull=false;
-        var url='http://123.56.42.47:10492/sendGoodcomment/'+this.goodid;
+        var url='http://123.56.42.47:10492/sendGoodComment/'+this.goodid;
         this.axios.post(url,null,{
           headers:{
             'Authorization': this.$store.state.Authorization
