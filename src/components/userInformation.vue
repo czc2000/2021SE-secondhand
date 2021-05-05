@@ -35,9 +35,20 @@
 						<el-input v-model="form.userphonenumber" prefix-icon="el-icon-mobile phone" :disabled="!isEditMode"></el-input>
 					</el-form-item>
 				</el-form>
-				<el-button class="info-edit" plain @click="enterEditMode" v-show="!isEditMode">修改信息</el-button>
+				<el-button class="info-edit" plain @click="enterEditMode" v-show="!isEditMode&&!isPWDChangeMode">修改信息</el-button>
 				<el-button class="info-save" plain @click="saveEdit" v-show="isEditMode">保存修改</el-button>
 				<el-button class="info-cancel" plain @click="leaveEditMode" v-show="isEditMode">取消修改</el-button>
+				<el-form :model="form2" class="info-body2" :rules="rules2" ref="ruleForm2" label-width="75px" v-show="isPWDChangeMode">
+					<el-form-item label="现有密码" prop="pwdNow">
+						<el-input v-model="form2.pwdNow" prefix-icon="el-icon-lock"></el-input>
+					</el-form-item>
+					<el-form-item label="新密码" prop="pwdNew">
+						<el-input v-model="form2.pwdNew" prefix-icon="el-icon-key"></el-input>
+					</el-form-item>
+				</el-form>
+				<el-button class="pwd-change" plain @click="enterPWDChangeMode" v-show="!isPWDChangeMode&&!isEditMode">修改密码</el-button>
+				<el-button class="pwd-save" plain @click="savePWDChangeMode" v-show="isPWDChangeMode">保存修改</el-button>
+				<el-button class="pwd-cancel" plain @click="leavePWDChangeMode" v-show="isPWDChangeMode">取消修改</el-button>
 			</div>
 			<div class="order" v-show="isMode('order')">
 				<p>order</p>
@@ -87,6 +98,22 @@ export default {
         callback();
       }
     };
+		var validatePwdNow = (rule, value, callback) => {
+			if(value === ''){
+				callback(new Error('请输入原有密码'));
+			}else if(value!=this.$store.state.pwd){
+				callback(new Error('请输入正确的密码'));
+			}else{
+				callback();
+			}
+		};
+    var validatePwdNew=(rule,value,callback)=>{
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        callback();
+      }
+    };
     return{
 			mode:"info",
 			menu1ChoosenOptionSytle:{
@@ -103,6 +130,15 @@ export default {
 			rules:{
 			  useremail:[{validator: validatemail, trigger: 'blur'}],
 			  userphonenumber:[{validator: validatephone, trigger: 'blur'}],
+			},
+			isPWDChangeMode:false,
+			form2:{
+				"pwdNow":"",
+				"pwdNew":""
+			},
+			rules2:{
+				pwdNow:[{validator: validatePwdNow, trigger:'blur'}],
+				pwdNew:[{validator: validatePwdNew, trigger: 'blur' },{min:6,max:18,message:'长度应当在6到18个字符',trigger: 'blur'}]
 			}
     }
   },
@@ -133,7 +169,6 @@ export default {
 			this.$store.commit('loadUserdataFromLocalStorage');
 			this.$store.commit('loadUserspaceFromNet');
 			this.form=JSON.parse(JSON.stringify(this.$store.state.userdata));//深拷贝
-			this.form.password='';
 			this.form.usersex=this.form.usersex==0?'0':'1';
 			//console.log(this.$store.state.favorites.length);
   },
@@ -249,6 +284,50 @@ export default {
       }).then(function(){
 				vm.form=JSON.parse(JSON.stringify(vm.$store.state.userdata));
 				vm.form.usersex=vm.form.usersex==0?'0':'1';
+			})
+		},
+		enterPWDChangeMode:function(){
+			this.isPWDChangeMode=true;
+		},
+		leavePWDChangeMode:function(){
+			this.form2.pwdNow="";
+			this.form2.pwdNew="";
+			this.$refs.ruleForm2.resetFields();
+			this.isPWDChangeMode=false;
+		},
+		savePWDChangeMode:function(){
+			this.$refs.ruleForm2.validate(valid=>{
+				if(valid){
+					console.log('valid change');
+					this.isPWDChangeMode=false;
+					this.postPWDChange();
+				}
+				else{
+					console.log('error submit');
+					return false;
+				}
+			})
+		},
+		postPWDChange:function(){
+			var urlPWDChange='http://123.56.42.47:10492/user/updatePWD';
+			var vm=this;
+			this.axios.post(urlPWDChange,null,{
+				params:{password:this.form2.pwdNew},
+				headers:{'Authorization':this.$store.state.Authorization}
+			}).then((response)=>{
+				var pwd=this.form2.pwdNow;
+				if(response.data.msg==200)
+				{
+					this.$message({message:'修改密码成功',type:'success'});
+					pwd=this.form2.pwdNew;
+				}
+				else this.$message({message:'修改不成功，好像哪里有问题'});
+				return pwd;
+			}).then((pwd)=>{
+				vm.$store.commit('savePWD',pwd);
+				return;
+			}).then(()=>{
+				vm.leavePWDChangeMode();
 			})
 		}
   }

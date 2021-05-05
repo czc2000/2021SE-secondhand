@@ -236,7 +236,7 @@ h1{
 .info-edit{
 	position: relative;
 	top: 250px;
-	left: 400px;
+	left: 450px;
 }
 .info-save{
 	position: relative;
@@ -247,4 +247,27 @@ h1{
 	position: relative;
 	top: 210px;
 	left: 250px;
+}
+.pwd-change{
+	position: relative;
+	top: 350px;
+	left: 352px;
+}
+.pwd-save{
+	position: relative;
+	top: 350px;
+	left: 396px;
+}
+.pwd-cancel{
+	position: relative;
+	top: 310px;
+	left: 251px;
+}
+.info-body2{
+	float: right;
+	position: relative;
+	width: 410px;
+	height: 500px;
+	left: -20px;
+	top: -290px;
 }

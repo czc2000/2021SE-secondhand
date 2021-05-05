@@ -15,21 +15,29 @@ const state = {
 	favorites: null,
 	receivedintentions: null,
 	goods: null,
-	intentions: null
+	intentions: null,
+	pwd:null
 }
 const mutations = {
 	saveAu(state,Au) {
 		state.Authorization=Au;
+		window.localStorage.setItem('Authorization',state.Authorization);
+	},
+	savePWD(state,PWD){
+		state.pwd=PWD;
+		window.localStorage.setItem('pwd',state.pwd);
 	},
 	loginout(state){
 		state.Authorization=null;
 		state.useravatar=null
 		state.login=false;
 		state.userid=null,
+		state.pwd=null,
 		window.localStorage.removeItem('Authorization');
 		window.localStorage.removeItem('useravatar');
 		window.localStorage.removeItem('userdata');
 		window.localStorage.removeItem('userid');
+		window.localStorage.removeItem('pwd');
 	},
 	saveuserinfo(state,userdata_){
 		state.useravatar=userdata_.useravatarurl;
@@ -37,7 +45,6 @@ const mutations = {
 		state.userid=userdata_.userid;
 		window.localStorage.setItem('userid',state.userid);
 		state.login=true;
-		window.localStorage.setItem('Authorization',state.Authorization);
 		state.userdata=userdata_;
 		//向localStorage中存放对象
 		window.localStorage.setItem('userdata',JSON.stringify(state.userdata));
@@ -55,6 +62,7 @@ const mutations = {
 		state.Authorization=window.localStorage.getItem('Authorization');
 		state.useravatar=window.localStorage.getItem('useravatar');
 		state.userid=window.localStorage.getItem('userid');
+		state.pwd=window.localStorage.getItem('pwd');
 		//从localStorage中读取对象(只在个人信息页面才需要，故取消)
 		//state.userdata=JSON.parse(window.localStorage.getItem('userdata'));
 		//调试信息 console.log('from loadFromLocalStorage\n');
@@ -68,7 +76,7 @@ const mutations = {
 				}
 			}).then(response => {
 				//console.log('from store_checkAuValidity:\n');
-				if(response.status==200){
+				if(typeof(response.data.WhoAmI.userid)!="undefined"){
 					state.login=true;
 				}
 				else{
