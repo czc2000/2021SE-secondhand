@@ -32,10 +32,20 @@
   <div class="comment">
     <el-tabs v-model="activeName" type="border-card" >
       <el-tab-pane label="评论区" name="first">
-        <commentBox v-for="(item,index) in commentlist" :key="index" :commentcontent="item.commentcontent"
-                    :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"
-                    :username="commentsendinfo[index].username" :number="index+1">
-        </commentBox>
+        <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto" infinite-scroll-disabled="disabled">
+          <li v-for="(item,index) in commentlist" v-if="index<commentcount" class="infinite-list-item">
+            <commentBox  :key="index" :commentcontent="item.commentcontent"
+                        :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"
+                        :username="commentsendinfo[index].username" :number="index+1">
+            </commentBox>
+          </li>
+        </ul>
+        <div class="bouncingLoader" v-if="commentloading"><div></div></div>
+        <p v-if="noMore" class="nomore">以上为全部评论</p>
+<!--          <commentBox v-for="(item,index) in commentlist" v-if="index<count" :key="index" :commentcontent="item.commentcontent"-->
+<!--                      :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"-->
+<!--                      :username="commentsendinfo[index].username" :number="index+1">-->
+<!--          </commentBox>-->
       </el-tab-pane>
       <el-tab-pane label="发表评论" name="second">
         <div class="postcomment">
@@ -58,6 +68,11 @@
       </el-tab-pane>
     </el-tabs>
   </div>
+    <div>
+      <el-backtop target=".el-main">
+        <div class="pulseAnim"><i class="el-icon-top"></i></div>
+      </el-backtop>
+    </div>
   </div>
 </template>
 
@@ -80,7 +95,17 @@ export default {
       comment:'',
       commentIsNull:false,
       commentSuccess:false,
-      activeName:'first'
+      activeName:'first',
+      commentcount:5,
+      commentloading:false
+    }
+  },
+  computed: {
+    noMore () {
+      return this.commentcount >this.commentlist.length
+    },
+    disabled () {
+      return this.commentloading || this.noMore
     }
   },
   created:async function() {
@@ -161,182 +186,18 @@ export default {
       }
       this.loaded=true;
     },
+    load:function (){
+      console.log(this.commentcount)
+      this.commentloading=true
+      setTimeout(() => {
+        this.commentcount += 5
+        this.commentloading = false
+      }, 2000)
+    }
   }
 }
 </script>
 
 <style>
-.goodinfo{
-  margin: 50px auto;
-  width: 1280px;
-  height: 480px;
-}
-.preview{
-  float: left;
-  padding:0 50px;
-}
-.preview img{
-  width: 350px;
-}
-.previewbottom p{
-  float: right;
-  width: 30px;
-  color: #919191;
-  font-size: 13px;
-}
-.preview p:hover{
-  color: red;
-  cursor: pointer;
-}
-.iteminfo{
-  float: left;
-  width: 590px;
-  text-align: left;
-}
-.iteminfo .goodtitle{
-  font:700 16px Arial,"microsoft yahei";
-  color: #666;
-  text-align: left;
-}
-.iteminfo .senderinfo{
-  margin-top: 15px;
-  height: 60px;
-  background-color: rgb(250, 250, 250);
-}
-
-.iteminfo .senderinfo .circleImg{
-  float: right;
-  border-radius: 25px;
-  width:50px;
-  height:50px;
-}
-.iteminfo .senderinfo  .circleImg,.sendername:hover{
-  cursor: pointer;
-}
-.iteminfo .senderinfo .price{
-  float: left;
-  line-height: 60px;
-  margin-left: 16px;
-  font-size: 32px;
-  font-weight: 700;
-  color: red;
-}
-.iteminfo .senderinfo .sendername{
-  float: right;
-  line-height: 60px;
-  font-size: 16px;
-  font-weight: 600;
-  padding-left: 16px;
-  margin-right: 16px;
-  color: #ffd647;
-}
-.iteminfo .el-divider{
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.iteminfo .description{
-  height: 165px;
-  padding: 14px;
-  font-size: 14px;
-  border: 2px dashed #cdcdcd;
-
-}
-.horizontalOverlay {
-  overflow: hidden;
-  padding: 12px 30px;
-  border-radius: 6px;
-  background-color: rgba(255,0,0,0.7);
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-  position: relative;
-  display: inline-block;
-}
-.horizontalOverlay :hover{
-  cursor: pointer;
-}
-.horizontalOverlay::before {
-  content: '创建订单';
-  padding: 12px 30px;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: red;
-  transform: scaleX(0);
-  transform-origin: 100% 100%;
-  transition: transform 0.3s cubic-bezier(0.53, 0.21, 0, 1);
-  will-change: transform;
-}
-
-.horizontalOverlay:hover::before  {
-  transform-origin: 0 0;
-  transform: scaleX(1);
-  cursor: pointer;
-}
-
-.horizontalOverlay2 {
-  margin-left: 20px;
-  overflow: hidden;
-  padding: 12px 30px;
-  border-radius: 6px;
-  background-color:rgba(255,214,37,0.7);
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-  position: relative;
-  display: inline-block;
-}
-.horizontalOverlay2 :hover{
-  cursor: pointer;
-}
-.horizontalOverlay2::before {
-  content: '联系卖家';
-  padding: 12px 30px;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color:#ffe909;
-  transform: scaleX(0);
-  transform-origin: 100% 100%;
-  transition: transform 0.3s cubic-bezier(0.53, 0.21, 0, 1);
-  will-change: transform;
-}
-
-.horizontalOverlay2:hover::before  {
-  transform-origin: 0 0;
-  transform: scaleX(1);
-  cursor: pointer;
-}
-
-.comment{
-  width: 1280px;
-  margin: 0 auto 20px;
-}
-.comment .el-tabs__item{
-  font-size: 16px;
-}
-.comment .pressDownButton {
-  margin-top:10px;
-  float: right;
-  width: 80px;
-  background-color: hsl(222, 100%, 95%);
-  padding: 12px 24px;
-  color: hsl(243, 80%, 62%);
-  border-radius: 6px;
-  border-bottom: 4px solid hsl(221, 89%, 85%);
-  border-top: 0px solid rgba(249, 250, 251,1);
-  transition: all 0.1s ease-in-out;
-}
-
-.comment .pressDownButton:hover {
-  border-bottom-width: 0;
-  border-top-width: 4px;
-  cursor: pointer;
-}
+@import "../assets/GoodShowPage.css";
 </style>

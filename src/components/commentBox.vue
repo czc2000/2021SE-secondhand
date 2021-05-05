@@ -39,6 +39,7 @@ export default {
 }
 .diskaform ol li, .diskameta .diskathumb {
   background-color: #FFFFFF;
+  border-radius: 8px;
   border: 1px solid #dfdfdf;
   list-style: none outside none;
   margin: 0 0 20px 35px;
@@ -49,6 +50,7 @@ export default {
 }
 .diskameta {
   background: none repeat scroll 0 0 #c9c9c9;
+  border-radius: 4px;
   height: auto;
   line-height: 37px;
   min-height: 37px;
