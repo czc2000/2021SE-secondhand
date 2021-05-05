@@ -7,8 +7,9 @@ Vue.use(Vuex)
 
 const state = {
 	Authorization: null,
-	useravatar:null,
 	login: null,
+	userid: null,
+	useravatar:null,
 	userdata: null,
 	needs: null,
 	favorites: null,
@@ -24,13 +25,17 @@ const mutations = {
 		state.Authorization=null;
 		state.useravatar=null
 		state.login=false;
+		state.userid=null,
 		window.localStorage.removeItem('Authorization');
 		window.localStorage.removeItem('useravatar');
 		window.localStorage.removeItem('userdata');
+		window.localStorage.removeItem('userid');
 	},
 	saveuserinfo(state,userdata_){
 		state.useravatar=userdata_.useravatarurl;
 		window.localStorage.setItem('useravatar',state.useravatar);
+		state.userid=userdata_.userid;
+		window.localStorage.setItem('userid',state.userid);
 		state.login=true;
 		window.localStorage.setItem('Authorization',state.Authorization);
 		state.userdata=userdata_;
@@ -49,9 +54,30 @@ const mutations = {
 	loadFromLocalStorage(state){
 		state.Authorization=window.localStorage.getItem('Authorization');
 		state.useravatar=window.localStorage.getItem('useravatar');
+		state.userid=window.localStorage.getItem('userid');
 		//从localStorage中读取对象(只在个人信息页面才需要，故取消)
 		//state.userdata=JSON.parse(window.localStorage.getItem('userdata'));
 		//调试信息 console.log('from loadFromLocalStorage\n');
+	},
+	checkAuValidity(state){
+		if(state.Authorization!=null){
+			var WhoAmI='http://123.56.42.47:10492/WhoAmI';
+			axios.get(WhoAmI,{
+				headers: {
+					'Authorization': state.Authorization
+				}
+			}).then(response => {
+				//console.log('from store_checkAuValidity:\n');
+				if(response.status==200){
+					state.login=true;
+				}
+				else{
+					state.login=false;
+					this.commit('loginout');
+				}
+				//console.log('store.state.Authorization='+state.Authorization+'\nstore.state.useravatar='+state.useravatar+'\nstore.state.login='+state.login);
+			})
+		}
 	},
 	loadUserdataFromLocalStorage(state){
 		state.userdata=JSON.parse(window.localStorage.getItem('userdata'));
@@ -73,26 +99,6 @@ const mutations = {
 				//console.log(state.favorites.length);
 			}
 		})
-	},
-	checkAuValidity(state){
-		if(state.Authorization!=null){
-			var WhoAmI='http://123.56.42.47:10492/WhoAmI';
-			axios.get(WhoAmI,{
-				headers: {
-					'Authorization': state.Authorization
-				}
-			}).then(response => {
-				//console.log('from store_checkAuValidity:\n');
-				if(!(response.data.status==-1)){
-					state.login=true;
-				}
-				else{
-					state.login=false;
-					this.commit('loginout');
-				}
-				//console.log('store.state.Authorization='+state.Authorization+'\nstore.state.useravatar='+state.useravatar+'\nstore.state.login='+state.login);
-			})
-		}
 	}
 }
 export default new Vuex.Store({

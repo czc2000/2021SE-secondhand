@@ -44,6 +44,7 @@ export default {
     height: 336px;
 		/*border-style: solid;
 		border-width: 2px;*/
+		margin: 6px;
   }
   .box{
     overflow:hidden;
