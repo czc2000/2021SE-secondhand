@@ -8,8 +8,26 @@
 						<span class="diskathumb">
 							<img :src="useravatar" alt="author"/>
 						</span>
-              <span class="diskaauthorname">{{username}}</span>
+              <span class="diskaauthorname">{{username}}
+              </span>
               <a href="#" class="diskadate">{{commenttime}}</a>
+                <span class="delete">
+                  <el-popconfirm
+                      confirm-button-text="确认"
+                      cancel-button-text="取消"
+                      icon="el-icon-info"
+                      icon-color="red"
+                      @confirm="deleteComment"
+                      title="确认要删除这条评论吗？"
+                      v-if="candelete"
+                  >
+                  <el-button type="text" slot="reference">
+                    <span class="deletetext">
+                      删除
+                    </span>
+                  </el-button>
+                </el-popconfirm>
+                </span>
             </div>
           </div>
           <div class="diskanumber">{{number}}L</div>
@@ -24,8 +42,25 @@
 
 <script>
 export default {
+  inject:['reload'],
   name: "commentBox",
-  props:['useravatar','commentcontent','commenttime','username','number']
+  props:['useravatar','commentcontent','commenttime','username','number','commentid','candelete'],
+  methods:{
+    deleteComment:function (){
+      var url='http://123.56.42.47:10492/deleteGoodComment/'+this.commentid;
+      this.axios.post(url,null,{
+        headers:{
+          'Authorization': this.$store.state.Authorization
+        }
+      }).then(response=>{
+        this.$message({
+          message: '删除评论成功',
+          type: 'success'
+        });
+        this.reload();
+      })
+    }
+  }
 }
 </script>
 
@@ -99,11 +134,23 @@ export default {
   font-weight: 700;
   line-height: 37px;
 }
-
+.delete{
+  float: right;
+  color: #919191;
+  margin-right: 10px;
+}
+.delete .deletetext{
+  font-size: 14px;
+  color: #919191;
+}
+.delete .deletetext:hover{
+  color: red;
+}
 .diskadate {
   display: inline;
   float: right;
-  font-size: 12px;
+  font-size: 13px;
+  margin-top: 1px;
   margin-right: 10px;
   text-transform: uppercase;
 }

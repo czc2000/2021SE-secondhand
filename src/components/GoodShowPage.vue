@@ -36,26 +36,17 @@
           <li v-for="(item,index) in commentlist" v-if="index<commentcount" class="infinite-list-item">
             <commentBox  :key="index" :commentcontent="item.commentcontent"
                         :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"
-                        :username="commentsendinfo[index].username" :number="index+1">
+                        :username="commentsendinfo[index].username" :number="index+1"
+                         :candelete="item.commentuserid==loginerid" :commentid="item.goodcommentid">
             </commentBox>
           </li>
         </ul>
         <div class="bouncingLoader" v-if="commentloading"><div></div></div>
         <p v-if="noMore" class="nomore">以上为全部评论</p>
-<!--          <commentBox v-for="(item,index) in commentlist" v-if="index<count" :key="index" :commentcontent="item.commentcontent"-->
-<!--                      :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"-->
-<!--                      :username="commentsendinfo[index].username" :number="index+1">-->
-<!--          </commentBox>-->
       </el-tab-pane>
       <el-tab-pane label="发表评论" name="second">
         <div class="postcomment">
         <el-input type="textarea" v-model="comment" placeholder="输入你的评论"></el-input>
-          <el-alert
-              title="成功评论"
-              type="success"
-              v-show="commentSuccess"
-          >
-          </el-alert>
           <el-alert
               title="不能发送空的评论哦"
               type="error"
@@ -69,7 +60,7 @@
     </el-tabs>
   </div>
     <div>
-      <el-backtop target=".el-main">
+      <el-backtop target=".el-main" right="80">
         <div class="pulseAnim"><i class="el-icon-top"></i></div>
       </el-backtop>
     </div>
@@ -79,6 +70,7 @@
 <script>
 import commentBox from "@/components/commentBox";
 export default {
+  inject:['reload'],
   name: "GoodShowPage",
   components:{
     commentBox
@@ -94,7 +86,6 @@ export default {
       commentsendinfo:{},
       comment:'',
       commentIsNull:false,
-      commentSuccess:false,
       activeName:'first',
       commentcount:5,
       commentloading:false
@@ -106,6 +97,9 @@ export default {
     },
     disabled () {
       return this.commentloading || this.noMore
+    },
+    loginerid(){
+      return this.$store.state.userid;
     }
   },
   created:async function() {
@@ -154,9 +148,12 @@ export default {
             goodcommentcontent:this.comment
           }
         }).then(response=>{
-          console.log(response);
           if(response.data.status==200){
-            this.commentSuccess=true;
+            this.$message({
+              message: '发布评论成功',
+              type: 'success'
+            });
+            this.reload();
           }
         })
       }else{
@@ -187,7 +184,6 @@ export default {
       this.loaded=true;
     },
     load:function (){
-      console.log(this.commentcount)
       this.commentloading=true
       setTimeout(() => {
         this.commentcount += 5
