@@ -85,13 +85,13 @@ h1{
 	bottom: -50px;
 	cursor: pointer;
 }
-.main{
+.userinfo-main{
 	position: absolute;
 	/*bottom: -70px;*/
 	left: 500px;
 	top: 25px;
 	width: 600px;
-	height: 680px;
+	height: 650px;
 	background-color: #f6ffff;
 	opacity: 0.9;
 }

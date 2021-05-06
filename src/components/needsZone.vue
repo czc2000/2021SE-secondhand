@@ -1,28 +1,28 @@
 <template>
-	<div class="goodsZoneMain">
-		<ul class="gz-leftMenu">
+	<div class="needsZoneMain">
+		<ul class="nz-leftMenu">
 			<li v-for="(item,index) in leftMenu_items" :key="index" 
 			:class="classOfMenuItem(index)" @click="turnTo(index,1)">{{item.title}}</li>
 		</ul>
-		<el-button class="lastPageButton" icon="el-icon-back" round @click="turnToLastPage">上一页</el-button>
-		<el-button class="nextPageButton" round @click="turnToNextPage">下一页<i class="el-icon-right el-icon--right"></i></el-button>
+		<el-button class="nz-lastPageButton" icon="el-icon-back" round @click="turnToLastPage">上一页</el-button>
+		<el-button class="nz-nextPageButton" round @click="turnToNextPage">下一页<i class="el-icon-right el-icon--right"></i></el-button>
 		<transition name="el-zoom-in-center">
-		<div class="goodcontainer" v-show="show">
-		      <Goodbox_goodshelf class="good" v-for="(item,index) in goodlist" :key="item.goodid"
-		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" 
-										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
-		      </Goodbox_goodshelf>
+		<div class="needcontainer" v-show="show">
+		      <needbox_needShelf class="good" v-for="(item,index) in needlist" :key="item.needid"
+		               :needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needsenderid="item.needsenderid" 
+										:needid="item.needid" :needDescription="item.needdescription">
+		      </needbox_needShelf>
 		</div>
 		</transition>
 	</div>
 </template>
 
 <script>
-import Goodbox_goodshelf from "@/components/Goodbox_goodshelf";
+import needbox_needShelf from "@/components/needbox_needShelf";
 export default {
-	name: "goodsZone",
+	name: "needsZone",
 	components:{
-		Goodbox_goodshelf,
+		needbox_needShelf,
 	}, 
 	data: function(){
 		return{
@@ -34,14 +34,14 @@ export default {
 			],
 			partFocused:null,
 			pageNow:null,
-			goodlist:[],
+			needlist:[],
 			show:true
 		}
 	},
 	computed:{
 		classOfMenuItem(){
 			return (index)=>{
-				return index==this.partFocused?"gz-leftMenu-itemFocused":"";
+				return index==this.partFocused?"nz-leftMenu-itemFocused":"";
 			}
 		}
 	},
@@ -89,21 +89,21 @@ export default {
 			this.partFocused=part;
 			this.pageNow=page;
 			part++;
-			var urlGet='http://123.56.42.47:10492/good/block';
-			var urlCheck= 'http://123.56.42.47:10492/user/isfavorite';
+			var urlGet='http://123.56.42.47:10492/need/block';
+			//var urlCheck= 'http://123.56.42.47:10492/user/isfavorite';
 			var vm=this;
 			procedure();
 			async function procedure(){
-				await vm.postChange();
+				//await vm.postChange();
 				var response=await vm.axios.get(urlGet+'/'+part+'/'+page);
 				await new Promise(function(resolve,reject){
-					vm.goodlist=response.data.goodList;
+					vm.needlist=response.data.needList;
 					resolve();
 				})
-				await new Promise(function(resolve,reject){
-					for(var i=0;i<vm.goodlist.length;i++){
+				/*await new Promise(function(resolve,reject){
+					for(var i=0;i<vm.needlist.length;i++){
 						new Promise(function(resolve,reject){
-							var temp=JSON.parse(JSON.stringify(vm.goodlist[i]));
+							var temp=JSON.parse(JSON.stringify(vm.needlist[i]));
 							temp.favorite=false;
 							temp.favoriteNow=false;
 							temp.index=i;
@@ -124,18 +124,18 @@ export default {
 						})
 					}
 					resolve();
-				})
+				})*/
 			}
 		},
 		getPageNum: function(index){
 			var urlGet='http://123.56.42.47:10492/getPageNum';
 			var vm=this;
-			this.axios.get(urlGet+'/'+index).then(function(response){
+			this.axios.post(urlGet+'/'+index).then(function(response){
 				vm.leftMenu_items[index-1].pageNum=response.data.PageNum;
 			})
 		},
 		postChange: function(){
-			if(this.$store.state.login){
+			/*if(this.$store.state.login){
 				var urlAdd='http://123.56.42.47:10492/addtoFavorite';
 				var urlCancel='http://123.56.42.47:10492/removeFavorite';
 				for(var i=0;i<this.goodlist.length;i++)
@@ -150,13 +150,13 @@ export default {
 						this.axios.post(urlCancel+'/'+this.goodlist[i].goodid,null,{
 								headers:{'Authorization':this.$store.state.Authorization}
 						})}
-				}}
+				}}*/
 		},
     removeItems: function (index) {
-      this.goodlist.splice(index, 1);
+      this.needlist.splice(index, 1);
     },
 		turnFavoriteState: function(index){
-			var temp=this.goodlist[index];
+			var temp=this.needlist[index];
 			temp.favoriteNow=!temp.favoriteNow;
 			this.$set(this.goodlist,index,temp);
 		},
@@ -181,11 +181,11 @@ export default {
 </script>
 
 <style>
-.goodsZoneMain{
+.needsZoneMain{
 	height:720px;
 	background-color: #f5f5f5;
 }
-.gz-leftMenu{
+.nz-leftMenu{
 	position: relative;
 	left: 70px;
 	top: 50px;
@@ -196,7 +196,7 @@ export default {
 	border-style: solid;
 	border-width: 2px;
 }
-.gz-leftMenu>li{
+.nz-leftMenu>li{
 	width: 100px;
 	height: 49px;
 	text-align: center;
@@ -207,40 +207,40 @@ export default {
 	border-bottom-width: 1px;
 	border-bottom-color: #dddddd;
 }
-.gz-leftMenu>li:last-child{
+.nz-leftMenu>li:last-child{
 	height: 50px;
 	border-bottom-style: none;
 }
-.gz-leftMenu>li:hover{
+.nz-leftMenu>li:hover{
 	background-color: #dff1f1;
 	font-weight: bolder;
 }
-.gz-leftMenu>li:active{
+.nz-leftMenu>li:active{
 	background-color: #dde8e8;
 	font-weight: bolder;
 	color: #4169e1;
 }
-.gz-leftMenu-itemFocused{
+.nz-leftMenu-itemFocused{
 	background-color: #dde8e8;
 	font-weight: bolder;
 	color: #4169e1;
 }
-.good{
+.need{
   float: left;
   margin: 25px 12px;
 }
-.goodcontainer{
+.needcontainer{
   margin-left: 120px;
 	position: relative;
 	left: 100px;
 	top: -230px;
 }
-.lastPageButton{
+.nz-lastPageButton{
 	position: relative;
 	left: -580px;
 	top: 80px;
 }
-.nextPageButton{
+.nz-nextPageButton{
 	position: relative;
 	left: -700px;
 	top: 150px;

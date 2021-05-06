@@ -1,6 +1,6 @@
 <template>
   <div class="background_userinfo">
-		<div class="main">
+		<div class="userinfo-main">
 			<ul class="menu1">
 				<li @click="modeTo('info')" :style="isChoosen('info')">资料</li>
 				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>

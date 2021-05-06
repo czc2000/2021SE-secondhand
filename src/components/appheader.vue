@@ -21,7 +21,7 @@
             </ol>
           </li>
           <li>
-            <div class="header flex " ><div class="borderLeftRight">需求区</div></div>
+            <div class="header flex " @click="needsClick"><div class="borderLeftRight">需求区</div></div>
           </li>
           <li>
             <div class="header flex " @click="goodsClick"><div class="borderLeftRight">购买区</div></div>
@@ -50,28 +50,6 @@ export default {
     }
   },
   created:function (){
-		/*if(this.$store.state.Authorization==null){
-			this.$store.commit('loadFromLocalStorage');
-		}
-    if(this.$store.state.Authorization!=null) {
-      var url = 'http://123.56.42.47:10492/WhoAmI'
-      this.axios.get(url, {
-        headers: {
-          'Authorization': this.$store.state.Authorization
-        }
-      }).then(response => {
-				if(!(response.data.status == -1))
-				{
-					this.loginstate=true;
-					this.avatarurl=this.$store.state.useravatar;
-					//console.log("logininfo:\nlogin?:"+this.loginstate+"\nthis.token:"+this.$store.state.Authorization+"\nthis.avatarurl:"+this.avatarurl+"\nthis.$store.state.useravatar"+this.$store.state.useravatar);
-				}
-				else{
-					this.$store.commit('loginout');
-					this.loginstate=false;
-				}
-      })
-    }*/
   },
   computed:{
     getUseravatar(){
@@ -90,6 +68,9 @@ export default {
     },
 		goodsClick:function(){
 			this.$router.push('/goods');
+		},
+		needsClick:function(){
+			this.$router.push('/needs');
 		},
     loginClick:function () {
       this.$router.push('/login');
