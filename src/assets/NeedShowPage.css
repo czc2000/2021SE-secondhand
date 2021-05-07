@@ -1,14 +1,15 @@
-.goodinfo{
+.needinfo{
     margin: 50px auto;
     width: 1280px;
     height: 480px;
 }
-.preview{
+.needinfo .preview{
     float: left;
     padding:0 50px;
 }
-.preview img{
+.needinfo .preview img{
     width: 350px;
+    height: 350px;
 }
 .previewbottom p{
     float: right;
@@ -26,7 +27,7 @@
     border-radius: 5px;
     text-align: left;
 }
-.iteminfo .goodtitle{
+.iteminfo .needtitle{
     font:700 16px Arial,"microsoft yahei";
     color: #666;
     text-align: left;
@@ -128,7 +129,7 @@
     cursor: pointer;
 }
 .horizontalOverlay2::before {
-    content: '联系卖家';
+    content: '发送消息';
     padding: 12px 30px;
     display: block;
     position: absolute;

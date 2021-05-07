@@ -29,20 +29,25 @@
       </div>
     </div>
   </div>
-  <div class="comment">
+  <div class="comment" :style="commentboxheight">
     <el-tabs v-model="activeName" type="border-card" >
       <el-tab-pane label="评论区" name="first">
         <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto" infinite-scroll-disabled="disabled">
           <li v-for="(item,index) in commentlist" v-if="index<commentcount" class="infinite-list-item">
-            <commentBox  :key="index" :commentcontent="item.commentcontent"
+            <commentBox  :key="index" commenttype="good" :commentcontent="item.commentcontent"
                         :commenttime="item.commenttime" :useravatar="commentsendinfo[index].useravatarurl"
                         :username="commentsendinfo[index].username" :number="index+1"
                          :candelete="item.commentuserid==loginerid" :commentid="item.goodcommentid">
             </commentBox>
           </li>
         </ul>
+        <div v-if="!noMore&&!commentloading" class="arrowBounce">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="20">
+          <path d="M7.5 0a.5.5 0 01.5.5v16.17l4.44-4.45a.5.5 0 01.71 0l.7.71a.5.5 0 010 .71l-6.13 6.14a.75.75 0 01-.53.22h-.38a.77.77 0 01-.53-.22L.15 13.64a.5.5 0 010-.71l.7-.71a.49.49 0 01.7 0L6 16.67V.5a.5.5 0 01.5-.5z">
+          </path>
+          </svg>
+        </div>
         <div class="bouncingLoader" v-if="commentloading"><div></div></div>
-        <p v-if="noMore" class="nomore">以上为全部评论</p>
       </el-tab-pane>
       <el-tab-pane label="发表评论" name="second">
         <div class="postcomment">
@@ -60,7 +65,7 @@
     </el-tabs>
   </div>
     <div>
-      <el-backtop target=".el-main" right="80">
+      <el-backtop target=".el-main" :right="80">
         <div class="pulseAnim"><i class="el-icon-top"></i></div>
       </el-backtop>
     </div>
@@ -88,12 +93,13 @@ export default {
       commentIsNull:false,
       activeName:'first',
       commentcount:5,
-      commentloading:false
+      commentloading:false,
+      commentboxheight:'--height:'
     }
   },
   computed: {
     noMore () {
-      return this.commentcount >this.commentlist.length
+      return this.commentcount >=this.commentlist.length
     },
     disabled () {
       return this.commentloading || this.noMore
@@ -130,7 +136,7 @@ export default {
     },
   methods:{
     sendComment:function (){
-      if(this.$store.state.login==false){
+      if(!this.$store.state.login){
         this.$alert('登录之后才可以进行评论哦', '未登录', {
           confirmButtonText: '确定',
           center:true,
@@ -181,6 +187,11 @@ export default {
           console.log(reason)
         })
       }
+      this.commentcount=this.commentlist.length>5?5:this.commentlist.length;
+      var length=this.commentcount*120+80;
+      if(length>680)
+        length=680;
+      this.commentboxheight=this.commentboxheight+length+'px'
       this.loaded=true;
     },
     load:function (){
@@ -196,4 +207,10 @@ export default {
 
 <style>
 @import "../assets/GoodShowPage.css";
+.comment {
+  --height: 100px;
+}
+.comment .infinite-list{
+  height: var(--height);
+}
 </style>
