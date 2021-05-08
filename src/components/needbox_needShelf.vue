@@ -1,8 +1,8 @@
 <template>
 	<transition name="el-zoom-in-center">
 		<div class="needbox">
-			<img :src="needpicurl" alt="我的图图呢">
-			<p class="needname">{{needname}}</p>
+			<img :src="needpicurl" alt="我的图图呢" @click="toShowPage">
+			<p class="needname" @click="toShowPage">{{needname}}</p>
 			<p class="needDescription">{{needDescription}}</p>
 		</div>
 	</transition>
@@ -16,7 +16,12 @@ export default{
 		return{
 			
 		}
-	}
+	},
+	methods:{
+	  toShowPage:function (){
+      this.$router.push({path:'/needinfo',query:{needid:this.needid}})
+    }
+  }
 }
 </script>
 

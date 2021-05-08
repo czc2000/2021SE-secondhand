@@ -12,6 +12,7 @@ import { Message } from 'element-ui';
 import goodsZone from "@/components/goodsZone";
 import GoodShowPage from "@/components/GoodShowPage";
 import needsZone from "@/components/needsZone"
+import NeedShowPage from "@/components/NeedShowPage";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -51,18 +52,24 @@ const routes=[
             requireAuth: true
         }
     },
-		{
-				path: '/goods',
-				component: goodsZone
-		},
+    {
+        path: '/goods',
+        component: goodsZone
+    },
+
     {
         path: '/goodinfo',
         component: GoodShowPage,
     },
-		{
-				path: '/needs',
-				component: needsZone
-		}
+
+    {
+        path: '/needs',
+        component: needsZone
+    },
+    {
+        path:'/needinfo',
+        component: NeedShowPage
+    }
 ]
 const vueRouter = new VueRouter({
     routes,

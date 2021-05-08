@@ -42,12 +42,16 @@
 
 <script>
 export default {
-  inject:['reload'],
+  inject: ['reload'],
   name: "commentBox",
-  props:['useravatar','commentcontent','commenttime','username','number','commentid','candelete'],
-  methods:{
-    deleteComment:function (){
-      var url='http://123.56.42.47:10492/deleteGoodComment/'+this.commentid;
+  props: ['useravatar', 'commentcontent', 'commenttime', 'username', 'number', 'commentid', 'candelete', 'commenttype'],
+  methods: {
+    deleteComment: function () {
+      if (this.commenttype == 'good') {
+        var url = 'http://123.56.42.47:10492/deleteGoodComment/' + this.commentid;
+      } else if (this.commenttype == 'need') {
+        var url = 'http://123.56.42.47:10492/deleteNeedComment/' + this.commentid;
+      }
       this.axios.post(url,null,{
         headers:{
           'Authorization': this.$store.state.Authorization
