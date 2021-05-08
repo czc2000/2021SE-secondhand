@@ -4,6 +4,7 @@
       <appheader></appheader>
     </el-header>
     <el-main>
+		<message-part v-show="this.$store.state.messageShow"></message-part>
     <router-view v-if="isRouterAlive"></router-view>
     </el-main>
   </el-container>
@@ -11,9 +12,11 @@
 
 <script>
 import appheader from "@/components/appheader";
+import messagePart from "@/components/messagePart"
 export default {
   components:{
-    appheader
+    appheader,
+		messagePart
   },
   provide () {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
     return {

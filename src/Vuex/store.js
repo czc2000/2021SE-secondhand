@@ -16,7 +16,11 @@ const state = {
 	receivedintentions: null,
 	goods: null,
 	intentions: null,
-	pwd:null
+	pwd:null,
+	unreadList:[],
+	timer:null,
+	loadDone:false,
+	messageShow:false,
 }
 const mutations = {
 	saveAu(state,Au) {
@@ -78,10 +82,13 @@ const mutations = {
 				//console.log('from store_checkAuValidity:\n');
 				if(typeof(response.data.WhoAmI.userid)!="undefined"){
 					state.login=true;
+					state.timer=setInterval(this.commit('checkMessage'),5000);
 				}
 				else{
 					state.login=false;
 					this.commit('loginout');
+					clearInterval(state.timer);
+					state.loadDone=false;
 				}
 				//console.log('store.state.Authorization='+state.Authorization+'\nstore.state.useravatar='+state.useravatar+'\nstore.state.login='+state.login);
 			})
@@ -107,6 +114,22 @@ const mutations = {
 				//console.log(state.favorites.length);
 			}
 		})
+	},
+	checkMessage(state){
+			var url="http://123.56.42.47:10492/getUnreadMsg"
+			axios.get(url,{
+				params:{credentials:{},details:{},principal:{}},
+				headers:{'Authorization':state.Authorization}
+			}).then((response)=>{
+				state.unreadList=response.data.msgList
+				state.loadDone=true
+			})
+	},
+	showMessage(state){
+		state.messageShow=true;
+	},
+	hideMessage(state){
+		state.messageShow=false;
 	}
 }
 export default new Vuex.Store({

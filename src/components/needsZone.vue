@@ -8,7 +8,7 @@
 		<el-button class="nz-nextPageButton" round @click="turnToNextPage">下一页<i class="el-icon-right el-icon--right"></i></el-button>
 		<transition name="el-zoom-in-center">
 		<div class="needcontainer" v-show="show">
-		      <needbox_needShelf class="good" v-for="(item,index) in needlist" :key="item.needid"
+		      <needbox_needShelf class="need" v-for="(item,index) in needlist" :key="item.needid"
 		               :needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needsenderid="item.needsenderid" 
 										:needid="item.needid" :needDescription="item.needdescription">
 		      </needbox_needShelf>
@@ -53,7 +53,7 @@ export default {
 			async function last_(){
 				await vm.getPageNum(vm.partFocused+1);
 				await new Promise(function(resolve,reject){
-					if(vm.pageNow==1)
+					if(vm.pageNow<=1)
 						vm.$message({message: '已经是第一页了'});
 					else if(vm.pageNow>vm.leftMenu_items[vm.partFocused]+1)
 						vm.$message({message: '页码出错'});
@@ -72,7 +72,7 @@ export default {
 					console.log(vm.pageNow+' '+vm.leftMenu_items[vm.partFocused].pageNum);
 					if(vm.pageNow<0)
 						vm.$message({message: '页码出错'});
-					else if(vm.pageNow==vm.leftMenu_items[vm.partFocused].pageNum)
+					else if(vm.pageNow>=vm.leftMenu_items[vm.partFocused].pageNum)
 						vm.$message({message: '已经是最后一页了'});
 					else vm.turnTo(vm.partFocused,vm.pageNow+1);
 					resolve();
@@ -227,7 +227,7 @@ export default {
 }
 .need{
   float: left;
-  margin: 25px 12px;
+  margin: 5px 5px;
 }
 .needcontainer{
   margin-left: 120px;

@@ -71,12 +71,18 @@ a {
     float: right;
     left:63%
 }
+.messagebutton{
+	line-height: 70px;
+	position: absolute;
+	float: right;
+	left:85%;
+}
 .navbar .nav {
     width: 600px;
     height: 100%;
     /* 让元素自动水平居中 */
     position: absolute;
-    left:67.5%;
+    left:5%;
 }
 .navbar .nav ul {
     /* 相对定位 */
@@ -161,20 +167,41 @@ a {
     /* 各位小伙伴可能对着属性比较陌生 我简单说一下这句话如何生成了三角形 这个属性可以绘制图案 polygon这个属性只需要提供最少三个点 就可以将三个点连接到一起 然后绘制一个图案  两个点的坐标位置(x,y) 0 100% 这个点就是说在x轴上为0px 在y轴是100% 就是盒子的高度 x轴的方向是向右 y轴的方向是向下 那么我们设置了三个点 然后将三个点连起来刚好绘制出一个三角形 不明白的小伙伴可以在纸上画一下 画出来就理解了 */
     clip-path: polygon(0 100%, 50% 0, 100% 100%);
 }
+.navbar .nav ul > li:nth-child(1):hover ~ .underline {
+    left: -10px;
+    background-color: hsl(243, 80%, 62%);
+}
 .navbar .nav ul > li:nth-child(2):hover ~ .underline {
-    left: 120px;
+    left: 90px;
     background-color: hsl(243, 80%, 62%);
 }
 /* 重复以上操作 */
 .navbar .nav ul > li:nth-child(3):hover ~ .underline {
-    left: 240px;
+    left: 190px;
     background-color: hsl(243, 80%, 62%);
 }
 .navbar .nav ul > li:nth-child(4):hover ~ .underline {
-    left: 360px;
+    left: 290px;
     background-color: hsl(243, 80%, 62%);
 }
-.navbar .nav ul > li:nth-child(5):hover ~ .underline {
-    left: 480px;
+/*.navbar .nav ul > li:nth-child(5):hover ~ .underline {
+    left: 1280px;
     background-color: hsl(243, 80%, 62%);
+}*/
+.navbar .nav ul > li:nth-child(5) {
+		position: relative;
+		left: 800px;
+}
+.unreadNum{
+	position: relative;
+	top: -60px;
+	left: 20px;
+	color: white;
+	text-align: center;
+	font-size: 10px;
+	line-height: 15px;
+	height: 15px;
+	width: 15px;
+	border-radius: 7.5px;
+	background-color: red;
 }

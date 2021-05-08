@@ -64,11 +64,13 @@ export default {
 				{
 					if(!this.goodlist[i].favorite&&this.goodlist[i].favoriteNow){
 						//console.log('add '+this.goodlist[i].goodid);
+						this.goodlist[i].favorite=true;
 						this.axios.post(urlAdd+'/'+this.goodlist[i].goodid,null,{
 								headers:{'Authorization':this.$store.state.Authorization}
 						})}
 					else if(this.goodlist[i].favorite&&!this.goodlist[i].favoriteNow){
 						//console.log('cancel '+this.goodlist[i].goodid);
+						this.goodlist[i].favorite=false;
 						this.axios.post(urlCancel+'/'+this.goodlist[i].goodid,null,{
 								headers:{'Authorization':this.$store.state.Authorization}
 						})}
