@@ -24,9 +24,11 @@
           </li>
           <li>
             <div class="header flex " @click="testClick"><div class="borderLeftRight">测试</div></div>
+						<ol>
+							<li><a href="javascript:;" @click="needTestClick">测试2</a></li>
+						</ol>
           </li>
           <li>
-<<<<<<< HEAD
             <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
             <ol>
               <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
@@ -36,12 +38,6 @@
               <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
               <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
 						</ol>
-=======
-            <div class="header flex " @click="testClick"><div class="borderLeftRight">测试</div></div>
-            <ol>
-              <li><a href="javascript:;" @click="needTestClick">测试2</a></li>
-            </ol>
->>>>>>> e8b3e962def83b56faf8ab351abe4cc2a16acaf1
           </li>
           <!-- 这个元素来定义滑动的线条 -->
           <li class="underline"></li>
@@ -107,16 +103,13 @@ export default {
     testClick:function (){
       this.$router.push({path:'/goodinfo',query:{goodid:200}});
     },
-<<<<<<< HEAD
 		messageClick:function(){
 			if(!this.$store.state.messageShow) this.$store.commit('showMessage');
 			else if(this.$store.state.messageShow) this.$store.commit('hideMessage');
 		},
-=======
     needTestClick:function (){
       this.$router.push({path:'/needinfo',query:{needid:9}});
     },
->>>>>>> e8b3e962def83b56faf8ab351abe4cc2a16acaf1
     loginout:function (){
       this.$confirm('确定要退出登录吗？', '退出登录', {
         confirmButtonText: '确定',

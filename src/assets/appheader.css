@@ -168,20 +168,20 @@ a {
     clip-path: polygon(0 100%, 50% 0, 100% 100%);
 }
 .navbar .nav ul > li:nth-child(1):hover ~ .underline {
-    left: -10px;
+    left: 0px;
     background-color: hsl(243, 80%, 62%);
 }
 .navbar .nav ul > li:nth-child(2):hover ~ .underline {
-    left: 90px;
+    left: 120px;
     background-color: hsl(243, 80%, 62%);
 }
 /* 重复以上操作 */
 .navbar .nav ul > li:nth-child(3):hover ~ .underline {
-    left: 190px;
+    left: 240px;
     background-color: hsl(243, 80%, 62%);
 }
 .navbar .nav ul > li:nth-child(4):hover ~ .underline {
-    left: 290px;
+    left: 360px;
     background-color: hsl(243, 80%, 62%);
 }
 /*.navbar .nav ul > li:nth-child(5):hover ~ .underline {
