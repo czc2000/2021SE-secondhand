@@ -14,7 +14,10 @@
     position: relative;
     color: hsl(222, 25%, 14%);
 }
-
+.home .borderLeftRight{
+    color: white;
+    font-weight: 600;
+}
 .borderLeftRight::after {
     content: '';
     position: absolute;
@@ -27,16 +30,20 @@
     transform-origin: bottom right;
     transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
 }
+.home .borderLeftRight::after{
+    background-color: white;
+}
 
 .borderLeftRight:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
 }
 .circleImg{
-    margin-top: 5px;
+    margin-top: 10px;
     border-radius: 25px;
     width:50px;
     height:50px;
+    background: white;
 }
 .circleImg:hover{
     cursor: pointer;
@@ -54,9 +61,17 @@ a {
     width: 100%;
     height: 70px;
     position: relative;
-    background-color: rgba(	248,248,255,0.9);
+    background-color: rgba(	255,255,255,0.9);
     /* 盒子阴影 */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.home{
+    z-index:999;
+    background-color: rgba(	255,255,255,0);
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0.3);
+}
+.movingimage{
+    top:0;
 }
 .search{
     line-height: 70px;
@@ -72,7 +87,7 @@ a {
     left:63%
 }
 .navbar .nav {
-    width: 600px;
+    width: 32.5%;
     height: 100%;
     /* 让元素自动水平居中 */
     position: absolute;
@@ -132,13 +147,13 @@ a {
 .navbar .nav ul .underline {
     /* 绝对定位 */
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
-    width: 120px;
+    width: 20%;
     height: 6px;
     /* 设置一下盒子的左上角和右上角的圆角 */
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
     background-color: hsl(243, 80%, 62%);
     /* 加过渡 */
     transition: all 0.5s;
@@ -151,7 +166,7 @@ a {
     content: "";
     /* 利用::before伪元素设置三角 */
     position: absolute;
-    top: -10px;
+    bottom: -10px;
     /* calc方法自动计算数值 让盒子居中 */
     left: calc(50% - 9px);
     width: 18px;
@@ -159,22 +174,25 @@ a {
     /* inherit可以继承父元素的属性值 */
     background-color: inherit;
     /* 各位小伙伴可能对着属性比较陌生 我简单说一下这句话如何生成了三角形 这个属性可以绘制图案 polygon这个属性只需要提供最少三个点 就可以将三个点连接到一起 然后绘制一个图案  两个点的坐标位置(x,y) 0 100% 这个点就是说在x轴上为0px 在y轴是100% 就是盒子的高度 x轴的方向是向右 y轴的方向是向下 那么我们设置了三个点 然后将三个点连起来刚好绘制出一个三角形 不明白的小伙伴可以在纸上画一下 画出来就理解了 */
-    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    clip-path: polygon(10% 0, 50% 90%, 90% 0);
 }
 .navbar .nav ul > li:nth-child(2):hover ~ .underline {
-    left: 120px;
+    left: 20%;
     background-color: hsl(243, 80%, 62%);
 }
 /* 重复以上操作 */
 .navbar .nav ul > li:nth-child(3):hover ~ .underline {
-    left: 240px;
+    left: 40%;
     background-color: hsl(243, 80%, 62%);
 }
 .navbar .nav ul > li:nth-child(4):hover ~ .underline {
-    left: 360px;
+    left: 60%;
     background-color: hsl(243, 80%, 62%);
 }
 .navbar .nav ul > li:nth-child(5):hover ~ .underline {
-    left: 480px;
+    left: 80%;
     background-color: hsl(243, 80%, 62%);
+}
+.home .nav ul .underline{
+    display: none;
 }

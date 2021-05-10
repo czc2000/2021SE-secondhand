@@ -41,7 +41,7 @@
             </commentBox>
           </li>
         </ul>
-        <div v-if="!noMore&&!commentloading" class="arrowBounce">
+        <div v-if="!noMore&&!commentloading" class="arrowBounce" @click="load">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="20">
           <path d="M7.5 0a.5.5 0 01.5.5v16.17l4.44-4.45a.5.5 0 01.71 0l.7.71a.5.5 0 010 .71l-6.13 6.14a.75.75 0 01-.53.22h-.38a.77.77 0 01-.53-.22L.15 13.64a.5.5 0 010-.71l.7-.71a.49.49 0 01.7 0L6 16.67V.5a.5.5 0 01.5-.5z">
           </path>
@@ -174,6 +174,7 @@ export default {
       var that=this
       await that.axios.get(url).then(response=>{
         that.commentlist=response.data.CommentList;
+        console.log(this.commentlist)
       })
       for(var i=0;i<this.commentlist.length;i++){
         if (this.commentlist[i].commenttime!=null){

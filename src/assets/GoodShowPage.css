@@ -249,6 +249,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     fill: #409EFF;
+    cursor: pointer;
 }
 
 @keyframes bounce {
