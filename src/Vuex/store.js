@@ -9,6 +9,7 @@ const state = {
 	Authorization: null,
 	login: null,
 	userid: null,
+	username: null,
 	useravatar:null,
 	userdata: null,
 	needs: null,
@@ -17,10 +18,9 @@ const state = {
 	goods: null,
 	intentions: null,
 	pwd:null,
-	unreadList:[],
-	timer:null,
-	loadDone:false,
+	unreadNum:0,
 	messageShow:false,
+	loadDone:false,
 }
 const mutations = {
 	saveAu(state,Au) {
@@ -36,11 +36,13 @@ const mutations = {
 		state.useravatar=null
 		state.login=false;
 		state.userid=null,
+		state.username=null,
 		state.pwd=null,
 		window.localStorage.removeItem('Authorization');
 		window.localStorage.removeItem('useravatar');
 		window.localStorage.removeItem('userdata');
 		window.localStorage.removeItem('userid');
+		window.localStorage.removeItem('username');
 		window.localStorage.removeItem('pwd');
 	},
 	saveuserinfo(state,userdata_){
@@ -48,6 +50,8 @@ const mutations = {
 		window.localStorage.setItem('useravatar',state.useravatar);
 		state.userid=userdata_.userid;
 		window.localStorage.setItem('userid',state.userid);
+		state.username=userdata_.username;
+		window.localStorage.setItem('userid',state.username);
 		state.login=true;
 		state.userdata=userdata_;
 		//向localStorage中存放对象
@@ -66,6 +70,7 @@ const mutations = {
 		state.Authorization=window.localStorage.getItem('Authorization');
 		state.useravatar=window.localStorage.getItem('useravatar');
 		state.userid=window.localStorage.getItem('userid');
+		state.username=window.localStorage.getItem('username');
 		state.pwd=window.localStorage.getItem('pwd');
 		//从localStorage中读取对象(只在个人信息页面才需要，故取消)
 		//state.userdata=JSON.parse(window.localStorage.getItem('userdata'));
@@ -82,14 +87,12 @@ const mutations = {
 				//console.log('from store_checkAuValidity:\n');
 				if(typeof(response.data.WhoAmI.userid)!="undefined"){
 					state.login=true;
-					state.timer=setInterval(this.commit('checkMessage'),5000);
 				}
 				else{
 					state.login=false;
 					this.commit('loginout');
-					clearInterval(state.timer);
-					state.loadDone=false;
 				}
+				state.loadDone=true;
 				//console.log('store.state.Authorization='+state.Authorization+'\nstore.state.useravatar='+state.useravatar+'\nstore.state.login='+state.login);
 			})
 		}
@@ -115,21 +118,14 @@ const mutations = {
 			}
 		})
 	},
-	checkMessage(state){
-			var url="http://123.56.42.47:10492/getUnreadMsg"
-			axios.get(url,{
-				params:{credentials:{},details:{},principal:{}},
-				headers:{'Authorization':state.Authorization}
-			}).then((response)=>{
-				state.unreadList=response.data.msgList
-				state.loadDone=true
-			})
-	},
 	showMessage(state){
 		state.messageShow=true;
 	},
 	hideMessage(state){
 		state.messageShow=false;
+	},
+	changeUnreadNum(state,num){
+		state.unreadNum=num;
 	}
 }
 export default new Vuex.Store({

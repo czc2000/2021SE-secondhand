@@ -9,7 +9,7 @@
       </div>
       <div class="messagebutton">
         <el-button class="headerButton" type="primary" circle size="medium" v-show="getloginstate" @click='messageClick'><i class="el-icon-chat-dot-round"></i></el-button>
-				<div class=unreadNum v-show="unreadNum!=0">{{unreadNum}}</div>
+				<div class="unreadNum" v-show="unreadNum!=0">{{unreadNum}}</div>
 			</div>
       <div class="nav">
         <ul>
@@ -67,7 +67,7 @@ export default {
       return this.$store.state.login
     },
 		unreadNum(){
-			return this.$store.state.unreadList.length
+			return this.$store.state.unreadNum
 		}
   },
 	watch:{
