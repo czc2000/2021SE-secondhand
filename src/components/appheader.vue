@@ -7,18 +7,14 @@
       <div class="searchbutton">
         <el-button class="headerButton" type="primary" circle size="medium"><i class="el-icon-search"></i></el-button>
       </div>
+      <div class="messagebutton">
+        <el-button class="headerButton" type="primary" circle size="medium" v-show="getloginstate" @click='messageClick'><i class="el-icon-chat-dot-round"></i></el-button>
+				<div class=unreadNum v-show="unreadNum!=0">{{unreadNum}}</div>
+			</div>
       <div class="nav">
         <ul>
           <li>
-            <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
-            <ol>
-              <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
-              <li v-show="!getloginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
-            </ol>
+            <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
           </li>
           <li>
             <div class="header flex " @click="needsClick"><div class="borderLeftRight">需求区</div></div>
@@ -27,10 +23,13 @@
             <div class="header flex " @click="goodsClick"><div class="borderLeftRight">购买区</div></div>
           </li>
           <li>
-            <div class="header flex " @click="homeClick"><div class="borderLeftRight"><i class="el-icon-s-home"></i>首页</div></div>
+            <div class="header flex " @click="testClick"><div class="borderLeftRight">测试</div></div>
+						<ol>
+							<li><a href="javascript:;" @click="needTestClick">测试2</a></li>
+						</ol>
           </li>
           <li>
-            <div class="header flex " @click="testClick"><div class="borderLeftRight">测试</div></div>
+            <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
             <ol>
               <li><a href="javascript:;" @click="needTestClick">测试2</a></li>
               <li><a href="javascript:;" @click="moduleTest">单元测试</a></li>
@@ -55,11 +54,12 @@ export default {
   data:function (){
     return{
       activeIndex:"2",
-      searchkey:''
+      searchkey:'',
     }
   },
-  created:function (){
-  },
+	created:function(){
+		console.log('appheader created')
+	},
   computed:{
     getUseravatar(){
       return this.$store.state.useravatar?this.$store.state.useravatar:require('../assets/unlogin.png');
@@ -69,8 +69,13 @@ export default {
     },
     getPath(){
       return this.$route.path
-    }
+    },
+		unreadNum(){
+			return this.$store.state.unreadList.length
+		}
   },
+	watch:{
+	},
   methods:{
     removeItems:function (index) {
       this.goodlist.splice(index, 1);
@@ -102,6 +107,10 @@ export default {
     testClick:function (){
       this.$router.push({path:'/goodinfo',query:{goodid:200}});
     },
+		messageClick:function(){
+			if(!this.$store.state.messageShow) this.$store.commit('showMessage');
+			else if(this.$store.state.messageShow) this.$store.commit('hideMessage');
+		},
     needTestClick:function (){
       this.$router.push({path:'/needinfo',query:{needid:9}});
     },

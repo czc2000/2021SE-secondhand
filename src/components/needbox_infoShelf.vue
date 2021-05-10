@@ -1,59 +1,53 @@
 <template>
 	<transition name="el-zoom-in-center">
-		<div class="needbox">
-			<img :src="needpicurl" alt="我的图图呢" @click="toShowPage">
-			<p class="needname" @click="toShowPage">{{needname}}</p>
-			<p class="needDescription">{{needDescription}}</p>
+		<div v-show="show" class="needbox_">
+			<img :src="needpicurl" alt="我的图图呢">
+			<p class="needname_">{{needname}}</p>
+			<p class="needDescription_">{{needDescription}}</p>
+			<el-button type="danger" icon="el-icon-delete" size='mini' circle @click="$emit('deleteNeed');show=!show"></el-button>
 		</div>
 	</transition>
 </template>
 
 <script>
 export default{
-	name: "needbox_needShelf",
+	name: "needbox_infoShelf",
 	props: ['needpicurl','needname','needDescription','needid','needsenderid'],
 	data: function(){
 		return{
-			
+			show:true
 		}
-	},
-	methods:{
-	  toShowPage:function (){
-      this.$router.push({path:'/needinfo',query:{needid:this.needid}})
-    }
-  }
+	}
 }
 </script>
 
 <style>
-.needbox{
+.needbox_{
 	overflow: hidden;
-	width: 220px;
-	height: 325px;
+	width: 172px;
+	height: 254px;
 	padding: 5px;
-	border-radius: 5px;
+	border-radius: 8px;
 	background-color: #fff;
 	border-style: solid;
 	border-width: 3px;
-	border-color: #f5f5f5;
-	margin: 0;
+	border-color: #ffffff;
+	margin: 6px;
 }
-.needbox:hover{
+.needbox_:hover{
 	border:3px solid darkorange;
 	box-shadow:  0 6px 12px 0 rgba(0, 0, 0, 0.1);
 }
-.needbox img{
-	width: 220px;
-	height: 220px;
+.needbox_ img{
+	width: 160px;
+	height: 160px;
 	cursor: pointer;
-	/*border-style: solid;
-	border-width: 2px;*/
 }
-.needname{
+.needname_{
 	position: relative;
-	top: -30px;
-	height: 56px;
-	font-size:20px;
+	top: -35px;
+	height: 37px;
+	font-size:15px;
 	color: RoyalBlue;
 	margin-top: 30px;
 	overflow: hidden;/* 超出的文本隐藏 */
@@ -69,15 +63,15 @@ export default{
 	margin: 12px 0px;
 	text-align: left;
 }
-.needDescription{
+.needDescription_{
 	position: relative;
-	top: -17px;
+	top: -37px;
 	font-size: 14px;
-	height: 20px;
+	height: 30px;
 	width: 130px;
 	text-align: left;
 }
-.needbox .el-button{
+.needbox_ .el-button{
 	position: relative;
 	top: -40px;
 	left: 50px;

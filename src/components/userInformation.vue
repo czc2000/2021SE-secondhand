@@ -55,16 +55,23 @@
 			</div>
 			<div class="favorite" v-show="isMode('favorite')">
 				<el-divider class="favorite-divider1"></el-divider>
+				<el-divider class="favorite-divider2"></el-divider>
 				<div class="favorite-goodContainer">
 					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.favorites" :key="item.goodid"
 						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
 						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="recordCancel(item.goodid)">
 					</Goodbox_favoriteshelf>
 				</div>
-				<!--<el-divider></el-divider>-->
 			</div>
 			<div class="demand" v-show="isMode('demand')">
-				<p>demand</p>
+				<el-divider class="demand-divider1"></el-divider>
+				<el-divider class="demand-divider2"></el-divider>
+				<div class="demand-needContainer">
+					<needbox_infoShelf class="needs" v-for="(item,index) in this.$store.state.needs" :key="item.needid"
+						:needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needid="item.needid"
+						:needsenderid="item.needsenderid" :needDescription="item.needdescription" @deleteNeed="recordDelete(item.needid)">
+					</needbox_infoShelf>
+				</div>
 			</div>
 		</div>
   </div>
@@ -73,11 +80,13 @@
 <script>
 import profileUpload from "@/components/profileUpload";
 import Goodbox_favoriteshelf from "@/components/Goodbox_favoriteshelf";
+import needbox_infoShelf from "@/components/needbox_infoShelf";
 export default {
   name: "userInformation",
   components:{
     profileUpload,
 		Goodbox_favoriteshelf,
+		needbox_infoShelf
   },
   data:function () {
     var validatemail = (rule, value, callback) => {
@@ -189,6 +198,20 @@ export default {
 		 this.$message(
 			{
 				message: '取消收藏成功',
+				type: 'success',
+				offset: 50
+			});
+		},
+		recordDelete:function(needid){
+			var url='http://123.56.42.47:10492/deleteNeed';
+			this.axios.post(url+'/'+needid,null,{
+					headers:{
+						'Authorization':this.$store.state.Authorization
+					}
+				})
+		 this.$message(
+			{
+				message: '删除需求成功',
 				type: 'success',
 				offset: 50
 			});

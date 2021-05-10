@@ -231,7 +231,11 @@ h1{
 }
 .favorite-divider1{
 	position: relative;
-	top: 40px;
+	top: 50px;
+}
+.favorite-divider2{
+	position: relative;
+	top: 620px;
 }
 .info-edit{
 	position: relative;
@@ -270,4 +274,26 @@ h1{
 	height: 500px;
 	left: -20px;
 	top: -290px;
+}
+.demand-needContainer{
+	position: relative;
+	top: 50px;
+	left: 5px;
+	height: 570px;
+	overflow: scroll;
+}
+.needs{
+	float: left;
+}
+.demand-needContainer::-webkit-scrollbar {
+/*隐藏滚轮*/
+	display: none;
+}
+.demand-divider1{
+	position: relative;
+	top: 40px;
+}
+.demand-divider2{
+	position: relative;
+	top: 610px;
 }
