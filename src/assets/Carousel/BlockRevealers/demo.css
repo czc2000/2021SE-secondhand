@@ -1,0 +1,117 @@
+/* Content */
+.CarouselItem{
+	width: 960px;
+	height: 480px;
+	position: relative;
+	background-color: #e2f3f5;
+	margin:0 auto;
+	z-index: 1;
+}
+h2{
+	margin: 0;
+}
+.content__title__inner {
+	font-size: 42px;
+	line-height: 1.2;
+	font-weight: 400;
+	color: #0e153a;
+	display: inline-block;
+	position: absolute;
+	top:2.5em;
+	left: 1.5em;
+	z-index: 1;
+}
+.content__title__inner--offset-img1{
+	float: right;
+	position: absolute;
+	top:0;
+	right: 0;
+	height: 480px;
+	z-index: 0;
+}
+.content__title__inner--offset-img1 img{
+	height: 480px;
+	max-width: 550px;
+}
+.content__title__inner--button{
+	position: absolute;
+	top:19em;
+	left:5em;
+}
+.content__title__inner--offset-1 {
+	display: inline-block;
+	font-size: 50px;
+	line-height: 1.2;
+	font-weight: 400;
+	color: #0e153a;
+	position: absolute;
+	top:4em;
+	left: 1em;
+	z-index: 1;
+
+}
+
+.content__title__inner--offset-2 {
+	top: -0.25em;
+	left: 1.75vw;
+}
+
+.content__title__inner--offset-3 {
+	left: -10vw;
+	top: -0.25em;
+}
+.circleScaleBtn {
+	width: 90px;
+	padding: 12px 24px;
+	background-color: hsl(243, 80%, 62%);
+	color: hsl(222, 100%, 95%);
+	font-size: 20px;
+	font-weight: 600;
+	position: absolute;
+	border-radius: 6px;
+	overflow: hidden;
+	z-index: 1;
+	cursor: pointer;
+}
+/*.circleScaleBtn:hover{*/
+/*	border-radius: 0px;*/
+/*}*/
+.circleScaleBtn span {
+	z-index: 1;
+	position: relative;
+}
+
+.circleScaleBtn::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 250px;
+	height: 250px;
+	border-radius: 50%;
+	transform: translate3d(-50%,-50%,0) scale3d(0,0,0);
+	transition: opacity .4s cubic-bezier(.19,1,.22,1),transform .75s cubic-bezier(.19,1,.22,1);
+	background-color: #cadcde;
+	opacity: 0;
+}
+
+.circleScaleBtn:hover span {
+	color: #0e153a;
+}
+
+.circleScaleBtn:hover::before {
+	opacity: 1;
+	transition-duration: .85s;
+	transform: translate3d(-50%,-50%,0) scale3d(1,1,1)
+}
+
+.block-revealer__element {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #000;
+	pointer-events: none;
+	opacity: 0;
+}

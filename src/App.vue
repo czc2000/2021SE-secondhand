@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header height="70px">
+    <el-header :height="headerHeight">
       <appheader></appheader>
     </el-header>
     <el-main>
@@ -20,15 +20,38 @@ export default {
   },
   provide () {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
     return {
-      reload: this.reload
+      reload: this.reload,
+    }
+  },
+  beforeMount() {
+    if(this.$route.path=='/home'){
+      this.headerHeight='155px'
+    }else{
+      this.headerHeight='70px'
+    }
+  },
+  computed:{
+    getPath(){
+      return this.$route.path;
+    }
+  },
+  watch:{
+    getPath:function (val){
+      if(val!='/home'){
+        this.headerHeight='70px'
+      }else{
+        this.headerHeight='155px'
+      }
     }
   },
   data:function (){
     return{
-      isRouterAlive:true
+      isRouterAlive:true,
+      headerHeight:''
     }
   },
   methods: {
+    //本方法用于刷新界面
     reload () {
       this.isRouterAlive = false;            //先关闭，
       this.$nextTick(function () {
@@ -41,10 +64,9 @@ export default {
 
 <style>
 .el-header{
-  background-color: whitesmoke;
   color: #333;
   text-align: right;
-  z-index: 1;
+  z-index: 999;
   padding: 0px 0px !important;
 }
 .el-main {

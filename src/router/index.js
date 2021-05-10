@@ -13,6 +13,7 @@ import goodsZone from "@/components/goodsZone";
 import GoodShowPage from "@/components/GoodShowPage";
 import needsZone from "@/components/needsZone"
 import NeedShowPage from "@/components/NeedShowPage";
+import Carousel from "@/components/Carousel";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -69,6 +70,10 @@ const routes=[
     {
         path:'/needinfo',
         component: NeedShowPage
+    },
+    {
+        path: '/moduletest',
+        component:Carousel
     }
 ]
 const vueRouter = new VueRouter({

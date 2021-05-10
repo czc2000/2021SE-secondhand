@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Carousel></Carousel>
     <h2>首页</h2>
     <div>
       <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable></el-input>
@@ -14,14 +15,17 @@
           </Goodbox_goodshelf>
     </div>
     </transition>
+
   </div>
 </template>
 
 <script>
+import Carousel from "@/components/Carousel";
 import Goodbox_goodshelf from "@/components/Goodbox_goodshelf";
 export default {
   name: "Home",
   components:{
+    Carousel,
     Goodbox_goodshelf,
   },
   data: function () {
@@ -156,5 +160,4 @@ export default {
 .el-button{
   display: inline-block;
 }
-
 </style>

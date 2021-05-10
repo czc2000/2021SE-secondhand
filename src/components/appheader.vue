@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="navbar">
+  <div class="appheader">
+    <div class="navbar" :class="{home:getPath=='/home'}">
       <div class="search">
         <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable></el-input>
       </div>
@@ -31,25 +31,30 @@
           <li>
             <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
             <ol>
-              <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
-              <li v-show="!getloginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
-              <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
-						</ol>
+                <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
+                <li v-show="!getloginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
+                <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
+                <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
+                <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
+                <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
+            </ol>
           </li>
           <!-- 这个元素来定义滑动的线条 -->
           <li class="underline"></li>
         </ul>
       </div>
     </div>
+    <movingimage v-if="getPath=='/home'" class="movingimage"></movingimage>
   </div>
 </template>
 
 <script>
+import movingimage from "@/components/movingimage";
 export default {
   name: "appheader",
+  components:{
+    movingimage
+  },
   data:function (){
     return{
       activeIndex:"2",
@@ -65,6 +70,9 @@ export default {
     },
     getloginstate(){
       return this.$store.state.login
+    },
+    getPath(){
+      return this.$route.path
     },
 		unreadNum(){
 			return this.$store.state.unreadNum
@@ -109,6 +117,9 @@ export default {
 		},
     needTestClick:function (){
       this.$router.push({path:'/needinfo',query:{needid:9}});
+    },
+    moduleTest:function (){
+      this.$router.push('/moduletest')
     },
     loginout:function (){
       this.$confirm('确定要退出登录吗？', '退出登录', {
