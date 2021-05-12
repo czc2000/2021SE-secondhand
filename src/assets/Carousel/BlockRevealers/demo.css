@@ -1,7 +1,7 @@
 /* Content */
 .CarouselItem{
-	width: 960px;
-	height: 480px;
+	width: 1150px;
+	height: 680px;
 	position: relative;
 	background-color: #e2f3f5;
 	margin:0 auto;
@@ -11,14 +11,14 @@ h2{
 	margin: 0;
 }
 .content__title__inner {
-	font-size: 42px;
+	font-size: 48px;
 	line-height: 1.2;
 	font-weight: 400;
 	color: #0e153a;
 	display: inline-block;
 	position: absolute;
-	top:2.5em;
-	left: 1.5em;
+	top:150px;
+	left: 2em;
 	z-index: 1;
 }
 .content__title__inner--offset-img1{
@@ -26,27 +26,27 @@ h2{
 	position: absolute;
 	top:0;
 	right: 0;
-	height: 480px;
+	height: 680px;
 	z-index: 0;
 }
 .content__title__inner--offset-img1 img{
-	height: 480px;
-	max-width: 550px;
+	height: 680px;
+	max-width: 530px;
 }
 .content__title__inner--button{
 	position: absolute;
-	top:19em;
-	left:5em;
+	top:400px;
+	left:150px;
 }
 .content__title__inner--offset-1 {
 	display: inline-block;
-	font-size: 50px;
+	font-size: 55px;
 	line-height: 1.2;
-	font-weight: 400;
+	font-weight: 500;
 	color: #0e153a;
 	position: absolute;
-	top:4em;
-	left: 1em;
+	top:5em;
+	left: 0.8em;
 	z-index: 1;
 
 }
@@ -61,11 +61,11 @@ h2{
 	top: -0.25em;
 }
 .circleScaleBtn {
-	width: 90px;
+	width: 100px;
 	padding: 12px 24px;
 	background-color: hsl(243, 80%, 62%);
 	color: hsl(222, 100%, 95%);
-	font-size: 20px;
+	font-size: 25px;
 	font-weight: 600;
 	position: absolute;
 	border-radius: 6px;

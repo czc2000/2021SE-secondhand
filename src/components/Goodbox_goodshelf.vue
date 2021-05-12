@@ -4,8 +4,6 @@
       <div  class=box>
         <img :src="goodpicurl" alt="" @click="toShowPage">
         <p class="review" @click="toShowPage">{{goodname}}</p>
-				<!--<p class="Id">{{goodid}}</p>-->
-        <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
         <el-button type="success" icon="el-icon-shopping-cart-1" size='small' circle></el-button>
         <el-button :type="favoriteButtonType" icon="el-icon-star-off" size='small' circle @click="$emit('favoriteOrNot')"></el-button>
@@ -45,8 +43,6 @@ export default {
 .goodbox{
 		width: 236px;
     height: 336px;
-		/*border-style: solid;
-		border-width: 2px;*/
 		margin: 6px;
   }
   .box{
@@ -100,8 +96,6 @@ export default {
     font-weight: bolder;
     color: coral;
     text-align: left;
-		/*border-style: solid;
-		border-width: 2px;*/
   }
 	.box .el-button{
 		position: relative;

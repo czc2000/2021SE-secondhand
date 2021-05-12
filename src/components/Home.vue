@@ -1,65 +1,96 @@
 <template>
   <div>
-    <Carousel></Carousel>
-    <h2>首页</h2>
-    <div>
-      <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable></el-input>
-      <el-button class="HomeButton" type="primary" @click="test" ><i class="el-icon-search"></i>搜索</el-button>
-      <el-button class="HomeButton" type="success" @click="getrandom"><i class="el-icon-present">试试手气</i></el-button>
+    <div style="margin-bottom: 50px">
+      <Carousel></Carousel>
     </div>
-    <transition name="el-zoom-in-center">
-    <div class="goodcontainer" v-show="show">
-          <Goodbox_goodshelf class="randomgood" v-for="(item,index) in goodlist" :key="item.goodid"
-                   :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" 
-										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
-          </Goodbox_goodshelf>
+    <div class="divider1">
+      <div class="intro slide-top" v-show="show1">
+        <div class="intro_item">
+          <img src="../assets/Home/home_1.png" alt="">
+          <p class="p1">在线交流</p>
+          <p class="p2">简单的聊天系统，让交流更轻松</p>
+        </div>
+        <div class="intro_item">
+          <img src="../assets/Home/home_2.png" alt="">
+          <p class="p1">供需一体</p>
+          <p class="p2">购物需求模块共存，让交易更便捷</p>
+        </div>
+        <div class="intro_item">
+          <img src="../assets/Home/home_3.png" alt="">
+          <p class="p1">安全管理</p>
+          <p class="p2">完善的举报和管理员机制，让购物更安全</p>
+        </div>
+      </div>
     </div>
-    </transition>
-
+      <div class="divider2">
+        <div class="home_goodcontainer slide-top" v-show="show2">
+          <div class="title">还等什么，来看看这些商品吧!</div>
+          <div class="changecontainer" @click="getrandom">
+            <div class="changetop">不太满意？点我更换</div>
+            <div class="changecenter">CHANGE</div>
+            <div class="changebottom">不太满意？点我更换</div>
+          </div>
+          <div class="allRandomGood">
+            <img src="../assets/Home/homeGoods.png" alt="">
+            <div class="goodlist1">
+              <Goodbox_home class="randomgood1" v-for="(item,index) in goodlist.slice(0,3)" :key="item.goodid"
+                            :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
+                            :goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
+              </Goodbox_home>
+            </div>
+            <div class="goodlist2">
+              <Goodbox_home class="randomgood2" v-for="(item,index) in goodlist.slice(3)" :key="item.goodid"
+                            :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
+                            :goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
+              </Goodbox_home>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
 import Carousel from "@/components/Carousel";
-import Goodbox_goodshelf from "@/components/Goodbox_goodshelf";
+import Goodbox_home from "@/components/Goodbox_home";
 export default {
   name: "Home",
   components:{
     Carousel,
-    Goodbox_goodshelf,
+    Goodbox_home
   },
   data: function () {
     return {
       good: {},
       goodlist: [],
       searchkey:'',
-      show:false
+      show1:false,
+      show2:false
     }
   },
-  created: function () {
-    const url1 = 'http://123.56.42.47:10492/goodInfo/6'
-    this.axios.get(url1).then((response) => {
-      this.good = response.data.good
-      this.good.goodpicurl = 'http://123.56.42.47:10492' + this.good.goodpicurl
-    })
+  computed:{
+    top(){
+      return this.$store.state.scrollTop;
+    }
   },
-	mounted: function(){
-		window.addEventListener('beforeunload', e => this.postChange());
+  watch:{
+    top(val){
+      console.log(val)
+      if(val>=0){
+        this.show1=true;
+      }
+      if(val>360){
+        this.show2=true;
+      }
+    }
+  },
+  created() {
+    this.getrandom();
+  },
+  mounted: function(){
+    window.addEventListener('beforeunload', e => this.postChange());
 	},
   methods: {
-    test: function () {
-      const url = 'http://123.56.42.47:10492/goodInfo/' + this.id
-      this.axios.get(url).then((response) => {
-            if (response.data.good != null) {
-              this.good = response.data.good
-              this.good.goodpicurl = 'http://123.56.42.47:10492' + this.good.goodpicurl
-            } else {
-              alert("亲，您查询的商品不存在哟");
-              this.id = '';
-            }
-          }
-      )
-    },
 		postChange: function(){
 			if(this.$store.state.login){
 				var urlAdd='http://123.56.42.47:10492/addtoFavorite';
@@ -81,8 +112,7 @@ export default {
 				}}
 		},
     getrandom: function () {
-      this.show=true;
-      var urlGet = 'http://123.56.42.47:10492/getRandomGoods?number=16';
+      var urlGet = 'http://123.56.42.47:10492/getRandomGoods?number=6';
 			var urlCheck= 'http://123.56.42.47:10492/user/isfavorite';
 			let vm=this;
 			async function test(){
@@ -133,31 +163,169 @@ export default {
 			this.$set(this.goodlist,index,temp);
 		}
   },
-	beforeRouteLeave(to, from, next) {
-		this.postChange();
-		next();
-	}
 }
 
 </script>
 
 <style scoped>
-.HomeButton+.HomeButton{
+.HomeButton+.HomeButton {
   margin: 0px;
 }
-.randomgood{
+.divider1{
+  width: 930px;
+  height: 330px;
+  margin: 70px auto 0;
+}
+.intro .intro_item{
   float: left;
-  margin: 25px 12px;
 }
-.goodcontainer{
-  margin-left: 120px;
-	position: relative;
-	top: 0px;
+.intro .intro_item .p1{
+  font-size: 20px;
+  font-weight: 600;
 }
-.el-input{
-  width: 50%;
+.intro .intro_item .p2{
+  margin-top:1em;
+  font-size: 15px;
+  color: #919191;
 }
-.el-button{
-  display: inline-block;
+.intro img{
+  height: 150px;
+  margin: 0 80px;
+}
+.title {
+  font-size: 55px;
+  float: left;
+  position: absolute;
+  left: 160px;
+  top:120px;
+  font-weight: 700;
+}
+.divider2{
+  width: 100%;
+  height: 850px;
+}
+.slide-top {
+  position: relative;
+  animation: slide-top 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@keyframes slide-top {
+  0% {
+    transform: translateY(200px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+.home_goodcontainer{
+  position: relative;
+  background-color: #fafaf6;
+  width: 100%;
+  height: 850px;
+  margin: 0px auto;
+  overflow: hidden;
+}
+.goodlist1,.goodlist2{
+  width: 1200px;
+  height: 400px;
+  margin-left: 700px;
+}
+.goodlist1{
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+.goodlist2{
+  margin-top: 0px;
+}
+.randomgood1,.randomgood2{
+  float: right;
+  margin: 0px 50px;
+}
+
+.home_goodcontainer img{
+  position: absolute;
+  left: 0;
+}
+.changecontainer {
+  position       : absolute;
+  width          : 700px;
+  height         : 200px;
+  top:220px;
+  left: 200px;
+  /* 居中 */
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+  cursor: pointer;
+}
+
+.changecontainer div {
+  position       : absolute;
+  /* 大写 */
+  text-transform : uppercase;
+  /* 居中 */
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+}
+
+.changecontainer .changetop {
+  width      : 600px;
+  height     : 100px;
+  font-size  : 55px;
+  color: #49beb7;
+  font-weight: bold;
+  /* 显示上半部分 */
+  /* 四个坐标点分别为：左上，右上，右50%，左50% */
+  clip-path  : polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+
+  z-index   : 2;
+  transition: all 0.5s;
+}
+
+.changecontainer:hover .changetop {
+  /* 鼠标移动上移20px */
+  transform  : translateY(-28px);
+}
+
+.changecontainer .changebottom {
+  width      : 600px;
+  height     : 100px;
+  font-size  : 55px;
+  font-weight: bold;
+  color: #49beb7;
+  /* 显示下半部分 */
+  /* 四个坐标点分别为：左50%，右50%，右下，左下 */
+  clip-path  : polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%);
+
+  z-index   : 2;
+  transition: all 0.5s;
+}
+
+.changecontainer:hover .changebottom {
+  /* 鼠标移入下移20px */
+  transform  : translateY(28px);
+}
+
+.changecontainer .changecenter {
+  width           : 250px;
+  height          : 50px;
+  background-color:#085f63;
+  font-size: 25px;
+  font-weight: 600;
+  border-radius: 10px;
+  color: #deeff1;
+  /* letter-spacing  : 5px; */
+  /* 默认为缩小 */
+  transform       : scale(0.1);
+  opacity         : 0;
+  transition      : all 0.5s;
+  z-index         : 1;
+}
+
+/* 鼠标移入放大 */
+.changecontainer:hover .changecenter {
+  transform: scale(1);
+  opacity  : 1;
 }
 </style>

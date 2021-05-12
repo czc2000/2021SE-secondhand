@@ -21,6 +21,7 @@ const state = {
 	timer:null,
 	loadDone:false,
 	messageShow:false,
+	scrollTop:0
 }
 const mutations = {
 	saveAu(state,Au) {
@@ -130,6 +131,9 @@ const mutations = {
 	},
 	hideMessage(state){
 		state.messageShow=false;
+	},
+	setScrollTop(state,num){
+		state.scrollTop=num;
 	}
 }
 export default new Vuex.Store({
