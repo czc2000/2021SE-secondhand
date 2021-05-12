@@ -13,8 +13,8 @@
         </div>
         <div class="senderinfo">
           <div class="price"></div>
-          <el-tooltip content="联系卖家" placement="bottom" effect="light">
-            <div class="sendername">{{senderinfo.username}}</div>
+          <el-tooltip content="联系买家" placement="bottom" effect="light">
+            <div class="sendername" @click="addTemporaryContact">{{senderinfo.username}}</div>
           </el-tooltip>
           <img :src="this.senderinfo.useravatarurl" class="circleImg">
         </div>
@@ -24,7 +24,7 @@
         </div>
         <el-divider></el-divider>
         <div class="buy">
-          <div class="horizontalOverlay2"><span>联系买家</span></div>
+          <div class="horizontalOverlay2" @click="addTemporaryContact"><span>联系买家</span></div>
         </div>
       </div>
     </div>
@@ -195,7 +195,12 @@ export default {
         this.commentcount += 5
         this.commentloading = false
       }, 2000)
-    }
+    },
+		addTemporaryContact:function(){
+			//console.log(this.senderinfo);
+			this.$store.commit('addTemporaryContact',this.senderinfo);
+			this.$store.commit('showMessage');
+		}
   }
 }
 </script>

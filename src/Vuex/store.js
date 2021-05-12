@@ -21,6 +21,7 @@ const state = {
 	unreadNum:0,
 	messageShow:false,
 	loadDone:false,
+	temporaryContact:null
 }
 const mutations = {
 	saveAu(state,Au) {
@@ -51,7 +52,7 @@ const mutations = {
 		state.userid=userdata_.userid;
 		window.localStorage.setItem('userid',state.userid);
 		state.username=userdata_.username;
-		window.localStorage.setItem('userid',state.username);
+		window.localStorage.setItem('username',state.username);
 		state.login=true;
 		state.userdata=userdata_;
 		//向localStorage中存放对象
@@ -126,6 +127,12 @@ const mutations = {
 	},
 	changeUnreadNum(state,num){
 		state.unreadNum=num;
+	},
+	addTemporaryContact(state,userdata){
+		this.state.temporaryContact=userdata;
+	},
+	clearTPContact(state){
+		this.state.temporaryContact=null;
 	}
 }
 export default new Vuex.Store({

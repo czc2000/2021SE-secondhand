@@ -4,7 +4,7 @@
       <appheader></appheader>
     </el-header>
     <el-main>
-		<message-part v-show="this.$store.state.messageShow"></message-part>
+		<message-part v-show="this.$store.state.messageShow&&this.$store.state.login"></message-part>
     <router-view v-if="isRouterAlive"></router-view>
     </el-main>
   </el-container>

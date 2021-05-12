@@ -11,7 +11,7 @@
       <div class="goodtitle">
         {{good.goodname}}
       </div>
-      <div class="senderinfo">
+      <div class="senderinfo"  @click="addTemporaryContact">
         <div class="price">￥{{good.goodprice}}</div>
         <el-tooltip content="联系卖家" placement="bottom" effect="light">
         <div class="sendername">{{senderinfo.username}}</div>
@@ -25,7 +25,7 @@
       <el-divider></el-divider>
       <div class="buy">
         <div class="horizontalOverlay"><span>点击购买</span></div>
-        <div class="horizontalOverlay2"><span>了解更多</span></div>
+        <div class="horizontalOverlay2" @click="addTemporaryContact"><span>了解更多</span></div>
       </div>
     </div>
   </div>
@@ -201,7 +201,12 @@ export default {
         this.commentcount += 5
         this.commentloading = false
       }, 2000)
-    }
+    },
+		addTemporaryContact:function(){
+			//console.log(this.senderinfo);
+			this.$store.commit('addTemporaryContact',this.senderinfo);
+			this.$store.commit('showMessage');
+		}
   }
 }
 </script>

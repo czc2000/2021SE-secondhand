@@ -206,3 +206,15 @@ a {
 .home .nav ul .underline{
     display: none;
 }
+.unreadNum{
+	width: 15px;
+	height: 15px;
+	line-height: 15px;
+	text-align: center;
+	background-color: red;
+	color: white;
+	border-radius: 7.5px;
+	position: relative;
+	top: -55px;
+	left: 25px;
+}
