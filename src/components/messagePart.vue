@@ -12,7 +12,6 @@
 				:text="item.messagecontent"></messageUnit>
 			</div>
 			<input class="message-main-right-bottom"></div>
-		</div>
 </template>
 
 <script>

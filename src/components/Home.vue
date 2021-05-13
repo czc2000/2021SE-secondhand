@@ -75,7 +75,6 @@ export default {
   },
   watch:{
     top(val){
-      console.log(val)
       if(val>=0){
         this.show1=true;
       }

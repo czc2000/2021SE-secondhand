@@ -1,11 +1,13 @@
 <template>
-	<transition name="el-zoom-in-center">
-		<div class="needbox">
-			<img :src="needpicurl" alt="我的图图呢" @click="toShowPage">
-			<p class="needname" @click="toShowPage">{{needname}}</p>
-			<p class="needDescription">{{needDescription}}</p>
-		</div>
-	</transition>
+  <transition name="el-zoom-in-center">
+    <div class="needbox">
+      <div class=box>
+        <img :src="needpicurl" alt="" @click="toShowPage">
+        <p class="name" @click="toShowPage">{{needname}}</p>
+        <p class="review">{{needDescription}}</p>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -25,61 +27,70 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 .needbox{
-	overflow: hidden;
-	width: 220px;
-	height: 325px;
-	padding: 5px;
-	border-radius: 5px;
-	background-color: #fff;
-	border-style: solid;
-	border-width: 3px;
-	border-color: #f5f5f5;
-	margin: 0;
+  width: 240px;
+  height: 350px;
 }
-.needbox:hover{
-	border:3px solid darkorange;
-	box-shadow:  0 6px 12px 0 rgba(0, 0, 0, 0.1);
+.box{
+  overflow:hidden;
+  position: absolute;
+  width: 240px;
+  height: 350px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: white;
+  border-style: solid;
+  border-width: 3px;
+  border-color: rgba(160,160,160,1);
+  transition: border-color 0.5s;
 }
-.needbox img{
-	width: 220px;
-	height: 220px;
-	cursor: pointer;
-	/*border-style: solid;
-	border-width: 2px;*/
+.box:hover{
+  border:3px solid coral;
+  box-shadow:
+      0 0.4px 4.3px -3px rgba(14, 24, 58, 0.032),
+      0 1.1px 8.4px -3px rgba(14, 24, 58, 0.049),
+      0 2.1px 12.4px -3px rgba(14, 24, 58, 0.062),
+      0 3.4px 16.6px -3px rgba(14, 24, 58, 0.074),
+      0 5.3px 21.4px -3px rgba(14, 24, 58, 0.084),
+      0 7.9px 27.4px -3px rgba(14, 24, 58, 0.094),
+      0 11.7px 35.7px -3px rgba(14, 24, 58, 0.103),
+      0 17.6px 49px -3px rgba(14, 24, 58, 0.114),
+      0 30px 80px -3px rgba(14, 24, 58, 0.13)
 }
-.needname{
-	position: relative;
-	top: -30px;
-	height: 56px;
-	font-size:20px;
-	color: RoyalBlue;
-	margin-top: 30px;
-	overflow: hidden;/* 超出的文本隐藏 */
-	text-overflow: ellipsis; /* 溢出用省略号显示 */
-	display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */
-	-webkit-box-orient: vertical; /*  从上到下垂直排列子元素（设置伸缩盒子的子元素排列方式） */
-	-webkit-line-clamp: 3; /* 这个属性不是css的规范属性，需要组合上面两个属性，表示显示的行数 */
-	text-align: left;
-	cursor: pointer;
+.box img{
+  width: 220px;
+  height: 220px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
 }
-.needsender{
-	font-size: 13px;
-	margin: 12px 0px;
-	text-align: left;
+.review{
+  width: 220px;
+  height: 42px;
+  font-size:15px;
+  margin-top: 5px;
+  margin-left: 5px;
+  overflow: hidden;/* 超出的文本隐藏 */
+  text-overflow: ellipsis; /* 溢出用省略号显示 */
+  display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */
+  -webkit-box-orient: vertical; /*  从上到下垂直排列子元素（设置伸缩盒子的子元素排列方式） */
+  -webkit-line-clamp: 2; /* 这个属性不是css的规范属性，需要组合上面两个属性，表示显示的行数 */
+  text-align: left;
+  cursor: pointer;
 }
-.needDescription{
-	position: relative;
-	top: -17px;
-	font-size: 14px;
-	height: 20px;
-	width: 130px;
-	text-align: left;
-}
-.needbox .el-button{
-	position: relative;
-	top: -40px;
-	left: 50px;
+.name{
+  height: 22px;
+  margin-left: 5px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bolder;
+  color: coral;
+  text-align: left;
+  overflow: hidden;/* 超出的文本隐藏 */
+  text-overflow: ellipsis; /* 溢出用省略号显示 */
+  display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */
+  -webkit-box-orient: vertical; /*  从上到下垂直排列子元素（设置伸缩盒子的子元素排列方式） */
+  -webkit-line-clamp: 2; /* 这个属性不是css的规范属性，需要组合上面两个属性，表示显示的行数 */
 }
 </style>

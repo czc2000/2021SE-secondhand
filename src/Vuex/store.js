@@ -52,7 +52,7 @@ const mutations = {
 		state.userid=userdata_.userid;
 		window.localStorage.setItem('userid',state.userid);
 		state.username=userdata_.username;
-		window.localStorage.setItem('userid',state.username);
+		window.localStorage.setItem('username',state.username);
 		state.login=true;
 		state.userdata=userdata_;
 		//向localStorage中存放对象
