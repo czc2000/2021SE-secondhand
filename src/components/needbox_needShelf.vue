@@ -1,5 +1,4 @@
 <template>
-  <transition name="el-zoom-in-center">
     <div class="needbox">
       <div class=box>
         <img :src="needpicurl" alt="" @click="toShowPage">
@@ -7,7 +6,6 @@
         <p class="review">{{needDescription}}</p>
       </div>
     </div>
-  </transition>
 </template>
 
 <script>

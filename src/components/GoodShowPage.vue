@@ -1,5 +1,7 @@
 <template>
   <div v-if="loaded">
+    <div class="Show_Background">
+    </div>
   <div class="goodinfo">
     <div class="preview">
       <img :src="this.good.goodpicurl" alt="">
@@ -16,7 +18,7 @@
         <el-tooltip content="联系卖家" placement="bottom" effect="light">
         <div class="sendername">{{senderinfo.username}}</div>
         </el-tooltip>
-        <img :src="this.senderinfo.useravatarurl" class="circleImg">
+        <img :src="this.senderinfo.useravatarurl" class="Show_circleImg">
       </div>
       <el-divider></el-divider>
       <div class="description">
@@ -64,11 +66,6 @@
       </el-tab-pane>
     </el-tabs>
   </div>
-    <div>
-      <el-backtop target=".el-main" :right="80">
-        <div class="pulseAnim"><i class="el-icon-top"></i></div>
-      </el-backtop>
-    </div>
   </div>
 </template>
 
@@ -213,5 +210,16 @@ export default {
 }
 .comment .infinite-list{
   height: var(--height);
+}
+.Show_Background{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  height: 1080px;
+  background-image: url('../assets/GoodShowPage/bg.jpg');
+  background-size: cover;
+  background-position: center;
 }
 </style>
