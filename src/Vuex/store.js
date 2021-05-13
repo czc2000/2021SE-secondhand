@@ -20,6 +20,7 @@ const state = {
 	pwd:null,
 	unreadNum:0,
 	messageShow:false,
+	scrollTop:0,
 	loadDone:false,
 	temporaryContact:null,
 	loadUserdataDone:false,
@@ -129,6 +130,9 @@ const mutations = {
 	},
 	hideMessage(state){
 		state.messageShow=false;
+	},
+	setScrollTop(state,num){
+		state.scrollTop=num;
 	},
 	changeUnreadNum(state,num){
 		state.unreadNum=num;

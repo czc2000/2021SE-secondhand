@@ -26,6 +26,7 @@
             <div class="header flex " @click="testClick"><div class="borderLeftRight">测试</div></div>
 						<ol>
 							<li><a href="javascript:;" @click="needTestClick">测试2</a></li>
+							<li><a href="javascript:;" @click="moduleTest">单元测试</a></li>
 						</ol>
           </li>
           <li>

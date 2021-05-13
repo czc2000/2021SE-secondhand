@@ -34,6 +34,16 @@
       </div>
         </transition>
         <transition name="el-fade-in">
+          <el-alert
+              title="文件太大了"
+              type="error"
+              description="请上传2M以下的图片"
+              show-icon
+              v-show="picoversizeWarning"
+              @close="closeAlert1">
+          </el-alert>
+        </transition>
+        <transition name="el-fade-in">
     <el-alert
         title="请上传一张图片哟"
         type="error"
@@ -76,6 +86,7 @@ export default {
         ],
       },
       nopicWarning:false,
+      picoversizeWarning:false,
       formData:new FormData()
     }
   },
@@ -86,12 +97,21 @@ export default {
       this.removePic();
     },
     beforeUpload(file){
-      this.formData.append('needpic',file)
-      this.nopicWarning=false;
+      //限制图片大小为2M以下
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        this.formData.append('needpic',file)
+        this.nopicWarning=false;
+      }else{
+        this.picoversizeWarning=true;
+      }
       return false;//禁止elementUI的组件自动上传
     },
     closeAlert(){
       this.nopicWarning=false;
+    },
+    closeAlert1(){
+      this.picoversizeWarning=false;
     },
     submitForm(formName){
       if(!this.form.needpic) {
@@ -121,17 +141,19 @@ export default {
       })
     },
     getLocalImg(event){
-      // 获取上传图片的本地url，用于上传前的本地预览
-      let url = '';
-      if (window.createObjectURL != undefined) {
-        url = window.createObjectURL(event.raw);
-      } else if (window.URL != undefined) {
-        url = window.URL.createObjectURL(event.raw);
-      } else if (window.webkitURL != undefined) {
-        url = window.webkitURL.createObjectURL(event.raw);
+      const isLt2M = event.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        let url = '';
+        if (window.createObjectURL != undefined) {
+          url = window.createObjectURL(event.raw);
+        } else if (window.URL != undefined) {
+          url = window.URL.createObjectURL(event.raw);
+        } else if (window.webkitURL != undefined) {
+          url = window.webkitURL.createObjectURL(event.raw);
+        }
+        this.form.needpic = url;
+        this.picoversizeWarning=false;
       }
-      this.form.needpic = url;
-      this.isHidden = false;
     },
     removePic(){
       this.form.needpic=null;

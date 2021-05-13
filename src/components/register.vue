@@ -181,12 +181,12 @@ export default {
 
 <style>
   .background{
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background-image: url("../assets/wallhaven-9mxz8k.jpg");
-  background-size: 100%;
-  background-repeat: round;
+    position: relative;
+    width: 100%;
+    height: 1080px;
+    background-image: url("../assets/wallhaven-9mxz8k.jpg");
+    background-size: 100%;
+    background-repeat: no-repeat;
   }
   .kuang{
     width: 500px;

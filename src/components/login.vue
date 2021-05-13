@@ -1,5 +1,5 @@
 <template>
-    <div class="background">
+    <div class="login_background">
       <div class="loginform">
         <h1>LOGIN</h1>
       <el-form ref="ruleForm" :model="formdata" :rules="rules" label-width="120px" @keyup.enter.native="submitForm('ruleForm')">
@@ -114,25 +114,25 @@ export default {
 </script>
 
 <style>
-.background{
+.login_background{
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 1080px;
   background-image: url("../assets/wallhaven-9mxz8k.jpg");
   background-size: 100%;
-  background-repeat: round;
+  background-repeat: no-repeat;
 }
 .loginform{
+  position: absolute;
+  top: 25%;
+  left: 40%;
   width: 400px;
   height: 350px;
   background-color: rgba(220,220,250,0.6);
   margin: 0 auto;
-  position: absolute;
-  left:40%;
-  top:30%;
 }
 .loginform h1{
-  margin: 20px;
+  margin:20px 20px 20px 20px;
   font-family:  Garamond, serif;
   font-weight: 700;
   font-size: 40px;

@@ -1,18 +1,18 @@
 <template>
-  <transition name="el-zoom-in-center">
-    <div v-show="show" class="goodbox">
-      <div class=box>
-        <img :src="goodpicurl" alt="" @click="toShowPage">
-        <p class="review" @click="toShowPage">{{goodname}}</p>
-        <p class="price">￥{{goodprice}}</p>
-        <div class="buttonGroup">
-          <div class="icon"><el-button type="success" icon="el-icon-shopping-cart-1" size='medium' circle></el-button></div>
-          <div class="icon"><el-button :type="favoriteButtonType" icon="el-icon-star-off" size='medium' circle @click="$emit('favoriteOrNot')"></el-button></div>
-          <div class="icon"><el-button type="danger"  icon="el-icon-delete"  size='medium' circle @click="show = !show"></el-button></div>
+    <transition name="el-zoom-in-center">
+      <div v-show="show" class="goodbox" @mouseenter="hovering=true" @mouseleave="hovering=false">
+        <div class=box>
+          <img :src="goodpicurl" alt="" @click="toShowPage">
+          <p class="review" @click="toShowPage">{{goodname}}</p>
+          <p class="price">￥{{goodprice}}</p>
+            <div class="buttonGroup">
+              <div class="icon"><el-button type="success" icon="el-icon-shopping-cart-1" size='medium' circle></el-button></div>
+              <div class="icon"><el-button :type="favoriteButtonType" icon="el-icon-star-off" size='medium' circle @click="$emit('favoriteOrNot')"></el-button></div>
+              <div class="icon"><el-button type="danger"  icon="el-icon-delete"  size='medium' circle @click="show = !show"></el-button></div>
+            </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
 </template>
 
 <script>
@@ -23,6 +23,7 @@ export default {
     return{
       isActive:true,
       show:true,
+      hovering:false
     }
   },
   methods:{
@@ -56,11 +57,10 @@ export default {
   background-color: white;
   border-style: solid;
   border-width: 3px;
-  border-color: rgba(160,160,160,1);
-  transition: border-color 0.5s;
+  border-color: #e5f6f8;
 }
 .box:hover{
-  border:3px solid #ffd615;
+  border:3px solid #deeff1;
   box-shadow:
       0 0.4px 4.3px -3px rgba(14, 24, 58, 0.032),
       0 1.1px 8.4px -3px rgba(14, 24, 58, 0.049),
@@ -112,9 +112,9 @@ export default {
   left: 0px;
   top: 100%;
   /* 通过调整背景色透明度让背景透明 */
-  background-color: #ffd615;
+  background-color: #deeff1;
   /* 这会让整个层和内部元素全部透明 */
-  opacity: 0.85;
+   opacity: 0.85;
   /* flex 布局 让图标靠右上角 */
   display: flex;
   justify-content: flex-end;

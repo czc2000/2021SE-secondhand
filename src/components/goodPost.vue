@@ -23,6 +23,7 @@
       <div class="uploadImage">
         <el-upload
             action="#"
+            accept=".jpg,.jpeg,.png"
             :limit="1"
             :before-upload="beforeUpload"
             :on-change="getLocalImg"
@@ -34,9 +35,19 @@
         </el-upload>
         <transition name="el-zoom-in-top">
         <div v-show="form.goodpic" class="good_img">
-          <img :src="form.goodpic" />
+          <img :src="form.goodpic"/>
           <i class="el-icon-delete-solid" @click="removePic"></i>
         </div>
+        </transition>
+        <transition name="el-fade-in">
+          <el-alert
+              title="文件太大了"
+              type="error"
+              description="请上传2M以下的图片"
+              show-icon
+              v-show="picoversizeWarning"
+              @close="closeAlert1">
+          </el-alert>
         </transition>
         <transition name="el-fade-in">
           <el-alert
@@ -85,6 +96,7 @@ export default {
         ]
       },
       nopicWarning:false,
+      picoversizeWarning:false,
       formData:new FormData()
     }
   },
@@ -95,12 +107,21 @@ export default {
       this.removePic();
     },
     beforeUpload(file){
-      this.formData.append('goodpic',file)
-      this.nopicWarning=false;
+      //限制图片大小为2M以下
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        this.formData.append('goodpic',file)
+        this.nopicWarning=false;
+      }else{
+        this.picoversizeWarning=true;
+      }
       return false;//禁止elementUI的组件自动上传
     },
     closeAlert(){
       this.nopicWarning=false;
+    },
+    closeAlert1(){
+      this.picoversizeWarning=false;
     },
     submitForm(formName){
       if(!this.form.goodpic) {
@@ -133,16 +154,19 @@ export default {
     },
     getLocalImg(event){
       // 获取上传图片的本地url，用于上传前的本地预览
-      let url = '';
-      if (window.createObjectURL != undefined) {
-        url = window.createObjectURL(event.raw);
-      } else if (window.URL != undefined) {
-        url = window.URL.createObjectURL(event.raw);
-      } else if (window.webkitURL != undefined) {
-        url = window.webkitURL.createObjectURL(event.raw);
+      const isLt2M = event.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        let url = '';
+        if (window.createObjectURL != undefined) {
+          url = window.createObjectURL(event.raw);
+        } else if (window.URL != undefined) {
+          url = window.URL.createObjectURL(event.raw);
+        } else if (window.webkitURL != undefined) {
+          url = window.webkitURL.createObjectURL(event.raw);
+        }
+        this.form.goodpic = url;
+        this.picoversizeWarning=false;
       }
-      this.form.goodpic = url;
-      this.isHidden = false;
     },
     removePic(){
       this.form.goodpic=null;

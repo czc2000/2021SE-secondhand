@@ -1,20 +1,29 @@
 <template>
 	<div class="goodsZoneMain">
-		<ul class="gz-leftMenu">
-			<li v-for="(item,index) in leftMenu_items" :key="index" 
-			:class="classOfMenuItem(index)" @click="turnTo(index,1)">{{item.title}}</li>
-		</ul>
-		<el-button class="lastPageButton" icon="el-icon-back" round @click="turnToLastPage">上一页</el-button>
-		<el-button class="nextPageButton" round @click="turnToNextPage">下一页<i class="el-icon-right el-icon--right"></i></el-button>
-		<transition name="el-zoom-in-center">
-		<div class="goodcontainer" v-show="show">
-		      <Goodbox_goodshelf class="good" v-for="(item,index) in goodlist" :key="item.goodid"
-		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid" 
+    <div class="GZone_banner">
+      <img src="../assets/GoodZone/banner.jpg" alt="">
+    </div>
+    <div class="GZone_menu">
+      <ul class="gz-Menu">
+        <li v-for="(item,index) in leftMenu_items" :key="index"
+            :class="{activeItem:index==partFocused}" @click="turnTo(index,1)"><a>{{item.title}}</a></li>
+      </ul>
+    </div>
+		<div class="GZone_goodcontainer" v-show="show">
+		      <Goodbox_goodshelf class="Zone_good" v-for="(item,index) in goodlist" :key="item.goodid"
+		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
 										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
 		      </Goodbox_goodshelf>
 		</div>
-		</transition>
-	</div>
+    <div class="changePage">
+      <a @click="turnToLastPage" class="page-link link-left">
+        <span><i class="el-icon-caret-left"></i></span>
+      </a>
+      <a @click="turnToNextPage" class="page-link">
+        <span><i class="el-icon-caret-right"></i></span>
+      </a>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -27,10 +36,10 @@ export default {
 	data: function(){
 		return{
 			leftMenu_items:[
-				{title:"分区1",pageNum:null},
-				{title:"分区2",pageNum:null},
-				{title:"分区3",pageNum:null},
-				{title:"分区4",pageNum:null},
+				{title:"生活用品",pageNum:null},
+				{title:"电子产品",pageNum:null},
+				{title:"书籍资料",pageNum:null},
+				{title:"其它类型",pageNum:null},
 			],
 			partFocused:null,
 			pageNow:null,
@@ -184,68 +193,121 @@ export default {
 </script>
 
 <style>
-.goodsZoneMain{
-	height:720px;
-	background-color: #f5f5f5;
+.GZone_banner{
+  max-width: 100%;
+  overflow-x: hidden;
 }
-.gz-leftMenu{
-	position: relative;
-	left: 70px;
-	top: 50px;
-	width: 100px;
-	height: 200px;
-	background-color: #ebffff;
-	border-color: white;
-	border-style: solid;
-	border-width: 2px;
+.GZone_menu{
+  width: 75%;
+  height: 80px;
+  margin: 50px auto 0;
+  background-color: #52a7b4;
+  border-radius: 8px;
 }
-.gz-leftMenu>li{
-	width: 100px;
-	height: 49px;
-	text-align: center;
-	line-height: 49px;
-	font-family: "microsoft yahei";
-	cursor: pointer;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-bottom-color: #dddddd;
+.gz-Menu{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  width: 50%;
+  margin: 0 auto ;
 }
-.gz-leftMenu>li:last-child{
-	height: 50px;
-	border-bottom-style: none;
+.gz-Menu li{
+  display: inline-block;
 }
-.gz-leftMenu>li:hover{
-	background-color: #dff1f1;
-	font-weight: bolder;
+.gz-Menu a {
+  position: relative;
+  color: #0e153a;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 5px;
+   background-color: white;
+  transition: background-color 0.8s;
+  cursor: pointer;
 }
-.gz-leftMenu>li:active{
-	background-color: #dde8e8;
-	font-weight: bolder;
-	color: #4169e1;
+.gz-Menu .activeItem a{
+  color: white;
+  background-color: coral;
 }
-.gz-leftMenu-itemFocused{
-	background-color: #dde8e8;
-	font-weight: bolder;
-	color: #4169e1;
+.gz-Menu a:hover {
+  color: white;
+  background-color: coral;
 }
-.good{
+
+.gz-Menu a::before {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid coral;
+  border-width: 0 0 3px 3px;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.gz-Menu a::after {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid coral;
+  border-width: 3px 3px 0 0;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.gz-Menu a:hover::before {
+  left: -12px;
+  bottom: -12px;
+  opacity: 1;
+}
+
+.gz-Menu a:hover::after {
+  top: -12px;
+  right: -12px;
+  opacity: 1;
+}
+.GZone_goodcontainer{
+  width: 80%;
+  margin: 0 auto;
+  background-color: white;
+  overflow: hidden;
+}
+.Zone_good{
   float: left;
-  margin: 25px 12px;
+  margin-top: 60px;
+  margin-left: 50px;
 }
-.goodcontainer{
-  margin-left: 120px;
-	position: relative;
-	left: 100px;
-	top: -230px;
+.changePage{
+  height: 60px;
+  margin: 60px auto;
 }
-.lastPageButton{
-	position: relative;
-	left: -580px;
-	top: 80px;
+.page-link{
+  display: inline-block;
+  font-size: 40px;
+  padding: 0 5px;
+  margin-left: 20px;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.8s;
+
 }
-.nextPageButton{
-	position: relative;
-	left: -700px;
-	top: 150px;
+.link-left{
+  border-top-right-radius: 0rem;
+  border-bottom-right-radius: 0rem;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.page-link:hover{
+  background-color: #1e2a78;
+  color: white;
 }
 </style>
