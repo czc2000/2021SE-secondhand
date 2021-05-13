@@ -112,7 +112,7 @@
     transform: scaleX(1);
     cursor: pointer;
 }
-
+/*这里暂时有个bug*/
 .createIntentionInput{
 	position: absolute;
 	top: 67%;
