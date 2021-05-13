@@ -4,8 +4,8 @@
       <appheader></appheader>
     </el-header>
     <el-main>
-		<message-part v-show="this.$store.state.messageShow"></message-part>
-      <router-view ref="home" v-if="isRouterAlive" @click=""></router-view>
+		<message-part v-show="this.$store.state.messageShow&&this.$store.state.login"></message-part>
+    <router-view ref="home" v-if="isRouterAlive"></router-view>
     </el-main>
     <transition name="el-fade-in">
     <div class="ToTop" @click="toTop" v-show="showToTop&&height>50">

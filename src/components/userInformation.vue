@@ -6,8 +6,15 @@
 				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>
 				<li @click="modeTo('favorite')" :style="isChoosen('favorite')">收藏</li>
 				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
+				<li @click="modeTo('good')" :style="isChoosen('good')">商品</li>
+				<li @click="modeTo('intention')" :style="isChoosen('intention')">意向</li>
+				<ul class="intention_fold" v-if="isMode('intention')">
+					<li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>
+					<li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>
+				</ul>
 			</ul>
-			<div class="info" v-show="isMode('info')">
+			
+			<div class="info userinfo-maincard" v-if="isMode('info')">
 				<div class="info-head">
 					<profileUpload ref="avatar"></profileUpload>
 					<img :src="getUseravatar" alt="">
@@ -50,20 +57,23 @@
 				<el-button class="pwd-save" plain @click="savePWDChangeMode" v-show="isPWDChangeMode">保存修改</el-button>
 				<el-button class="pwd-cancel" plain @click="leavePWDChangeMode" v-show="isPWDChangeMode">取消修改</el-button>
 			</div>
-			<div class="order" v-show="isMode('order')">
-				<p>order</p>
+			
+			<div class="order userinfo-maincard" v-if="isMode('order')">
+				<orderbox></orderbox>
 			</div>
-			<div class="favorite" v-show="isMode('favorite')">
+			
+			<div class="favorite userinfo-maincard" v-if="isMode('favorite')">
 				<el-divider class="favorite-divider1"></el-divider>
 				<el-divider class="favorite-divider2"></el-divider>
 				<div class="favorite-goodContainer">
-					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.favorites" :key="item.goodid"
+					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.favorites" :key="item.goodid"
 						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
-						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="recordCancel(item.goodid)">
+						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="recordCancel(item.goodid,index)">
 					</Goodbox_favoriteshelf>
 				</div>
 			</div>
-			<div class="demand" v-show="isMode('demand')">
+			
+			<div class="demand userinfo-maincard" v-if="isMode('demand')">
 				<el-divider class="demand-divider1"></el-divider>
 				<el-divider class="demand-divider2"></el-divider>
 				<div class="demand-needContainer">
@@ -73,6 +83,36 @@
 					</needbox_infoShelf>
 				</div>
 			</div>
+			
+			<div class="good___ userinfo-maincard" v-if="isMode('good')">
+				<el-divider class="favorite-divider1"></el-divider>
+				<el-divider class="favorite-divider2"></el-divider>
+				<div class="favorite-goodContainer">
+					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.goods" :key="item.goodid"
+						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
+						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="deleteGood(item.goodid)">
+					</Goodbox_favoriteshelf>
+				</div>
+			</div>
+			
+			<div class="intention_ userinfo-maincard" v-if="isMode('intention')">
+				<div class="intentionContainer" v-if="isMode2('fromMe')">
+					<intentionbox v-for="(item,index) in this.intentions" :key="item.intentionid"
+						:avatar="'http://123.56.42.47:10492'+item.selleravatar" :name="item.sellername" 
+						:intentionprice="item.intentionprice" :goodprice="item.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.goodpicurl"
+						:goodname="item.goodname" :status="item.intentionstatus" towho="卖家" @deleteIntention="deleteIntention(item.intentionid,index)">
+					</intentionbox>
+				</div>
+				<div class="intentionContainer" v-if="isMode2('fromOthers')">
+					<intentionbox v-for="(item,index) in this.receivedintentions" :key="item.intentionid"
+						:avatar="'http://123.56.42.47:10492'+item.buyeravatar" :name="item.buyername" 
+						:intentionprice="item.intentionprice" :goodprice="item.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.goodpicurl"
+						:goodname="item.goodname" :status="item.intentionstatus" towho="买家"
+						@accpet="acceptIntention(item.intentionid,index)" @refuse="refuseIntention(item.intentionid,index)">
+					</intentionbox>
+				</div>
+			</div>
+			
 		</div>
   </div>
 </template>
@@ -81,12 +121,16 @@
 import profileUpload from "@/components/profileUpload";
 import Goodbox_favoriteshelf from "@/components/Goodbox_favoriteshelf";
 import needbox_infoShelf from "@/components/needbox_infoShelf";
+import orderbox from "@/components/orderbox"
+import intentionbox from "@/components/intentionbox"
 export default {
   name: "userInformation",
   components:{
     profileUpload,
 		Goodbox_favoriteshelf,
-		needbox_infoShelf
+		needbox_infoShelf,
+		orderbox,
+		intentionbox
   },
   data:function () {
     var validatemail = (rule, value, callback) => {
@@ -125,6 +169,7 @@ export default {
     };
     return{
 			mode:"info",
+			submode:"fromMe",
 			menu1ChoosenOptionSytle:{
 				"background-color": "#d2dede",
 				"color": "#4169e1"
@@ -148,7 +193,10 @@ export default {
 			rules2:{
 				pwdNow:[{validator: validatePwdNow, trigger:'blur'}],
 				pwdNew:[{validator: validatePwdNew, trigger: 'blur' },{min:6,max:18,message:'长度应当在6到18个字符',trigger: 'blur'}]
-			}
+			},
+			intentions:[],
+			receivedintentions:[],
+			favorites:[]
     }
   },
   computed:{
@@ -160,6 +208,11 @@ export default {
 				return pattern==this.mode
 			}
 		},
+		isMode2(){
+			return(pattern)=>{
+				return pattern==this.submode
+			}
+		},
 		isChoosen(){
 			return(pattern)=>{
 				if(this.isMode(pattern)){
@@ -167,12 +220,37 @@ export default {
 				}
 				return {}
 			}
+		},
+		isChoosen2(){
+			return(pattern)=>{
+				if(this.isMode2(pattern)){
+					return this.menu1ChoosenOptionSytle
+				}
+				return {}
+			}
+		},
+		loadDone(){
+			return this.$store.state.loadUserdataDone;
 		}
   },
   watch:{
     getUseravatar(val){
       this.userdata.useravatarurl=val;
-    }
+    },
+		loadDone(val){
+			if(val==true){
+				var vm=this;
+				new Promise((resolve,reject)=>{
+					vm.intentions=vm.$store.state.intentions;
+					vm.receivedintentions=vm.$store.state.receivedintentions;
+					vm.favorites=vm.$store.state.favorites;
+					resolve();
+				}).then(()=>{
+					vm.completeIntentions();
+				})
+				this.$store.commit('prepareforUserdataReload');
+			}
+		}
   },
   created:function (){
 			this.$store.commit('loadUserdataFromLocalStorage');
@@ -188,13 +266,16 @@ export default {
     modeTo:function(pattern){
 			this.mode=pattern; 
 		},
-		recordCancel:function(goodid){
+    submodeTo:function(pattern){
+			this.submode=pattern; 
+		},
+		recordCancel:function(goodid,index){
 			var url='http://123.56.42.47:10492/removeFavorite';
 			this.axios.post(url+'/'+goodid,null,{
-					headers:{
-						'Authorization':this.$store.state.Authorization
-					}
-				})
+					headers:{'Authorization':this.$store.state.Authorization}
+			}).then((response)=>{
+				this.favorites.splice(index,1);
+			})
 		 this.$message(
 			{
 				message: '取消收藏成功',
@@ -215,6 +296,100 @@ export default {
 				type: 'success',
 				offset: 50
 			});
+		},
+		deleteGood:function(goodid){
+			var url='http://123.56.42.47:10492/deleteGood';
+			this.axios.post(url+'/'+goodid,null,{
+					headers:{
+						'Authorization':this.$store.state.Authorization
+					}
+				})
+		 this.$message(
+			{
+				message: '删除商品成功',
+				type: 'success',
+				offset: 50
+			});
+		},
+		completeIntentions:function(){
+			var urlGood='http://123.56.42.47:10492/goodInfo',urlUser='http://123.56.42.47:10492/userinfo',
+				vm=this;
+			//console.log('completeIntentions '+this.intentions.length+' '+this.receivedintentions.length);
+			for(var i=0;i<this.intentions.length;i++){
+				new Promise(function(resolve,reject){
+					var temp=JSON.parse(JSON.stringify(vm.intentions[i]));
+					temp.index=i;
+					vm.axios.get(urlGood+'/'+vm.intentions[temp.index].goodid).then((response)=>{
+						temp.goodname=response.data.good.goodname;
+						temp.goodprice=response.data.good.goodprice;
+						temp.goodpicurl=response.data.good.goodpicurl;
+						return temp;
+					}).then((temp)=>{
+						vm.axios.get(urlUser+'/'+vm.intentions[temp.index].sellerid).then((response)=>{
+							temp.sellername=response.data.user.username;
+							temp.selleravatar=response.data.user.useravatarurl;
+							return temp;
+						}).then((temp)=>{
+							vm.$set(vm.intentions,temp.index,temp);
+						})
+					})
+				})
+			}
+			for(var i=0;i<this.receivedintentions.length;i++){
+				if(this.receivedintentions[i].intentionstatus!=0)
+				{
+					//console.log('已处理： '+this.receivedintentions[i].intentionid);
+					this.receivedintentions.splice(i,1);
+					i--;
+					continue;
+				}
+				new Promise(function(resolve,reject){
+					var temp=JSON.parse(JSON.stringify(vm.receivedintentions[i]));
+					temp.index=i;
+					vm.axios.get(urlGood+'/'+vm.receivedintentions[temp.index].goodid).then((response)=>{
+						temp.goodname=response.data.good.goodname;
+						temp.goodprice=response.data.good.goodprice;
+						temp.goodpicurl=response.data.good.goodpicurl;
+						return temp;
+					}).then((temp)=>{
+						vm.axios.get(urlUser+'/'+vm.receivedintentions[temp.index].buyerid).then((response)=>{
+							temp.buyername=response.data.user.username;
+							temp.buyeravatar=response.data.user.useravatarurl;
+							return temp;
+						}).then((temp)=>{
+							vm.$set(vm.receivedintentions,temp.index,temp);
+						})
+					})
+				})
+			}
+		},
+		acceptIntention: function(intentionid,index){
+			console.log('accept');
+			var url='http://123.56.42.47:10492/deal';
+			this.axios.post(url+'/'+intentionid,null,{
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			var temp=this.receivedintentions[index];
+			temp.intentionstatus=1;
+			this.$set(this.receivedintentions,temp,index);
+		},
+		refuseIntention: function(intentionid,index){
+			console.log('refuse');
+			var url='http://123.56.42.47:10492/reject';
+			this.axios.post(url+'/'+intentionid,null,{
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			var temp=this.receivedintentions[index];
+			temp.intentionstatus=-1;
+			this.$set(this.receivedintentions,temp,index);
+		},
+		deleteIntention: function(intentionid,index){
+			console.log('delete');
+			var url='http://123.56.42.47:10492/deleteIntention';
+			this.axios.post(url+'/'+intentionid,null,{
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			this.intentions.splice(index,1);
 		},
 		enterEditMode: function(){
 			console.log('enter edit mode');

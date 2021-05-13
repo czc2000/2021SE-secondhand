@@ -12,16 +12,18 @@ const state = {
 	username: null,
 	useravatar:null,
 	userdata: null,
-	needs: null,
-	favorites: null,
-	receivedintentions: null,
-	goods: null,
-	intentions: null,
+	needs: [],
+	favorites: [],
+	receivedintentions: [],
+	goods: [],
+	intentions:[],
 	pwd:null,
 	unreadNum:0,
 	messageShow:false,
 	scrollTop:0,
 	loadDone:false,
+	temporaryContact:null,
+	loadUserdataDone:false,
 }
 const mutations = {
 	saveAu(state,Au) {
@@ -115,9 +117,13 @@ const mutations = {
 				state.receivedintentions=response.data.receivedintentions;
 				state.goods=response.data.goods;
 				state.intentions=response.data.intentions;
+				state.loadUserdataDone=true;
 				//console.log(state.favorites.length);
 			}
 		})
+	},
+	prepareforUserdataReload(state){
+		state.loadUserdataDone=false;
 	},
 	showMessage(state){
 		state.messageShow=true;
@@ -130,6 +136,12 @@ const mutations = {
 	},
 	changeUnreadNum(state,num){
 		state.unreadNum=num;
+	},
+	addTemporaryContact(state,userdata){
+		this.state.temporaryContact=userdata;
+	},
+	clearTPContact(state){
+		this.state.temporaryContact=null;
 	}
 }
 export default new Vuex.Store({

@@ -13,7 +13,7 @@
       <div class="goodtitle">
         {{good.goodname}}
       </div>
-      <div class="senderinfo">
+      <div class="senderinfo"  @click="addTemporaryContact">
         <div class="price">￥{{good.goodprice}}</div>
         <el-tooltip content="联系卖家" placement="bottom" effect="light">
         <div class="sendername">{{senderinfo.username}}</div>
@@ -26,8 +26,12 @@
       </div>
       <el-divider></el-divider>
       <div class="buy">
-        <div class="horizontalOverlay"><span>点击购买</span></div>
-        <div class="horizontalOverlay2"><span>了解更多</span></div>
+        <div class="horizontalOverlay" @click="intentionInputShow=!intentionInputShow"><span>点击购买</span></div>
+				<div class="createIntentionInput" v-show="intentionInputShow">
+					<input id="createIntentionInput">
+					<button @click="createIntention">提交意向</button>
+				</div>
+        <div class="horizontalOverlay2" @click="addTemporaryContact"><span>了解更多</span></div>
       </div>
     </div>
   </div>
@@ -91,7 +95,8 @@ export default {
       activeName:'first',
       commentcount:5,
       commentloading:false,
-      commentboxheight:'--height:'
+      commentboxheight:'--height:',
+			intentionInputShow:false,
     }
   },
   computed: {
@@ -198,7 +203,27 @@ export default {
         this.commentcount += 5
         this.commentloading = false
       }, 2000)
-    }
+    },
+		addTemporaryContact:function(){
+			//console.log(this.senderinfo);
+			if(!this.$store.state.login) return;
+			this.$store.commit('addTemporaryContact',this.senderinfo);
+			this.$store.commit('showMessage');
+		},
+		createIntention:function(){
+			var input=this.$el.querySelector('#createIntentionInput');
+			var v=Number(input.value),url="http://123.56.42.47:10492/sendIntention";
+			if(!isNaN(v)&&v>=0){
+				//this.intentionInputShow=false;
+				input.value='';
+				this.axios.post(url+'/'+this.goodid,null,{
+					params:{intentionprice:v},
+					headers:{'Authorization':this.$store.state.Authorization}
+				}).then((response)=>{
+					console.log('提交成功');
+				})
+			}
+		}
   }
 }
 </script>

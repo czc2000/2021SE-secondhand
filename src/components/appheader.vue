@@ -129,6 +129,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.commit('loginout')
+				this.$store.commit('hideMessage');
         this.$router.push('/home')
         this.$message({
           type: 'success',

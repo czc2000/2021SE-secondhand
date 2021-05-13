@@ -66,7 +66,7 @@ export default {
     var validatemail = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入邮箱'));
-      } else if (!/^([A-Za-z0-9_\-.])+@(163.com|qq.com)$/.test(this.formdata.useremail)) {
+      } else if (!/^([A-Za-z0-9_\-.])+@(163.com|qq.com|buaa.edu.cn)$/.test(this.formdata.useremail)) {
         callback(new Error('请您输入正确的163邮箱或者qq邮箱'));
       } else {
         callback();
