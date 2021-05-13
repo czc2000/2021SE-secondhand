@@ -198,6 +198,7 @@ export default {
     },
 		addTemporaryContact:function(){
 			//console.log(this.senderinfo);
+			if(!this.$store.state.login) return;
 			this.$store.commit('addTemporaryContact',this.senderinfo);
 			this.$store.commit('showMessage');
 		}

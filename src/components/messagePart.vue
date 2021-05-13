@@ -157,10 +157,13 @@ export default{
 		},
 		finishRead:function(){
 			//console.log('?');
+			//console.log('finish read');
 			var id=this.choosen;
 			var url='http://123.56.42.47:10492/read';
 			var len=this.history[id].length,vm=this,num=this.unreadNumOf[id];
+			//console.log('before: '+this.unreadCatched);
 			this.unreadCatched-=this.unreadNumOf[id];
+			//console.log('after: '+this.unreadCatched);
 			this.$set(this.unreadNumOf,id,0);
 			this.$store.commit('changeUnreadNum',this.unreadCatched);
 			//console.log('senderid: '+id+', unreadNum: '+this.unreadNumOf[id]);
@@ -168,6 +171,8 @@ export default{
 			{
 				this.axios.post(url+'/'+vm.history[id][len-i-1].messageid,null,{
 					headers:{'Authorization':this.$store.state.Authorization}
+				}).then((resposne)=>{
+					//console.log(vm.history[id][len-i-1].messageid+' has been read');
 				})
 			}
 		},
