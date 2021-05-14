@@ -57,8 +57,8 @@ export default{
 		unreadNum(){
 			return this.unreadList.length
 		},
-		loadDone(){
-			return this.$store.state.loadDone;
+		login(){
+			return this.$store.state.login;
 		},
 		tpContact(){
 			return this.$store.state.temporaryContact;
@@ -71,7 +71,7 @@ export default{
 		}
 	},
 	watch:{
-		loadDone(val){
+		login(val){
 			var vm=this;
 			if(val==true)
 			{
@@ -218,11 +218,13 @@ export default{
 			var vm=this;
 			if(index!=-1)
 				this.tpContacts.splice(index,1);
-			for(var i=0;i<this.tpContactNum;i++)
-				if(this.tpContacts[i].userid==id){
-					this.tpContacts.splice(i,1);
-					break;
-				}
+			else{
+				for(var i=0;i<this.tpContactNum;i++)
+					if(this.tpContacts[i].userid==id){
+						this.tpContacts.splice(i,1);
+						break;
+					}
+			}
 			this.$store.commit('clearTPContact');
 			if(index!=-1) this.choosen=0;
 		},

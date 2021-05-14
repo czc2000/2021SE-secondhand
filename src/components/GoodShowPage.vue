@@ -21,7 +21,19 @@
       <el-divider></el-divider>
       <div class="description">
         {{good.gooddescription}}
+				
       </div>
+			<el-tag :key="tag" v-for="(tag,index) in good.goodtags" :closable="myGood"
+				:disable-transitions="false" @close="handleClose(index)">
+					{{tag}}
+			</el-tag>
+			<div v-if="myGood">
+				<el-input v-if="addingTag" class="input-new-tag" v-model="tagInput"
+					ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" 
+					@blur="handleInputConfirm">
+				</el-input>
+				<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+			</div>
       <el-divider></el-divider>
       <div class="buy">
         <div class="horizontalOverlay" @click="intentionInputShow=!intentionInputShow"><span>点击购买</span></div>
@@ -100,6 +112,10 @@ export default {
       commentloading:false,
       commentboxheight:'--height:',
 			intentionInputShow:false,
+			tagInput:'',
+			addingTag:false,
+			name:'',
+			description:'',
     }
   },
   computed: {
@@ -111,7 +127,10 @@ export default {
     },
     loginerid(){
       return this.$store.state.userid;
-    }
+    },
+		myGood(){
+			return this.senderinfo.userid==this.$store.state.userid;
+		}
   },
   created:async function() {
     if(!this.$route.query.goodid){
@@ -226,7 +245,30 @@ export default {
 					console.log('提交成功');
 				})
 			}
-		}
+		},
+		handleClose(index){
+		   this.good.goodtags.splice(index, 1);
+		 },
+		showInput(){
+		  this.addingTag = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm(){
+		  let inputValue=this.tagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.good.goodtags.length;i++)
+					if(this.good.goodtags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat) this.good.goodtags.push(inputValue);
+		  }
+		  this.addingTag=false;
+		  this.tagInput='';
+		},
   }
 }
 </script>

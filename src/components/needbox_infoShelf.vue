@@ -1,8 +1,8 @@
 <template>
 	<transition name="el-zoom-in-center">
 		<div v-show="show" class="needbox_">
-			<img :src="needpicurl" alt="我的图图呢">
-			<p class="needname_">{{needname}}</p>
+			<img :src="needpicurl" alt="我的图图呢" @click="toShowPage">
+			<p class="needname_" @click="toShowPage">{{needname}}</p>
 			<p class="needDescription_">{{needDescription}}</p>
 			<el-button type="danger" icon="el-icon-delete" size='mini' circle @click="$emit('deleteNeed');show=!show"></el-button>
 		</div>
@@ -17,7 +17,12 @@ export default{
 		return{
 			show:true
 		}
-	}
+	},
+	methods:{
+	  toShowPage:function (){
+      this.$router.push({path:'/needinfo',query:{needid:this.needid}})
+    }
+  }
 }
 </script>
 

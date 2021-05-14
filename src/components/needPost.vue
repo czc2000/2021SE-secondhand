@@ -15,7 +15,17 @@
         <el-radio :label="4">其他</el-radio>
       </el-radio-group>
     </el-form-item>
-      <div class="uploadImage">
+		<el-tag :key="tag" v-for="(tag,index) in tags" closable
+			:disable-transitions="false" @close="handleClose(index)">
+				{{tag}}
+		</el-tag>
+		<el-input class="input-new-tag" v-if="inputVisible" v-model="tagInput"
+			ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" 
+			@blur="handleInputConfirm">
+		</el-input>
+		<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+		<br/><br/><br/>
+		<div class="uploadImage">
     <el-upload
           action="#"
           :limit="1"
@@ -71,6 +81,9 @@ export default {
         needname:'',
         needpic:null
       },
+			tags:[],
+			inputVisible: false,
+			tagInput: '',
       isHidden:true,
       rules:{
         needname: [
@@ -113,6 +126,29 @@ export default {
     closeAlert1(){
       this.picoversizeWarning=false;
     },
+		handleClose(index){
+		   this.tags.splice(index, 1);
+		 },
+		showInput(){
+		  this.inputVisible = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm(){
+		  let inputValue=this.tagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.tags.length;i++)
+					if(this.tags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat) this.tags.push(inputValue);
+		  }
+		  this.inputVisible=false;
+		  this.tagInput='';
+		},
     submitForm(formName){
       if(!this.form.needpic) {
         this.nopicWarning=true
@@ -123,6 +159,10 @@ export default {
           this.formData.append('needcategory',this.form.needcategory)
           this.formData.append('needdescription',this.form.needdescription)
           this.formData.append('needname',this.form.needname)
+					var tagsToString='';
+					for(var i=0;i<this.tags.length;i++)
+						tagsToString+='#'+this.tags[i];
+					this.formData.append('needtags',tagsToString);
           console.log(this.formData)
           this.axios.post('http://123.56.42.47:10492/sendneed',this.formData,{
             headers:{
@@ -218,5 +258,21 @@ export default {
   display: block;
   cursor: pointer;
 }
-
+/*以下是关于标签的，从element ui抄的,对button有改动*/
+.el-tag + .el-tag {
+	margin-left: 10px;
+}
+.button-new-tag {
+	margin-left: 10px;
+	height: 32px;
+	line-height: 30px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.input-new-tag {
+	width: 90px;
+	margin-left: 10px;
+	vertical-align: bottom;
+}
+/*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>

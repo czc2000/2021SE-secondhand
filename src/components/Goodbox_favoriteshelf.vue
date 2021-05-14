@@ -7,8 +7,9 @@
 				<!--<p class="Id">{{goodid}}</p>-->
         <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
         <p class="price">￥{{goodprice}}</p>
-        <el-button type="success" icon="el-icon-shopping-cart-1" size='mini' circle></el-button>
-        <el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="$emit('cancelFavorite');show = !show"></el-button>
+        <el-button v-if="pos=='favorite'" type="success" icon="el-icon-shopping-cart-1" size='mini' circle></el-button>
+        <el-button v-else type="primary" icon="el-icon-edit" size='mini' circle></el-button>
+				<el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="$emit('cancelFavorite');show = !show"></el-button>
       </div>
     </div>
   </transition>
@@ -17,7 +18,7 @@
 <script>
 export default {
   name: "Goodbox_favoriteshelf",
-  props:['goodpicurl','goodname','goodprice','goodsenderid','goodid'],
+  props:['goodpicurl','goodname','goodprice','goodsenderid','goodid','pos'],
   data:function(){
     return{
       isActive:true,

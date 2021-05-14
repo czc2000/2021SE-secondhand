@@ -118,6 +118,8 @@ const mutations = {
 				state.goods=response.data.goods;
 				state.intentions=response.data.intentions;
 				state.loadUserdataDone=true;
+				state.Ibought=response.data.Ibought;
+				state.Isold=response.data.Isold;
 				//console.log(state.favorites.length);
 			}
 		})

@@ -4,11 +4,15 @@
 			<ul class="menu1">
 				<li @click="modeTo('info')" :style="isChoosen('info')">资料</li>
 				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>
+				<ul class="submenu_fold order_fold" v-if="isMode('order')">
+					<li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>
+					<li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>
+				</ul>
 				<li @click="modeTo('favorite')" :style="isChoosen('favorite')">收藏</li>
 				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
 				<li @click="modeTo('good')" :style="isChoosen('good')">商品</li>
 				<li @click="modeTo('intention')" :style="isChoosen('intention')">意向</li>
-				<ul class="intention_fold" v-if="isMode('intention')">
+				<ul class="submenu_fold intention_fold" v-if="isMode('intention')">
 					<li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>
 					<li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>
 				</ul>
@@ -59,14 +63,27 @@
 			</div>
 			
 			<div class="order userinfo-maincard" v-if="isMode('order')">
-				<orderbox></orderbox>
+				<div class="rectangleContainer" v-if="isMode2('fromMe')">
+					<orderbox v-for="(item,index) in this.Isold" :key="item.order.orderid" :index="index" towho="买家"
+						:good="item.good" :order="item.order" :buyer="item.buyer" :seller={}
+						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
+						@confirm="sellerConfirm(item.order.orderid,index)" @postComment="postSellerComment">
+					</orderbox>
+				</div>
+				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
+					<orderbox v-for="(item,index) in this.Ibought" :key="item.order.orderid" :index="index" towho="卖家"
+						:good="item.good" :order="item.order" :buyer={} :seller="item.seller"
+						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
+						@confirm="buyerConfirm(item.order.orderid,index)" @postComment="postBuyerComment">
+					</orderbox>
+				</div>
 			</div>
 			
 			<div class="favorite userinfo-maincard" v-if="isMode('favorite')">
 				<el-divider class="favorite-divider1"></el-divider>
 				<el-divider class="favorite-divider2"></el-divider>
 				<div class="favorite-goodContainer">
-					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.favorites" :key="item.goodid"
+					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.favorites" :key="item.goodid" pos="favorite"
 						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
 						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="recordCancel(item.goodid,index)">
 					</Goodbox_favoriteshelf>
@@ -88,7 +105,7 @@
 				<el-divider class="favorite-divider1"></el-divider>
 				<el-divider class="favorite-divider2"></el-divider>
 				<div class="favorite-goodContainer">
-					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.goods" :key="item.goodid"
+					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.goods" :key="item.goodid" pos="good"
 						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
 						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="deleteGood(item.goodid)">
 					</Goodbox_favoriteshelf>
@@ -96,19 +113,19 @@
 			</div>
 			
 			<div class="intention_ userinfo-maincard" v-if="isMode('intention')">
-				<div class="intentionContainer" v-if="isMode2('fromMe')">
-					<intentionbox v-for="(item,index) in this.intentions" :key="item.intentionid"
-						:avatar="'http://123.56.42.47:10492'+item.selleravatar" :name="item.sellername" 
-						:intentionprice="item.intentionprice" :goodprice="item.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.goodpicurl"
-						:goodname="item.goodname" :status="item.intentionstatus" towho="卖家" @deleteIntention="deleteIntention(item.intentionid,index)">
+				<div class="rectangleContainer" v-if="isMode2('fromMe')">
+					<intentionbox v-for="(item,index) in this.intentions" :key="item.intention.intentionid"
+						:avatar="'http://123.56.42.47:10492'+item.seller.useravatarurl" :name="item.seller.username" 
+						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
+						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="卖家" @deleteIntention="deleteIntention(item.intention.intentionid,index)">
 					</intentionbox>
 				</div>
-				<div class="intentionContainer" v-if="isMode2('fromOthers')">
-					<intentionbox v-for="(item,index) in this.receivedintentions" :key="item.intentionid"
-						:avatar="'http://123.56.42.47:10492'+item.buyeravatar" :name="item.buyername" 
-						:intentionprice="item.intentionprice" :goodprice="item.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.goodpicurl"
-						:goodname="item.goodname" :status="item.intentionstatus" towho="买家"
-						@accpet="acceptIntention(item.intentionid,index)" @refuse="refuseIntention(item.intentionid,index)">
+				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
+					<intentionbox v-for="(item,index) in this.receivedintentions" :key="item.intention.intentionid"
+						:avatar="'http://123.56.42.47:10492'+item.buyer.useravatarurl" :name="item.buyer.username" 
+						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
+						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="买家"
+						@accpet="acceptIntention(item.intention.intentionid,index)" @refuse="refuseIntention(item.intention.intentionid,index)">
 					</intentionbox>
 				</div>
 			</div>
@@ -196,7 +213,9 @@ export default {
 			},
 			intentions:[],
 			receivedintentions:[],
-			favorites:[]
+			favorites:[],
+			Isold:[],
+			Ibought:[]
     }
   },
   computed:{
@@ -244,6 +263,10 @@ export default {
 					vm.intentions=vm.$store.state.intentions;
 					vm.receivedintentions=vm.$store.state.receivedintentions;
 					vm.favorites=vm.$store.state.favorites;
+					vm.Isold=vm.$store.state.Isold;
+					vm.Ibought=vm.$store.state.Ibought;
+					vm.Isold.reverse();
+					vm.Ibought.reverse();
 					resolve();
 				}).then(()=>{
 					vm.completeIntentions();
@@ -300,10 +323,8 @@ export default {
 		deleteGood:function(goodid){
 			var url='http://123.56.42.47:10492/deleteGood';
 			this.axios.post(url+'/'+goodid,null,{
-					headers:{
-						'Authorization':this.$store.state.Authorization
-					}
-				})
+				headers:{'Authorization':this.$store.state.Authorization},
+			})
 		 this.$message(
 			{
 				message: '删除商品成功',
@@ -311,67 +332,83 @@ export default {
 				offset: 50
 			});
 		},
+		sellerConfirm:function(orderid,index){
+			var url='http://123.56.42.47:10492/sellerconfirm';
+			this.axios.post(url+'/'+orderid,null,{
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			var temp=this.Isold[index];
+			temp.order.sellerconfirm=1;
+			this.$set(this.Isold,temp,index);
+		},
+		buyerConfirm:function(orderid,index){
+			var url='http://123.56.42.47:10492/buyerconfirm';
+			this.axios.post(url+'/'+orderid,null,{
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			var temp=this.Ibought[index];
+			temp.order.buyerconfirm=1;
+			this.$set(this.Ibought,temp,index);
+		},
+		postSellerComment:function(comment,rate,orderid,index){
+			console.log('seller comment: '+comment+', '+rate+', '+orderid);
+			var url='http://123.56.42.47:10492/sellercomment';
+			this.axios.post(url+'/'+orderid,null,{
+				params:{content:comment,rank:rate},
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			var temp=this.Isold[index];
+			temp.order.sellercommentid=1;
+			temp.sellercomment={"commentcontent":comment,"commentrank":rate};
+			this.$set(this.Isold,temp,index);
+		},
+		postBuyerComment:function(comment,rate,orderid,index){
+			console.log('buyer comment: '+comment+', '+rate+', '+orderid);
+			var url='http://123.56.42.47:10492/buyercomment';
+			this.axios.post(url+'/'+orderid,null,{
+				params:{content:comment,rank:rate},
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			var temp=this.Ibought[index],part={"commentcontent":comment,"commentrank":rate};
+			temp.order.buyercommentid=1;
+			temp.buyercomment={"commentcontent":comment,"commentrank":rate};
+			this.$set(this.Ibought,temp,index);
+		},
 		completeIntentions:function(){
 			var urlGood='http://123.56.42.47:10492/goodInfo',urlUser='http://123.56.42.47:10492/userinfo',
 				vm=this;
+			/*for(var i=0;i<this.Isold.length;i++)
+				console.log(this.Isold[i].order);*/
 			//console.log('completeIntentions '+this.intentions.length+' '+this.receivedintentions.length);
-			for(var i=0;i<this.intentions.length;i++){
-				new Promise(function(resolve,reject){
-					var temp=JSON.parse(JSON.stringify(vm.intentions[i]));
-					temp.index=i;
-					vm.axios.get(urlGood+'/'+vm.intentions[temp.index].goodid).then((response)=>{
-						temp.goodname=response.data.good.goodname;
-						temp.goodprice=response.data.good.goodprice;
-						temp.goodpicurl=response.data.good.goodpicurl;
-						return temp;
-					}).then((temp)=>{
-						vm.axios.get(urlUser+'/'+vm.intentions[temp.index].sellerid).then((response)=>{
-							temp.sellername=response.data.user.username;
-							temp.selleravatar=response.data.user.useravatarurl;
-							return temp;
-						}).then((temp)=>{
-							vm.$set(vm.intentions,temp.index,temp);
-						})
-					})
-				})
-			}
 			for(var i=0;i<this.receivedintentions.length;i++){
-				if(this.receivedintentions[i].intentionstatus!=0)
+				if(this.receivedintentions[i].intention.intentionstatus!=0)
 				{
 					//console.log('已处理： '+this.receivedintentions[i].intentionid);
 					this.receivedintentions.splice(i,1);
 					i--;
 					continue;
 				}
-				new Promise(function(resolve,reject){
-					var temp=JSON.parse(JSON.stringify(vm.receivedintentions[i]));
-					temp.index=i;
-					vm.axios.get(urlGood+'/'+vm.receivedintentions[temp.index].goodid).then((response)=>{
-						temp.goodname=response.data.good.goodname;
-						temp.goodprice=response.data.good.goodprice;
-						temp.goodpicurl=response.data.good.goodpicurl;
-						return temp;
-					}).then((temp)=>{
-						vm.axios.get(urlUser+'/'+vm.receivedintentions[temp.index].buyerid).then((response)=>{
-							temp.buyername=response.data.user.username;
-							temp.buyeravatar=response.data.user.useravatarurl;
-							return temp;
-						}).then((temp)=>{
-							vm.$set(vm.receivedintentions,temp.index,temp);
-						})
-					})
-				})
 			}
 		},
 		acceptIntention: function(intentionid,index){
 			console.log('accept');
-			var url='http://123.56.42.47:10492/deal';
-			this.axios.post(url+'/'+intentionid,null,{
+			var urlDeal='http://123.56.42.47:10492/deal';
+			this.axios.post(urlDeal+'/'+intentionid,null,{
 				headers:{'Authorization':this.$store.state.Authorization}
 			})
 			var temp=this.receivedintentions[index];
-			temp.intentionstatus=1;
+			temp.intention.intentionstatus=1;
 			this.$set(this.receivedintentions,temp,index);
+			/*var urlDelete='http://123.56.42.47:10492/deleteGood';
+			this.axios.post(urlDelete+'/'+goodid,null,{
+				headers:{'Authorization':this.$store.state.Authorization},
+			})
+		 this.$message(
+			{
+				message: '已成交，自动删除商品',
+				type: 'success',
+				offset: 50
+			});*/
 		},
 		refuseIntention: function(intentionid,index){
 			console.log('refuse');
@@ -380,7 +417,7 @@ export default {
 				headers:{'Authorization':this.$store.state.Authorization}
 			})
 			var temp=this.receivedintentions[index];
-			temp.intentionstatus=-1;
+			temp.intention.intentionstatus=-1;
 			this.$set(this.receivedintentions,temp,index);
 		},
 		deleteIntention: function(intentionid,index){
