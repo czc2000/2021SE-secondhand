@@ -1,5 +1,7 @@
 <template>
   <div v-if="this.loaded">
+    <div class="Show_Background">
+    </div>
     <div class="needinfo">
       <div class="preview">
         <img :src="this.need.needpicurl" alt="">
@@ -62,11 +64,6 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-    </div>
-    <div>
-      <el-backtop target=".el-main" :right="80">
-        <div class="pulseAnim"><i class="el-icon-top"></i></div>
-      </el-backtop>
     </div>
   </div>
 </template>
@@ -214,4 +211,15 @@ export default {
 .comment .infinite-list{
     height: var(--height);
   }
+.Show_Background{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  height: 940px;
+  background-image: url('../assets/NeedShowPage/bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
 </style>

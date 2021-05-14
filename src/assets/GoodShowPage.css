@@ -1,5 +1,5 @@
 .goodinfo{
-    margin: 50px auto;
+    margin: 50px auto 0;
     width: 1280px;
     height: 480px;
 }
@@ -38,11 +38,12 @@
     background-color: rgb(250, 250, 250);
 }
 
-.iteminfo .senderinfo .circleImg{
+.iteminfo .senderinfo .Show_circleImg{
     float: right;
     border-radius: 25px;
     width:50px;
     height:50px;
+    margin-top: 5px;
 }
 .iteminfo .senderinfo  .circleImg,.sendername:hover{
     cursor: pointer;
@@ -111,7 +112,7 @@
     transform: scaleX(1);
     cursor: pointer;
 }
-
+/*这里暂时有个bug*/
 .createIntentionInput{
 	position: absolute;
 	top: 67%;
@@ -200,31 +201,7 @@
     border-top-width: 4px;
     cursor: pointer;
 }
-.pulseAnim {
-    display: block;
-    padding: 12px 15px;
-    border-radius: 50%;
-    background:#409EFF ;
-    cursor: pointer;
-    box-shadow: 0 0 0 rgba(64, 158, 255, 0.5);
-    animation: pulseAnim 2s infinite;
-}
-.pulseAnim .el-icon-top{
-    font-weight: 700;
-    font-size: 20px;
-    color: white;
-}
-@keyframes pulseAnim {
-    0% {
-        box-shadow: 0 0 0 0 rgba(64, 158, 255, 0.5);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(64, 158, 255, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(64, 158, 255, 0);
-    }
-}
+
 
 .bouncingLoader > div, .bouncingLoader:before, .bouncingLoader:after {
     display: inline-block;
