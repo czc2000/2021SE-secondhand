@@ -65,14 +65,14 @@
 			<div class="order userinfo-maincard" v-if="isMode('order')">
 				<div class="rectangleContainer" v-if="isMode2('fromMe')">
 					<orderbox v-for="(item,index) in this.Isold" :key="item.order.orderid" :index="index" towho="买家"
-						:good="item.good" :order="item.order" :buyer="item.buyer" :seller={}
+						:good="item.good" :order="item.order" :buyer="item.buyer" :seller="{}"
 						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
 						@confirm="sellerConfirm(item.order.orderid,index)" @postComment="postSellerComment">
 					</orderbox>
 				</div>
 				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
 					<orderbox v-for="(item,index) in this.Ibought" :key="item.order.orderid" :index="index" towho="卖家"
-						:good="item.good" :order="item.order" :buyer={} :seller="item.seller"
+						:good="item.good" :order="item.order" :buyer="{}" :seller="item.seller"
 						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
 						@confirm="buyerConfirm(item.order.orderid,index)" @postComment="postBuyerComment">
 					</orderbox>
@@ -102,12 +102,40 @@
 			</div>
 			
 			<div class="good___ userinfo-maincard" v-if="isMode('good')">
+				<el-dialog title="修改商品" :visible.sync="goodEditing" width="30%" :show-close="false" :modal-append-to-body='false'>
+						<el-form label-position="right" ref="ruleForm3" :rules="rules3" :model="form3" label-width="90px">
+						  <el-form-item label="商品标题" prop="goodname">
+						    <el-input v-model="form3.goodname"></el-input>
+						  </el-form-item>
+						  <el-form-item label="商品描述" prop="gooddescription">
+						    <el-input type="textarea" v-model="form3.gooddescription"></el-input>
+						  </el-form-item>
+							<el-tag :key="tag" v-for="(tag,index) in form3.goodtags" closable
+								:disable-transitions="false" @close="handleClose1(index)">
+									{{tag}}
+							</el-tag>
+							<el-input class="input-new-tag" v-if="goodTagsEditing" v-model="goodTagInput"
+								ref="saveTagInput1" size="small" @keyup.enter.native="handleInputConfirm">
+							</el-input>
+							<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+						  <br/><br/><br/>
+							<el-form-item label="商品价格" prop="goodprice">
+						    <p class="price">￥</p>
+						    <el-input-number v-model="form3.goodprice" :precision="2" :step="1" :max="50000" :min="0" size="medium">
+						    </el-input-number>
+						  </el-form-item>
+						</el-form>
+					  <span slot="footer" class="dialog-footer">
+					    <el-button @click="cancelGoodEdit">取 消</el-button>
+					    <el-button type="primary" @click="confirmGoodEdit">确 定</el-button>
+					  </span>
+				</el-dialog>
 				<el-divider class="favorite-divider1"></el-divider>
 				<el-divider class="favorite-divider2"></el-divider>
 				<div class="favorite-goodContainer">
-					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.$store.state.goods" :key="item.goodid" pos="good"
+					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.goods" :key="item.goodid" pos="good"
 						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
-						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="deleteGood(item.goodid)">
+						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="deleteGood(item.goodid)" @edit="editGood(item.goodid,index)">
 					</Goodbox_favoriteshelf>
 				</div>
 			</div>
@@ -211,11 +239,24 @@ export default {
 				pwdNow:[{validator: validatePwdNow, trigger:'blur'}],
 				pwdNew:[{validator: validatePwdNew, trigger: 'blur' },{min:6,max:18,message:'长度应当在6到18个字符',trigger: 'blur'}]
 			},
+			rules3:{
+			  goodname:[{required: true, message: '请输入商品标题', trigger: 'blur' },{min: 5, max: 36, message: '长度在 5 到 36 个字符之间', trigger: 'blur'}],
+			  gooddescription:[{required:true,message:'请输入商品描述',trigger:'blur'},{min:10,max:200,message: '长度在10到200个字符之间',trigger: 'blur'}],
+			  goodprice:[{required:true,message:'请输入商品价格',trigger:'blur'}]
+			},
 			intentions:[],
 			receivedintentions:[],
 			favorites:[],
 			Isold:[],
-			Ibought:[]
+			Ibought:[],
+			goods:[],
+			goodEditing:false,
+			form3:{},
+			rules3:{},
+			goodTagsEditing:false,
+			goodTagInput:'',
+			tagsEditHistory:[],
+			goodEdited:{},
     }
   },
   computed:{
@@ -265,6 +306,10 @@ export default {
 					vm.favorites=vm.$store.state.favorites;
 					vm.Isold=vm.$store.state.Isold;
 					vm.Ibought=vm.$store.state.Ibought;
+					vm.goods=vm.$store.state.goods;
+					vm.intentions.reverse();
+					vm.receivedintentions.reverse();
+					vm.goods.reverse();
 					vm.Isold.reverse();
 					vm.Ibought.reverse();
 					resolve();
@@ -332,6 +377,94 @@ export default {
 				offset: 50
 			});
 		},
+		editGood:function(goodid,index){
+			this.form3=JSON.parse(JSON.stringify(this.goods[index]));
+			if(this.form3.goodtags===null) this.form3.goodtags=[];
+			this.goodEditing=true;
+			this.goodEdited={"goodid":goodid,"index":index};
+			this.$nextTick(()=>{
+				this.$refs.ruleForm3.resetFields();
+			})
+			//console.log('?');
+		},
+		handleClose1:function(index){
+			this.tagsEditHistory.push({"tag":this.form3.goodtags[index],"type":0});
+			this.form3.goodtags.splice(index,1);
+		},
+		showInput(){
+		  this.goodTagsEditing = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput1.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm(){
+		  let inputValue=this.goodTagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.form3.goodtags.length;i++)
+					if(this.form3.goodtags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat){
+					this.tagsEditHistory.push({"tag":inputValue,"type":1});
+					this.form3.goodtags.push(inputValue);
+				}
+		  }
+		  this.goodTagsEditing=false;
+		  this.goodTagInput='';
+		},
+		cancelGoodEdit:function(){
+			this.goodEditing=false;
+			this.form3={},
+			this.tagsEditHistory=[],
+			this.goodTagsEditing=false;
+			this.goodTagInput='';
+		},
+		confirmGoodEdit:function(){
+			this.$refs.ruleForm3.validate(valid=>{
+				if(valid){
+					//console.log(valid);
+					var url='http://123.56.42.47:10492/editGood';
+					if(this.form3.goodname!=this.goods[this.goodEdited.index].goodname)
+						this.axios.post(url+'/'+this.goodEdited.goodid+'/name',null,{
+							params:{newname:this.form3.goodname},
+							headers:{'Authorization':this.$store.state.Authorization}
+						})
+					if(this.form3.goodprice!=this.goods[this.goodEdited.index].goodprice)
+						this.axios.post(url+'/'+this.goodEdited.goodid+'/price',null,{
+							params:{newprice:this.form3.goodprice},
+							headers:{'Authorization':this.$store.state.Authorization}
+						})
+					if(this.form3.gooddescription!=this.goods[this.goodEdited.index].gooddescription)
+						this.axios.post(url+'/'+this.goodEdited.goodid+'/description',null,{
+							params:{newdescription:this.form3.gooddescription},
+							headers:{'Authorization':this.$store.state.Authorization}
+						})
+					this.postTagsEdit(this.goodEdited.goodid,0,0);
+					this.$set(this.goods,this.goodEdited.index,this.form3);
+					//console.log(this.goods[this.goodEdited.index]);
+					this.goodEditing=false;
+					this.form3={},
+					this.goodTagsEditing=false;
+					this.goodTagInput='';
+					this.goodEdited={};
+				}
+			})
+		},
+		postTagsEdit:function(id,index,type){
+			if(index==this.tagsEditHistory.length){
+				this.tagsEditHistory=[];
+				return;
+			}
+			var urlAdd=type==0?"http://123.56.42.47:10492/good/addTag":"http://123.56.42.47:10492/need/addTag",
+				urlDelete=type==0?"http://123.56.42.47:10492/good/deleteTag":"http://123.56.42.47:10492/need/deleteTag",
+				vm=this;
+			this.axios.post(this.tagsEditHistory[index].type==0?urlDelete:urlAdd,null,{
+				params:type==0?{goodid:id,tag:this.tagsEditHistory[index].tag}:{needid:id,tag:this.tagsEditHistory[index].tag},
+				headers:{'Authorization':this.$store.state.Authorization}
+			}).then((response)=>{vm.postTagsEdit(id,index+1,type)})
+		},
 		sellerConfirm:function(orderid,index){
 			var url='http://123.56.42.47:10492/sellerconfirm';
 			this.axios.post(url+'/'+orderid,null,{
@@ -339,7 +472,7 @@ export default {
 			})
 			var temp=this.Isold[index];
 			temp.order.sellerconfirm=1;
-			this.$set(this.Isold,temp,index);
+			this.$set(this.Isold,index,temp);
 		},
 		buyerConfirm:function(orderid,index){
 			var url='http://123.56.42.47:10492/buyerconfirm';
@@ -348,7 +481,7 @@ export default {
 			})
 			var temp=this.Ibought[index];
 			temp.order.buyerconfirm=1;
-			this.$set(this.Ibought,temp,index);
+			this.$set(this.Ibought,index,temp);
 		},
 		postSellerComment:function(comment,rate,orderid,index){
 			console.log('seller comment: '+comment+', '+rate+', '+orderid);
@@ -360,19 +493,19 @@ export default {
 			var temp=this.Isold[index];
 			temp.order.sellercommentid=1;
 			temp.sellercomment={"commentcontent":comment,"commentrank":rate};
-			this.$set(this.Isold,temp,index);
+			this.$set(this.Isold,index,temp);
 		},
 		postBuyerComment:function(comment,rate,orderid,index){
 			console.log('buyer comment: '+comment+', '+rate+', '+orderid);
-			var url='http://123.56.42.47:10492/buyercomment';
+			/*var url='http://123.56.42.47:10492/buyercomment';
 			this.axios.post(url+'/'+orderid,null,{
 				params:{content:comment,rank:rate},
 				headers:{'Authorization':this.$store.state.Authorization}
-			})
-			var temp=this.Ibought[index],part={"commentcontent":comment,"commentrank":rate};
+			})*/
+			var temp=this.Ibought[index];
 			temp.order.buyercommentid=1;
 			temp.buyercomment={"commentcontent":comment,"commentrank":rate};
-			this.$set(this.Ibought,temp,index);
+			this.$set(this.Ibought,index,temp);
 		},
 		completeIntentions:function(){
 			var urlGood='http://123.56.42.47:10492/goodInfo',urlUser='http://123.56.42.47:10492/userinfo',
@@ -398,7 +531,7 @@ export default {
 			})
 			var temp=this.receivedintentions[index];
 			temp.intention.intentionstatus=1;
-			this.$set(this.receivedintentions,temp,index);
+			this.$set(this.receivedintentions,index,temp);
 			/*var urlDelete='http://123.56.42.47:10492/deleteGood';
 			this.axios.post(urlDelete+'/'+goodid,null,{
 				headers:{'Authorization':this.$store.state.Authorization},
@@ -418,7 +551,7 @@ export default {
 			})
 			var temp=this.receivedintentions[index];
 			temp.intention.intentionstatus=-1;
-			this.$set(this.receivedintentions,temp,index);
+			this.$set(this.receivedintentions,index,temp);
 		},
 		deleteIntention: function(intentionid,index){
 			console.log('delete');
