@@ -12,7 +12,7 @@
 				icon="el-icon-check" size='mini' circle @click="$emit('accpet')"></el-button>
 			<el-button class="intentionbox-refuse" v-if="showOptions" type="danger" 
 				icon="el-icon-close" size='mini' circle @click="$emit('refuse')"></el-button>
-			<el-button class="intentionbox-refuse" v-if="towho=='卖家'" type="danger" 
+			<el-button class="intentionbox-refuse" v-if="towho=='卖家'||status!=0" type="danger" 
 				icon="el-icon-delete" size='mini' circle @click="$emit('deleteIntention');show = !show"></el-button>
 		</div>
 	</transition>

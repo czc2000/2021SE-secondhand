@@ -1,4 +1,5 @@
 <template>
+	<div>
     <transition name="el-zoom-in-center">
       <div v-show="show" class="goodbox" @mouseenter="hovering=true" @mouseleave="hovering=false">
         <div class=box>
@@ -6,13 +7,25 @@
           <p class="review" @click="toShowPage">{{goodname}}</p>
           <p class="price">￥{{goodprice}}</p>
             <div class="buttonGroup">
-              <div class="icon"><el-button type="success" icon="el-icon-shopping-cart-1" size='medium' circle></el-button></div>
+              <div class="icon"><el-button type="success" icon="el-icon-shopping-cart-1" size='medium' circle v-popover:pop @click="createIntention"></el-button></div>
               <div class="icon"><el-button :type="favoriteButtonType" icon="el-icon-star-off" size='medium' circle @click="$emit('favoriteOrNot')"></el-button></div>
               <div class="icon"><el-button type="danger"  icon="el-icon-delete"  size='medium' circle @click="show = !show"></el-button></div>
             </div>
         </div>
       </div>
     </transition>
+		<el-popover trigger="click" ref="pop" placement="bottom" v-model="intentioning">
+			<div v-if="!intentioned">
+				<p class="bid">出价</p>
+				<el-input-number v-model="bid" :precision="2" :step="1" :max="50000" :min="0" size="medium">
+				</el-input-number>
+				<br/>
+				<el-button class="prop-icon" type="info" icon="el-icon-close" size="small" circle @click="cancelIntention"></el-button>
+				<el-button class="prop-icon" type="primary" icon="el-icon-s-promotion" size="small" circle v-popover:pop2 @click="sendIntention"></el-button>
+			</div>
+			<p v-else>已发送意向:)</p>
+		</el-popover>
+	</div>
 </template>
 
 <script>
@@ -23,7 +36,10 @@ export default {
     return{
       isActive:true,
       show:true,
-      hovering:false
+      hovering:false,
+			bid:null,
+			intentioning:false,
+			intentioned:false,
     }
   },
   methods:{
@@ -32,7 +48,22 @@ export default {
     },
     toShowPage:function (){
       this.$router.push({path:'/goodinfo',query:{goodid:this.goodid}})
-    }
+    },
+		createIntention:function(){
+			this.bid=this.goodprice;
+			this.intentioned=false;
+		},
+		cancelIntention:function(){
+			this.intentioning=false;
+		},
+		sendIntention:function(){
+			var url="http://123.56.42.47:10492/sendIntention";
+			this.axios.post(url+'/'+this.goodid,null,{
+				params:{intentionprice:this.bid},
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			this.intentioned=true;
+		}
   },
   computed:{
     favoriteButtonType(){
@@ -141,5 +172,12 @@ export default {
 
 .box:hover .icon{
   transform: rotate(18deg);
+}
+.bid{
+	text-align: center;
+}
+.prop-icon{
+	margin-top: 5%;
+	margin-left: 20%;
 }
 </style>

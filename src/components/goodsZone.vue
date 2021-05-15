@@ -12,7 +12,7 @@
 		<div class="GZone_goodcontainer" v-show="show">
 		      <Goodbox_goodshelf class="Zone_good" v-for="(item,index) in goodlist" :key="item.goodid"
 		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
-										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
+										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)" @wantobuy="createIntention(item.goodid,index)">
 		      </Goodbox_goodshelf>
 		</div>
     <div class="changePage">
@@ -172,7 +172,9 @@ export default {
 			temp.favoriteNow=!temp.favoriteNow;
 			this.$set(this.goodlist,index,temp);
 		},
-		
+		createIntention:function(goodid,index){
+			if(this.goodlist[index].goodsenderid==this.$store.state.userid) return;
+		}
 	},
 	created: function(){
 		var vm=this;

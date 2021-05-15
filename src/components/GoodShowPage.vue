@@ -48,7 +48,7 @@
 			</el-tag>
 			<div v-if="myGood">
 				<el-input v-if="addingTag" class="input-new-tag" v-model="tagInput"
-					ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm">
+					ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 				</el-input>
 				<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
 			</div>

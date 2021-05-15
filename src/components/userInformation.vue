@@ -65,14 +65,14 @@
 			<div class="order userinfo-maincard" v-if="isMode('order')">
 				<div class="rectangleContainer" v-if="isMode2('fromMe')">
 					<orderbox v-for="(item,index) in this.Isold" :key="item.order.orderid" :index="index" towho="买家"
-						:good="item.good" :order="item.order" :buyer="item.buyer" :seller="{}"
+						:good="item.good" :order="item.order" :buyer="item.buyer" :seller={}
 						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
 						@confirm="sellerConfirm(item.order.orderid,index)" @postComment="postSellerComment">
 					</orderbox>
 				</div>
 				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
 					<orderbox v-for="(item,index) in this.Ibought" :key="item.order.orderid" :index="index" towho="卖家"
-						:good="item.good" :order="item.order" :buyer="{}" :seller="item.seller"
+						:good="item.good" :order="item.order" :buyer={} :seller="item.seller"
 						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
 						@confirm="buyerConfirm(item.order.orderid,index)" @postComment="postBuyerComment">
 					</orderbox>
@@ -104,7 +104,7 @@
 									{{tag}}
 							</el-tag>
 							<el-input class="input-new-tag" v-if="needTagsEditing" v-model="needTagInput"
-								ref="saveTagInput2" size="small" @keyup.enter.native="handleInputConfirm2">
+								ref="saveTagInput2" size="small" @keyup.enter.native="handleInputConfirm2" @blur="handleInputConfirm2">
 							</el-input>
 							<el-button v-else class="button-new-tag" size="small" @click="showInput2">+ New Tag</el-button>
 						  <br/><br/><br/>
@@ -119,7 +119,7 @@
 				<div class="demand-needContainer">
 					<needbox_infoShelf class="needs" v-for="(item,index) in this.needs" :key="item.needid"
 						:needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needid="item.needid"
-						:needsenderid="item.needsenderid" :needDescription="item.needdescription" @deleteNeed="recordDelete(item.needid)" @edit="editNeed(item.needid,index)">
+						:needsenderid="item.needsenderid" :needDescription="item.needdescription" @deleteNeed="recordDelete(item.needid,index)" @edit="editNeed(item.needid,index)">
 					</needbox_infoShelf>
 				</div>
 			</div>
@@ -138,7 +138,7 @@
 									{{tag}}
 							</el-tag>
 							<el-input class="input-new-tag" v-if="goodTagsEditing" v-model="goodTagInput"
-								ref="saveTagInput1" size="small" @keyup.enter.native="handleInputConfirm1">
+								ref="saveTagInput1" size="small" @keyup.enter.native="handleInputConfirm1" @blur="handleInputConfirm1">
 							</el-input>
 							<el-button v-else class="button-new-tag" size="small" @click="showInput1">+ New Tag</el-button>
 						  <br/><br/><br/>
@@ -168,7 +168,7 @@
 					<intentionbox v-for="(item,index) in this.intentions" :key="item.intention.intentionid"
 						:avatar="'http://123.56.42.47:10492'+item.seller.useravatarurl" :name="item.seller.username" 
 						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
-						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="卖家" @deleteIntention="deleteIntention(item.intention.intentionid,index)">
+						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="卖家" @deleteIntention="deleteIntention(item.intention.intentionid,index,0)">
 					</intentionbox>
 				</div>
 				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
@@ -176,7 +176,7 @@
 						:avatar="'http://123.56.42.47:10492'+item.buyer.useravatarurl" :name="item.buyer.username" 
 						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
 						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="买家"
-						@accpet="acceptIntention(item.intention.intentionid,index)" @refuse="refuseIntention(item.intention.intentionid,index)">
+						@accpet="acceptIntention(item.intention.intentionid,index)" @refuse="refuseIntention(item.intention.intentionid,index)" @deleteIntention="deleteIntention(item.intention.intentionid,index,1)">
 					</intentionbox>
 				</div>
 			</div>
@@ -290,6 +290,18 @@ export default {
 			needTagsEditing:false,
 			needTagInput:'',
 			needEdited:{},
+			invalid:{
+				goodid:370,
+				goodstatus:1,
+				goodname:"___已失效___",
+				gooddescription:"已经被发布方给删掉了",
+				goodprice:2333,
+				goodpicurl:'/c5e1a9e7-8ad2-4354-8fde-4ea4792991cf.png',
+				goodcategory:4,
+				goodsendtime:"2021-05-15T13:12:28.000+00:00",
+				goodsenderid:102,
+				goodtags:null,
+			}
     }
   },
   computed:{
@@ -347,6 +359,7 @@ export default {
 					vm.needs.reverse();
 					vm.Isold.reverse();
 					vm.Ibought.reverse();
+					//console.log(vm.Isold[0]);
 					resolve();
 				}).then(()=>{
 					vm.completeIntentions();
@@ -386,7 +399,7 @@ export default {
 				offset: 50
 			});
 		},
-		recordDelete:function(needid){
+		recordDelete:function(needid,index){
 			var url='http://123.56.42.47:10492/deleteNeed';
 			this.axios.post(url+'/'+needid,null,{
 					headers:{
@@ -399,6 +412,7 @@ export default {
 				type: 'success',
 				offset: 50
 			});
+			this.needs.splice(index,1);
 		},
 		deleteGood:function(goodid){
 			var url='http://123.56.42.47:10492/deleteGood';
@@ -604,11 +618,11 @@ export default {
 		},
 		postBuyerComment:function(comment,rate,orderid,index){
 			console.log('buyer comment: '+comment+', '+rate+', '+orderid);
-			/*var url='http://123.56.42.47:10492/buyercomment';
+			var url='http://123.56.42.47:10492/buyercomment';
 			this.axios.post(url+'/'+orderid,null,{
 				params:{content:comment,rank:rate},
 				headers:{'Authorization':this.$store.state.Authorization}
-			})*/
+			})
 			var temp=this.Ibought[index];
 			temp.order.buyercommentid=1;
 			temp.buyercomment={"commentcontent":comment,"commentrank":rate};
@@ -617,18 +631,34 @@ export default {
 		completeIntentions:function(){
 			var urlGood='http://123.56.42.47:10492/goodInfo',urlUser='http://123.56.42.47:10492/userinfo',
 				vm=this;
-			/*for(var i=0;i<this.Isold.length;i++)
-				console.log(this.Isold[i].order);*/
-			//console.log('completeIntentions '+this.intentions.length+' '+this.receivedintentions.length);
-			for(var i=0;i<this.receivedintentions.length;i++){
-				if(this.receivedintentions[i].intention.intentionstatus!=0)
+			for(var i=0;i<this.intentions.length;i++)
+				if(this.intentions[i].good===null)
 				{
-					//console.log('已处理： '+this.receivedintentions[i].intentionid);
-					this.receivedintentions.splice(i,1);
-					i--;
-					continue;
+					var temp=this.intentions[i];
+					temp.good=this.invalid;
+					this.$set(this.intentions,i,temp);
 				}
-			}
+			for(var i=0;i<this.receivedintentions.length;i++)
+				if(this.receivedintentions[i].good===null)
+				{
+					var temp=this.receivedintentions[i];
+					temp.good=this.invalid;
+					this.$set(this.receivedintentions,i,temp);
+				}
+			for(var i=0;i<this.Isold.length;i++)
+				if(this.Isold[i].good===null)
+				{
+					var temp=this.Isold[i];
+					temp.good=this.invalid;
+					this.$set(this.Isold,i,temp);
+				}
+			for(var i=0;i<this.Ibought.length;i++)
+				if(this.Ibought[i].good===null)
+				{
+					var temp=this.Ibought[i];
+					temp.good=this.invalid;
+					this.$set(this.Ibought,i,temp);
+				}
 		},
 		acceptIntention: function(intentionid,index){
 			console.log('accept');
@@ -660,13 +690,14 @@ export default {
 			temp.intention.intentionstatus=-1;
 			this.$set(this.receivedintentions,index,temp);
 		},
-		deleteIntention: function(intentionid,index){
+		deleteIntention: function(intentionid,index,type){
 			console.log('delete');
 			var url='http://123.56.42.47:10492/deleteIntention';
 			this.axios.post(url+'/'+intentionid,null,{
 				headers:{'Authorization':this.$store.state.Authorization}
 			})
-			this.intentions.splice(index,1);
+			if(type==0) this.intentions.splice(index,1);
+			else this.receivedintentions.splice(index,1);
 		},
 		enterEditMode: function(){
 			console.log('enter edit mode');
