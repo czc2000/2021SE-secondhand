@@ -91,12 +91,35 @@
 			</div>
 			
 			<div class="demand userinfo-maincard" v-if="isMode('demand')">
+				<el-dialog title="修改需求" :visible.sync="needEditing" width="30%" :show-close="false" :modal-append-to-body='false'>
+						<el-form label-position="right" ref="ruleForm4" :rules="rules4" :model="form4" label-width="90px">
+						  <el-form-item label="需求标题" prop="needname">
+						    <el-input v-model="form4.needname"></el-input>
+						  </el-form-item>
+						  <el-form-item label="需求描述" prop="needdescription">
+						    <el-input type="textarea" v-model="form4.needdescription"></el-input>
+						  </el-form-item>
+							<el-tag :key="tag" v-for="(tag,index) in form4.needtags" closable
+								:disable-transitions="false" @close="handleClose2(index)">
+									{{tag}}
+							</el-tag>
+							<el-input class="input-new-tag" v-if="needTagsEditing" v-model="needTagInput"
+								ref="saveTagInput2" size="small" @keyup.enter.native="handleInputConfirm2">
+							</el-input>
+							<el-button v-else class="button-new-tag" size="small" @click="showInput2">+ New Tag</el-button>
+						  <br/><br/><br/>
+						</el-form>
+					  <span slot="footer" class="dialog-footer">
+					    <el-button @click="cancelNeedEdit">取 消</el-button>
+					    <el-button type="primary" @click="confirmNeedEdit">确 定</el-button>
+					  </span>
+				</el-dialog>
 				<el-divider class="demand-divider1"></el-divider>
 				<el-divider class="demand-divider2"></el-divider>
 				<div class="demand-needContainer">
-					<needbox_infoShelf class="needs" v-for="(item,index) in this.$store.state.needs" :key="item.needid"
+					<needbox_infoShelf class="needs" v-for="(item,index) in this.needs" :key="item.needid"
 						:needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needid="item.needid"
-						:needsenderid="item.needsenderid" :needDescription="item.needdescription" @deleteNeed="recordDelete(item.needid)">
+						:needsenderid="item.needsenderid" :needDescription="item.needdescription" @deleteNeed="recordDelete(item.needid)" @edit="editNeed(item.needid,index)">
 					</needbox_infoShelf>
 				</div>
 			</div>
@@ -115,9 +138,9 @@
 									{{tag}}
 							</el-tag>
 							<el-input class="input-new-tag" v-if="goodTagsEditing" v-model="goodTagInput"
-								ref="saveTagInput1" size="small" @keyup.enter.native="handleInputConfirm">
+								ref="saveTagInput1" size="small" @keyup.enter.native="handleInputConfirm1">
 							</el-input>
-							<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+							<el-button v-else class="button-new-tag" size="small" @click="showInput1">+ New Tag</el-button>
 						  <br/><br/><br/>
 							<el-form-item label="商品价格" prop="goodprice">
 						    <p class="price">￥</p>
@@ -244,19 +267,29 @@ export default {
 			  gooddescription:[{required:true,message:'请输入商品描述',trigger:'blur'},{min:10,max:200,message: '长度在10到200个字符之间',trigger: 'blur'}],
 			  goodprice:[{required:true,message:'请输入商品价格',trigger:'blur'}]
 			},
+			rules4:{
+			  needname:[{required: true, message: '请输入需求标题', trigger: 'blur' },{min: 5, max: 36, message: '长度在 5 到 36 个字符之间', trigger: 'blur'}],
+			  needdescription:[{required:true,message:'请输入需求描述',trigger:'blur'},{min:10,max:200,message: '长度在10到200个字符之间',trigger: 'blur'}],
+			  needprice:[{required:true,message:'请输入需求价格',trigger:'blur'}]
+			},
 			intentions:[],
 			receivedintentions:[],
 			favorites:[],
 			Isold:[],
 			Ibought:[],
 			goods:[],
+			needs:[],
 			goodEditing:false,
 			form3:{},
-			rules3:{},
 			goodTagsEditing:false,
 			goodTagInput:'',
 			tagsEditHistory:[],
 			goodEdited:{},
+			needEditing:false,
+			form4:{},
+			needTagsEditing:false,
+			needTagInput:'',
+			needEdited:{},
     }
   },
   computed:{
@@ -307,9 +340,11 @@ export default {
 					vm.Isold=vm.$store.state.Isold;
 					vm.Ibought=vm.$store.state.Ibought;
 					vm.goods=vm.$store.state.goods;
+					vm.needs=vm.$store.state.needs;
 					vm.intentions.reverse();
 					vm.receivedintentions.reverse();
 					vm.goods.reverse();
+					vm.needs.reverse();
 					vm.Isold.reverse();
 					vm.Ibought.reverse();
 					resolve();
@@ -378,26 +413,25 @@ export default {
 			});
 		},
 		editGood:function(goodid,index){
-			this.form3=JSON.parse(JSON.stringify(this.goods[index]));
+			var temp=Object.assign({},this.goods[index]);
+			this.form3=Object.assign({},temp);
+			//console.log(this.form3);
 			if(this.form3.goodtags===null) this.form3.goodtags=[];
 			this.goodEditing=true;
 			this.goodEdited={"goodid":goodid,"index":index};
-			this.$nextTick(()=>{
-				this.$refs.ruleForm3.resetFields();
-			})
 			//console.log('?');
 		},
 		handleClose1:function(index){
 			this.tagsEditHistory.push({"tag":this.form3.goodtags[index],"type":0});
 			this.form3.goodtags.splice(index,1);
 		},
-		showInput(){
+		showInput1(){
 		  this.goodTagsEditing = true;
 		  this.$nextTick(_ => {
 				this.$refs.saveTagInput1.$refs.input.focus();
 		  });
 		},
-		handleInputConfirm(){
+		handleInputConfirm1(){
 		  let inputValue=this.goodTagInput;
 		  if (inputValue){
 				var repeat=false;
@@ -416,10 +450,12 @@ export default {
 		},
 		cancelGoodEdit:function(){
 			this.goodEditing=false;
-			this.form3={},
-			this.tagsEditHistory=[],
 			this.goodTagsEditing=false;
+			this.tagsEditHistory=[];
 			this.goodTagInput='';
+			this.$nextTick(()=>{
+				this.$refs.ruleForm3.resetFields();
+			})
 		},
 		confirmGoodEdit:function(){
 			this.$refs.ruleForm3.validate(valid=>{
@@ -452,7 +488,78 @@ export default {
 				}
 			})
 		},
+		editNeed:function(needid,index){
+			var temp=Object.assign({},this.needs[index]);
+			this.form4=Object.assign({},temp);
+			//console.log(this.form4);
+			if(this.form4.needtags===null) this.form4.needtags=[];
+			this.needEditing=true;
+			this.needEdited={"needid":needid,"index":index};
+			console.log('editNeed');
+		},
+		handleClose2:function(index){
+			this.tagsEditHistory.push({"tag":this.form4.needtags[index],"type":0});
+			this.form4.needtags.splice(index,1);
+		},
+		showInput2(){
+		  this.needTagsEditing = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput2.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm2(){
+		  let inputValue=this.needTagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.form4.needtags.length;i++)
+					if(this.form4.needtags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat){
+					this.tagsEditHistory.push({"tag":inputValue,"type":1});
+					this.form4.needtags.push(inputValue);
+				}
+		  }
+		  this.needTagsEditing=false;
+		  this.needTagInput='';
+		},
+		cancelNeedEdit:function(){
+			this.needEditing=false;
+			this.tagsEditHistory=[],
+			this.needTagsEditing=false;
+			this.needTagInput='';
+			this.$nextTick(()=>{
+				this.$refs.ruleForm4.resetFields();
+			})
+		},
+		confirmNeedEdit:function(){
+			this.$refs.ruleForm4.validate(valid=>{
+				if(valid){
+					var url='http://123.56.42.47:10492/editNeed';
+					if(this.form4.needname!=this.needs[this.needEdited.index].needname)
+						this.axios.post(url+'/'+this.needEdited.needid+'/name',null,{
+							params:{newNeedName:this.form4.needname},
+							headers:{'Authorization':this.$store.state.Authorization}
+						})
+					if(this.form4.needdescription!=this.needs[this.needEdited.index].needdescription)
+						this.axios.post(url+'/'+this.needEdited.needid+'/description',null,{
+							params:{newdescription:this.form4.needdescription},
+							headers:{'Authorization':this.$store.state.Authorization}
+						})
+					this.postTagsEdit(this.needEdited.needid,0,1);
+					this.$set(this.needs,this.needEdited.index,this.form4);
+					//console.log(this.goods[this.goodEdited.index]);
+					this.needEditing=false;
+					this.form4={},
+					this.needTagsEditing=false;
+					this.needTagInput='';
+					this.needEdited={};
+				}
+			})
+		},
 		postTagsEdit:function(id,index,type){
+			//console.log("?");
 			if(index==this.tagsEditHistory.length){
 				this.tagsEditHistory=[];
 				return;
