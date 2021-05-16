@@ -218,7 +218,7 @@ export default {
   width: 100%;
   z-index: -1;
   height: 940px;
-  background-image: url('../assets/NeedShowPage/bg.jpg');
+  background-image: url('../assets/GoodShowPage/bg.jpg');
   background-size: cover;
   background-position: center;
 }

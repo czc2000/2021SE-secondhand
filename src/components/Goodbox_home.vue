@@ -58,6 +58,8 @@ export default {
   border-style: solid;
   border-width: 3px;
   border-color: #e5f6f8;
+  transition-property: border-color , box-shadow;
+  transition-duration:0.5s , 0.5s;
 }
 .box:hover{
   border:3px solid #deeff1;
