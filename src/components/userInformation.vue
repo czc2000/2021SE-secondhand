@@ -353,6 +353,7 @@ export default {
 					vm.Ibought=vm.$store.state.Ibought;
 					vm.goods=vm.$store.state.goods;
 					vm.needs=vm.$store.state.needs;
+					vm.favorites.reverse();
 					vm.intentions.reverse();
 					vm.receivedintentions.reverse();
 					vm.goods.reverse();
@@ -631,6 +632,13 @@ export default {
 		completeIntentions:function(){
 			var urlGood='http://123.56.42.47:10492/goodInfo',urlUser='http://123.56.42.47:10492/userinfo',
 				vm=this;
+			for(var i=0;i<this.favorites.length;i++)
+				if(this.favorites[i]===null)
+				{
+					this.favorites.splice(i,1);
+					i--;
+				}
+					//this.$set(this.favorites,i,this.invalid);
 			for(var i=0;i<this.intentions.length;i++)
 				if(this.intentions[i].good===null)
 				{

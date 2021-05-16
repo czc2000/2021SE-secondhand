@@ -50,6 +50,7 @@ export default {
       this.$router.push({path:'/goodinfo',query:{goodid:this.goodid}})
     },
 		createIntention:function(){
+			if(!this.$store.state.login) return;
 			this.bid=this.goodprice;
 			this.intentioned=false;
 		},

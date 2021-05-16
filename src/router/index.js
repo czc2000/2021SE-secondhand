@@ -14,6 +14,7 @@ import GoodShowPage from "@/components/GoodShowPage";
 import needsZone from "@/components/needsZone"
 import NeedShowPage from "@/components/NeedShowPage";
 import Carousel from "@/components/Carousel";
+import searchResult from "@/components/searchResult";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -74,7 +75,11 @@ const routes=[
     {
         path: '/moduletest',
         component:Carousel
-    }
+    },
+		{
+				path: '/searchResult',
+				component:searchResult
+		}
 ]
 const vueRouter = new VueRouter({
     routes,

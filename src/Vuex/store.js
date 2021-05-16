@@ -24,6 +24,8 @@ const state = {
 	loadDone:false,
 	temporaryContact:null,
 	loadUserdataDone:false,
+	searchParams:null,
+	newSearch:false
 }
 const mutations = {
 	saveAu(state,Au) {
@@ -144,6 +146,27 @@ const mutations = {
 	},
 	clearTPContact(state){
 		this.state.temporaryContact=null;
+	},
+	saveSearchParams(state,params){
+		this.state.searchParams=params;
+		window.localStorage.setItem("searchParams",JSON.stringify(params));
+	},
+	clearSearchParams(state){
+		this.state.searchParams=null;
+		window.localStorage.removeItem("searchParams");
+	},
+	changeSearchPage(state,pageNum){
+		this.state.searchParams.pageNum=pageNum;
+		window.localStorage.setItem("searchParams",JSON.stringify(this.state.searchParams));
+	},
+	loadSearchParams(state){
+		this.state.searchParams=JSON.parse(window.localStorage.getItem("searchParams"));
+	},
+	newSearch(state){
+		this.state.newSearch=true;
+	},
+	endSearch(state){
+		this.state.newSearch=false;
 	}
 }
 export default new Vuex.Store({
