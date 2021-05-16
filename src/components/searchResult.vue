@@ -40,14 +40,14 @@ export default {
 	watch:{
 		newSearch(val){
 			if(val==true){
-				console.log(this.$store.state.searchParams);
+				console.log('get');
 				var vm=this;
+				this.$store.commit('endSearch');	
 				search();
 				async function search(){
 					await vm.getPageNum();
 					await vm.turnTo(1);
 				}
-				this.$store.commit('endSearch');
 			}
 		}
 	},
@@ -170,6 +170,7 @@ export default {
 		}
 	},
 	created: function(){
+		this.$store.commit('endSearch');
 		var vm=this;
 		init();
 		async function init(){
