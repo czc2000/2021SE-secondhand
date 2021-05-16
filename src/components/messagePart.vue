@@ -83,6 +83,7 @@ export default{
 		},
 		tpContact(val){
 			if(this.tpContact!=null){
+				console.log(val);
 				if(typeof(this.isContact[val.userid])=="undefined"){
 					//console.log('this undefined');
 					this.$set(this.tpContacts,this.tpContactNum++,val);
@@ -100,6 +101,7 @@ export default{
 					return;
 				}
 				//this.$nextTick(()=>{this.chooseTPContact(val.userid,this.tpContacts.length-1)});
+				console.log(this.tpContactNum+' '+this.tpContacts[0]);
 				for(var i=0;i<this.tpContactNum;i++)
 					if(this.tpContacts[i].userid==val.userid){
 						this.chooseContact(val.userid,i);
@@ -225,6 +227,7 @@ export default{
 						break;
 					}
 			}
+			this.tpContactNum--;
 			this.$store.commit('clearTPContact');
 			if(index!=-1) this.choosen=0;
 		},

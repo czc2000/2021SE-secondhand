@@ -2,10 +2,10 @@
   <div class="appheader">
     <div class="navbar" :class="{home:getPath=='/home'}">
       <div class="search">
-        <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable></el-input>
+        <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable v-popover:pop @keyup.enter.native="confirmSearch"></el-input>
       </div>
       <div class="searchbutton">
-        <el-button class="headerButton" type="primary" circle size="medium"><i class="el-icon-search"></i></el-button>
+        <el-button class="headerButton" type="primary" circle size="medium"><i class="el-icon-search" @click="confirmSearch"></i></el-button>
       </div>
       <div class="messagebutton">
         <el-button class="headerButton" type="primary" circle size="medium" v-show="getloginstate" @click='messageClick'><i class="el-icon-chat-dot-round"></i></el-button>
@@ -45,6 +45,31 @@
       </div>
     </div>
     <movingimage v-if="getPath=='/home'" class="movingimage"></movingimage>
+		<el-popover ref="pop" placement="bottom" v-model="searching" @keyup.enter.native="confirmSearch">
+			<el-form ref="searchForm" :model="searchForm" label-width="13%">
+				<el-form-item label="分区">
+					<el-radio-group v-model="searchForm.blockId">
+						<el-radio label="0">全部</el-radio>
+						<el-radio label="1">生活用品</el-radio>
+						<el-radio label="2">电子产品</el-radio>
+						<el-radio label="3">书籍资料</el-radio>
+						<el-radio label="4">其他类型</el-radio>
+					</el-radio-group>
+				</el-form-item>
+				<el-form-item label="排列方式">
+					<el-radio-group v-model="searchForm.searchType">
+						<el-radio label="1">从旧到新</el-radio>
+						<el-radio label="2">从新到旧</el-radio>
+						<el-radio label="3">价格降序</el-radio>
+						<el-radio label="4">价格升序</el-radio>
+					</el-radio-group>
+				</el-form-item>
+			</el-form>
+			<div align="center">
+				<el-button type="info" @click="cancelSearch">取消</el-button>
+				<el-button type="primary" @click="confirmSearch">搜索</el-button>
+			</div>
+		</el-popover>
   </div>
 </template>
 
@@ -58,7 +83,12 @@ export default {
   data:function (){
     return{
       activeIndex:"2",
-      searchkey:'',
+      searchkey:"",
+			searching:false,
+			searchForm:{
+				blockId:'0',
+				searchType:'1'
+			}
     }
   },
 	created:function(){
@@ -79,6 +109,9 @@ export default {
 		}
   },
 	watch:{
+		searchKey(val){
+			console.log(val);
+		}
 	},
   methods:{
     removeItems:function (index) {
@@ -111,6 +144,31 @@ export default {
     testClick:function (){
       this.$router.push({path:'/goodinfo',query:{goodid:200}});
     },
+		cancelSearch:function(){
+			this.searching=false;
+		},
+		confirmSearch:function(){
+			if(typeof(this.searchkey)=="undefined"||this.searchkey==''){
+				this.$notify({
+					title: '!',
+					message: '请输入搜索内容',
+					type: 'info',
+					duration: 2000
+				})
+				return;
+			}
+			this.$store.commit('saveSearchParams',{
+				blockId:this.searchForm.blockId,
+				keyWord:this.searchkey,
+				pageNum:1,
+				searchType:this.searchForm.searchType,
+			});
+			this.$store.commit('newSearch');
+			this.$router.push('/searchResult');
+			this.searching=false;
+			this.searchkey="";
+			this.searchForm={blockId:'0',searchType:'1'};
+		},
 		messageClick:function(){
 			if(!this.$store.state.messageShow) this.$store.commit('showMessage');
 			else if(this.$store.state.messageShow) this.$store.commit('hideMessage');
@@ -141,7 +199,7 @@ export default {
         });
       });
     }
-  }
+  },
 }
 </script>
 

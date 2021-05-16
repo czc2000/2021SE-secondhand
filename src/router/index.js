@@ -15,6 +15,7 @@ import needsZone from "@/components/needsZone"
 import NeedShowPage from "@/components/NeedShowPage";
 import Carousel from "@/components/Carousel";
 import LoginWithRegister from "@/components/LoginWithRegister";
+import searchResult from "@/components/searchResult";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -75,7 +76,12 @@ const routes=[
     {
         path: '/moduletest',
         component:LoginWithRegister
-    }
+    },
+
+		{
+				path: '/searchResult',
+				component:searchResult
+		}
 ]
 const vueRouter = new VueRouter({
     routes,

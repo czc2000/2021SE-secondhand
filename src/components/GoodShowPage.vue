@@ -13,6 +13,24 @@
       <div class="goodtitle">
         {{good.goodname}}
       </div>
+			<div v-if="myGood&&!priceediting&&!descriptionediting&&!addingTag" class="editname">
+				<el-button type="text" slot="reference" @click="nameediting=true" v-if="!nameediting">
+				  <span class="edittext">修改</span>
+				</el-button>
+				<el-input v-else v-model="name" @keyup.enter.native="editName"></el-input>
+			</div>
+			<div v-if="myGood&&!nameediting&&!descriptionediting&&!addingTag" class="editprice">
+				<el-button type="text" slot="reference" @click="priceediting=true" v-if="!priceediting">
+				  <span class="edittext">修改</span>
+				</el-button>
+				<el-input v-else v-model="price" @keyup.enter.native="editPrice"></el-input>
+			</div>
+			<div v-if="myGood&&!nameediting&&!priceediting&&!addingTag" class="editdescription">
+				<el-button type="text" slot="reference" @click="descriptionediting=true" v-if="!descriptionediting">
+				  <span class="edittext">修改</span>
+				</el-button>
+				<el-input v-else v-model="description" @keyup.enter.native="editDescription"></el-input>
+			</div>
       <div class="senderinfo"  @click="addTemporaryContact">
         <div class="price">￥{{good.goodprice}}</div>
         <el-tooltip content="联系卖家" placement="bottom" effect="light">
@@ -23,7 +41,6 @@
       <el-divider></el-divider>
       <div class="description">
         {{good.gooddescription}}
-				
       </div>
 			<el-tag :key="tag" v-for="(tag,index) in good.goodtags" :closable="myGood"
 				:disable-transitions="false" @close="handleClose(index)">
@@ -31,8 +48,7 @@
 			</el-tag>
 			<div v-if="myGood">
 				<el-input v-if="addingTag" class="input-new-tag" v-model="tagInput"
-					ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" 
-					@blur="handleInputConfirm">
+					ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 				</el-input>
 				<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
 			</div>
@@ -112,7 +128,11 @@ export default {
 			tagInput:'',
 			addingTag:false,
 			name:'',
+			price:'',
 			description:'',
+			nameediting:false,
+			priceediting:false,
+			descriptionediting:false,
     }
   },
   computed: {
@@ -142,6 +162,7 @@ export default {
         this.good = response.data.good
         this.good.goodpicurl = 'http://123.56.42.47:10492' + this.good.goodpicurl
         url='http://123.56.42.47:10492/userinfo/'+this.good.goodsenderid;
+				if(this.good.goodtags===null) this.good.goodtags=[];
         this.axios.get(url).then((response)=>{
           this.senderinfo=response.data.user;
           this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
@@ -225,7 +246,7 @@ export default {
     },
 		addTemporaryContact:function(){
 			//console.log(this.senderinfo);
-			if(!this.$store.state.login) return;
+			if(!this.$store.state.login||this.senderinfo.userid==this.$store.state.userid) return;
 			this.$store.commit('addTemporaryContact',this.senderinfo);
 			this.$store.commit('showMessage');
 		},
@@ -244,8 +265,13 @@ export default {
 			}
 		},
 		handleClose(index){
-		   this.good.goodtags.splice(index, 1);
-		 },
+			var tag=this.good.goodtags[index],url="http://123.56.42.47:10492/good/deleteTag";
+		  this.axios.post(url,null,{
+				params:{goodid:this.good.goodid,tag:tag},
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			this.good.goodtags.splice(index, 1);
+		},
 		showInput(){
 		  this.addingTag = true;
 		  this.$nextTick(_ => {
@@ -261,11 +287,58 @@ export default {
 						repeat=true;
 						break;
 					}
-		    if(!repeat) this.good.goodtags.push(inputValue);
+		    if(!repeat){
+					this.good.goodtags.push(inputValue);
+					var url="http://123.56.42.47:10492/good/addTag";
+					this.axios.post(url,null,{
+						params:{goodid:this.good.goodid,tag:inputValue},
+						headers:{'Authorization':this.$store.state.Authorization}
+					})
+				}
 		  }
 		  this.addingTag=false;
 		  this.tagInput='';
 		},
+		editName:function(){
+			if(this.name){
+				//console.log(this.name);
+				this.good.goodname=this.name;
+				var url='http://123.56.42.47:10492/editGood';
+				this.axios.post(url+'/'+this.good.goodid+'/name',null,{
+					params:{newname:this.name},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.name="";
+			this.nameediting=false;
+		},
+		editPrice:function(){
+			var v=Number(this.price);
+			if(!isNaN(v)&&v>=0){
+				//console.log(this.name);
+				this.good.goodprice=v;
+				var url='http://123.56.42.47:10492/editGood';
+				this.axios.post(url+'/'+this.good.goodid+'/price',null,{
+					params:{newprice:v},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.price="";
+			this.priceediting=false;
+		},
+		editDescription:function(){
+			if(this.description){
+				//console.log(this.name);
+				this.good.gooddescription=this.description;
+				var url='http://123.56.42.47:10492/editGood';
+				this.axios.post(url+'/'+this.good.goodid+'/description',null,{
+					params:{newdescription:this.description},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.description="";
+			this.descriptionediting=false;
+		}
   }
 }
 </script>
@@ -289,4 +362,39 @@ export default {
   background-size: cover;
   background-position: center;
 }
+.editname{
+	position: absolute;
+}
+.editprice{
+	position: absolute;
+	top: 25%;
+}
+.editdescription{
+	position: absolute;
+	top: 35%;
+}
+.edittext{
+  font-size: 14px;
+  color: #919191;
+}
+.edittext:hover{
+	color: red;
+}
+/*以下是关于标签的，从element ui抄的,对button有改动*/
+.el-tag + .el-tag {
+	margin-left: 10px;
+}
+.button-new-tag {
+	margin-left: 10px;
+	height: 32px;
+	line-height: 30px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.input-new-tag {
+	width: 90px;
+	margin-left: 10px;
+	vertical-align: bottom;
+}
+/*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>

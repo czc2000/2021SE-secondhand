@@ -1,14 +1,5 @@
 <template>
-	<div class="goodsZoneMain">
-    <div class="GZone_banner">
-      <img src="../assets/GoodZone/banner.jpg" alt="">
-    </div>
-    <div class="GZone_menu">
-      <ul class="gz-Menu">
-        <li v-for="(item,index) in leftMenu_items" :key="index"
-            :class="{activeItem:index==partFocused}" @click="turnTo(index,1)"><a>{{item.title}}</a></li>
-      </ul>
-    </div>
+	<div>
 		<div class="GZone_goodcontainer" v-show="show">
 		      <Goodbox_goodshelf class="Zone_good" v-for="(item,index) in goodlist" :key="item.goodid"
 		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
@@ -35,22 +26,28 @@ export default {
 	}, 
 	data: function(){
 		return{
-			leftMenu_items:[
-				{title:"生活用品",pageNum:null},
-				{title:"电子产品",pageNum:null},
-				{title:"书籍资料",pageNum:null},
-				{title:"其它类型",pageNum:null},
-			],
-			partFocused:null,
 			pageNow:null,
+			pageMax:null,
 			goodlist:[],
 			show:true
 		}
 	},
 	computed:{
-		classOfMenuItem(){
-			return (index)=>{
-				return index==this.partFocused?"gz-leftMenu-itemFocused":"";
+		newSearch(){
+			return this.$store.state.newSearch;
+		}
+	},
+	watch:{
+		newSearch(val){
+			if(val==true){
+				console.log('get');
+				var vm=this;
+				this.$store.commit('endSearch');	
+				search();
+				async function search(){
+					await vm.getPageNum();
+					await vm.turnTo(1);
+				}
 			}
 		}
 	},
@@ -60,13 +57,13 @@ export default {
 			console.log('last');
 			last_();
 			async function last_(){
-				await vm.getPageNum(vm.partFocused+1);
+				await vm.getPageNum();
 				await new Promise(function(resolve,reject){
 					if(vm.pageNow==1)
 						vm.$message({message: '已经是第一页了'});
-					else if(vm.pageNow>vm.leftMenu_items[vm.partFocused]+1)
+					else if(vm.pageNow>vm.pageMax)
 						vm.$message({message: '页码出错'});
-					else vm.turnTo(vm.partFocused,vm.pageNow-1);
+					else vm.turnTo(vm.pageNow-1);
 					resolve();
 				})
 			}
@@ -76,36 +73,34 @@ export default {
 			console.log('next');
 			next_();
 			async function next_(){
-				await vm.getPageNum(vm.partFocused+1);
+				await vm.getPageNum();
 				await new Promise(function(resolve,reject){
-					console.log(vm.pageNow+' '+vm.leftMenu_items[vm.partFocused].pageNum);
 					if(vm.pageNow<0)
 						vm.$message({message: '页码出错'});
-					else if(vm.pageNow==vm.leftMenu_items[vm.partFocused].pageNum)
+					else if(vm.pageNow==vm.pageMax)
 						vm.$message({message: '已经是最后一页了'});
-					else vm.turnTo(vm.partFocused,vm.pageNow+1);
+					else vm.turnTo(vm.pageNow+1);
 					resolve();
 				})
 			}
 		},
-		turnTo:function(part,page){
-			if(this.partFocused==part&&this.pageNow==page) return;
-			if(this.page<1||this.page>this.leftMenu_items[part].pageNum)
+		turnTo:function(page){
+			if(this.page<1||this.page>this.pageMax)
 			{
 				this.$message({message:'页码出错'});
 				return;
 			}
-			this.partFocused=part;
 			this.pageNow=page;
-			part++;
-			var urlGet='http://123.56.42.47:10492/good/block';
+			this.$store.commit('changeSearchPage',page);
+			var urlGet='http://123.56.42.47:10492/good/search';
 			var urlCheck= 'http://123.56.42.47:10492/user/isfavorite';
 			var vm=this;
 			procedure();
 			async function procedure(){
 				await vm.postChange();
-				var response=await vm.axios.get(urlGet+'/'+part+'/'+page);
+				var response=await vm.axios.get(urlGet,{params:vm.$store.state.searchParams});
 				await new Promise(function(resolve,reject){
+					console.log(response.data.goodList);
 					vm.goodlist=response.data.goodList;
 					resolve();
 				})
@@ -137,10 +132,11 @@ export default {
 			}
 		},
 		getPageNum: function(index){
-			var urlGet='http://123.56.42.47:10492/getPageNum';
+			var urlGet='http://123.56.42.47:10492/good/search';
 			var vm=this;
-			this.axios.get(urlGet+'/'+index).then(function(response){
-				vm.leftMenu_items[index-1].pageNum=response.data.PageNum;
+			this.axios.get(urlGet,{params:this.$store.state.searchParams}).then(function(response){
+				vm.pageMax=response.data.pageNum;
+				console.log(vm.pageMax);
 			})
 		},
 		postChange: function(){
@@ -164,9 +160,6 @@ export default {
 						})}
 				}}
 		},
-    removeItems: function (index) {
-      this.goodlist.splice(index, 1);
-    },
 		turnFavoriteState: function(index){
 			var temp=this.goodlist[index];
 			temp.favoriteNow=!temp.favoriteNow;
@@ -177,11 +170,13 @@ export default {
 		}
 	},
 	created: function(){
+		this.$store.commit('endSearch');
 		var vm=this;
 		init();
 		async function init(){
-			await vm.getPageNum(1);
-			await vm.turnTo(0,1);
+			await vm.$store.commit('loadSearchParams');
+			await vm.getPageNum();
+			await vm.turnTo(1);
 		}
 	},
 	mounted: function(){
