@@ -16,6 +16,7 @@ import NeedShowPage from "@/components/NeedShowPage";
 import Carousel from "@/components/Carousel";
 import LoginWithRegister from "@/components/LoginWithRegister";
 import searchResult from "@/components/searchResult";
+import messagePart from "@/components/messagePart";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -75,7 +76,7 @@ const routes=[
     },
     {
         path: '/moduletest',
-        component:LoginWithRegister
+        component:null
     },
 
 		{
