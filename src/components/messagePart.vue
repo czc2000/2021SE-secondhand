@@ -91,7 +91,7 @@ export default{
 		},
 		tpContact(val){
 			if(this.tpContact!=null){
-				console.log(val);
+				//console.log(val);
 				if(typeof(this.isContact[val.userid])=="undefined"){
 					//console.log('this undefined');
 					this.$set(this.tpContacts,this.tpContactNum++,val);
@@ -109,7 +109,7 @@ export default{
 					return;
 				}
 				//this.$nextTick(()=>{this.chooseTPContact(val.userid,this.tpContacts.length-1)});
-				console.log(this.tpContactNum+' '+this.tpContacts[0]);
+				//console.log(this.tpContactNum+' '+this.tpContacts[0]);
 				for(var i=0;i<this.tpContactNum;i++)
 					if(this.tpContacts[i].userid==val.userid){
 						this.chooseContact(val.userid,i);
@@ -258,8 +258,22 @@ export default{
 			var inputbox=document.getElementById('inputbox'),
 				url='http://123.56.42.47:10492/sendMessage',
 				vm=this;
-			if(inputbox.innerText.length==3&&inputbox.innerText.charCodeAt(2)==10)
+			var empty=true;
+			for(var i=2;i<inputbox.innerText.length;i++)
+			{
+				//console.log(inputbox.innerText.charCodeAt(i));
+				if(inputbox.innerText.charCodeAt(i)!=10)
+				{
+					empty=false;
+					break;
+				}
+			}
+			/*for(var i=0;i<inputbox.innerText.length;i++)
+				console.log(inputbox.innerText.charCodeAt(i));
+			console.log(empty);*/
+			if(empty)
 				return;
+			inputbox.innerText.replace(/"\n"/g,"\r\n");
 			if(this.isContact[this.choosen]==false){
 				var urlAdd="http://123.56.42.47:10492/addContact";
 				this.axios.post(urlAdd,null,{
