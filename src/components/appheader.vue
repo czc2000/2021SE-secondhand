@@ -32,8 +32,7 @@
           <li>
             <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
             <ol>
-                <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录</a></li>
-                <li v-show="!getloginstate"><a href="javascript:;" @click="registerClick" >注册</a></li>
+                <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录/注册</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>

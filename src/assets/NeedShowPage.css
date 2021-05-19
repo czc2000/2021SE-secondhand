@@ -28,7 +28,7 @@
     text-align: left;
 }
 .iteminfo .needtitle{
-    font:700 16px Arial,"microsoft yahei";
+    font:700 18px Arial,"microsoft yahei";
     color: #666;
     text-align: left;
 }
@@ -73,7 +73,7 @@
     height: 165px;
     padding: 14px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 15px;
     border: 2px dashed #cdcdcd;
 
 }
@@ -158,6 +158,11 @@
 .comment .el-tabs__item{
     font-size: 16px;
 }
+.comment .el-tabs--border-card{
+    background-color: rgba(255,255,255,0.7);
+    border-radius: 10px;
+}
+
 .infinite-list::-webkit-scrollbar {
     /*隐藏滚轮*/
     display: none;

@@ -4,7 +4,9 @@
       <appheader></appheader>
     </el-header>
     <el-main>
+      <transition name="el-zoom-in-top">
 		<message-part v-show="this.$store.state.messageShow&&this.$store.state.login"></message-part>
+      </transition>
     <router-view ref="home" v-if="isRouterAlive"></router-view>
     </el-main>
     <transition name="el-fade-in">

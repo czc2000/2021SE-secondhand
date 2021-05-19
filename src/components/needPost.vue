@@ -1,4 +1,6 @@
 <template>
+  <div class="PostPage">
+    <div class="PostBackground"></div>
   <div class="formbox">
   <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
     <el-form-item label="需求标题" prop="needname">
@@ -67,6 +69,7 @@
   </el-form>
     <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
     <el-button @click="resetForm('ruleForm1')">重置</el-button>
+  </div>
   </div>
 </template>
 
@@ -204,12 +207,50 @@ export default {
 </script>
 
 <style >
+.PostBackground{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  height: 1080px;
+  background-image: url('../assets/Post/bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
 .formbox{
   width: 35%;
-  margin:0 auto;
-  background-color: white;
-  padding-top:50px;
-  padding-bottom: 50px;
+  margin: 80px auto 200px;
+  background-color: rgba(255,255,255,0.8);
+  box-shadow:
+      0 12.5px 2.6px rgba(0, 0, 0, 0.068),
+      0 16.4px 5.9px rgba(0, 0, 0, 0.09),
+      0 18.8px 10px rgba(0, 0, 0, 0.106),
+      0 21.1px 15.4px rgba(0, 0, 0, 0.118),
+      0 24.1px 22.8px rgba(0, 0, 0, 0.129),
+      0 28.8px 33.5px rgba(0, 0, 0, 0.14),
+      0 36.4px 50.2px rgba(0, 0, 0, 0.151),
+      0 50.3px 80px rgba(0, 0, 0, 0.166),
+      0 100px 150px rgba(0, 0, 0, 0.19)
+;
+  border-radius: 10px;
+  padding:50px 0;
+  transition-property: background-color , box-shadow;
+  transition-duration:0.5s , 0.5s;
+}
+.formbox:hover{
+  box-shadow:
+      0 22.2px 5.4px rgba(0, 0, 0, 0.086),
+      0 27.6px 12px rgba(0, 0, 0, 0.114),
+      0 30.1px 20.3px rgba(0, 0, 0, 0.134),
+      0 31.6px 31.4px rgba(0, 0, 0, 0.149),
+      0 33.4px 46.5px rgba(0, 0, 0, 0.163),
+      0 36.4px 68.3px rgba(0, 0, 0, 0.177),
+      0 42px 102.4px rgba(0, 0, 0, 0.191),
+      0 53.4px 163.3px rgba(0, 0, 0, 0.21),
+      0 100px 306px rgba(0, 0, 0, 0.24)
+;
+  background-color: rgba(255,255,255,1);
 }
 .formbox .el-form-item{
   padding:0px 25px;

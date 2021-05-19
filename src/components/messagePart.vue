@@ -1,6 +1,7 @@
 <template>
 		<div class="message-main">
 			<div class="message-main-left">
+        <div class="title">联系人列表</div>
 				<contactView class="view_" v-for="(item,index) in contactList" :key="item.userid"
 				:avatar="'http://123.56.42.47:10492'+item.useravatarurl" :name="item.username"
 				:id="item.userid" :unreadN="unreadNumOf[item.userid]" :choosen='choosen'
@@ -11,18 +12,25 @@
 				@click_="chooseContact(item.userid,index)" @removeDialog="removeTPContact(item.userid,index,false)"></contactView>
 			</div>
 			<div v-if="choosen!=0&&isContact[choosen]" class="message-main-right-top" id="msgbox">
-				<messageUnit v-for="(item,index) in history[choosen]" :key="item.messageid" 
+				<messageUnit v-for="(item,index) in history[choosen]" :key="item.messageid"
 				:senderid="item.messagesenderid" :contactname="contactList[choosenI].username"
-				:text="item.messagecontent" :sendtime="item.messagesendtime"></messageUnit>
+				:text="item.messagecontent" :sendtime="item.messagesendtime" :avatar="'http://123.56.42.47:10492'+contactList[choosenI].useravatarurl"></messageUnit>
 			</div>
-			<div v-if="choosen!=0&&isContact[choosen]" class="message-main-right-bottom" id="inputbox" contenteditable=true @keyup.enter="submitMsg"></div>
+      <div v-if="choosen!=0&&isContact[choosen]" class="message-main-right-bottom">
+        <div id="inputbox" contenteditable=true @keyup.enter="submitMsg">
+        </div>
+        <div class="pressDownButton" @click="submitMsg"><i class="el-icon-chat-line-round"></i>发送</div>
+      </div>
 			<div v-if="choosen!=0&&!isContact[choosen]" class="message-main-right-top" id="msgbox">
-				<messageUnit v-for="(item,index) in history[choosen]" :key="item.messageid" 
+				<messageUnit v-for="(item,index) in history[choosen]" :key="item.messageid"
 				:senderid="item.messagesenderid" :contactname="tpContacts[choosenI].username"
-				:text="item.messagecontent" :sendtime="item.messagesendtime"></messageUnit>
+				:text="item.messagecontent" :sendtime="item.messagesendtime" :avatar="'http://123.56.42.47:10492'+tpContacts[choosenI].useravatarurl"></messageUnit>
 			</div>
-			<div v-if="choosen!=0&&!isContact[choosen]" class="message-main-right-bottom" id="inputbox" contenteditable=true @keyup.enter="submitMsg"></div>
-		</div>
+      <div v-if="choosen!=0&&!isContact[choosen]" class="message-main-right-bottom">
+        <div id="inputbox" contenteditable=true @keyup.enter="submitMsg"></div>
+        <div class="pressDownButton" @click="submitMsg"><i class="el-icon-chat-line-round"></i>发送</div>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -388,69 +396,110 @@ export default{
 
 <style>
 .message-main{
-	position: absolute;
-	top: 20%;
-	left:15%;
-	width: 70%;
-	height: 85%;
-	background-color: white;
-	z-index: 100;
-	border-style: solid;
-	border-width: 3px;
-	border-color: #b3e2ea;/*#f5f5f5;*/
+  position: absolute;
+  left:20%;
+  width: 1150px;
+  border-radius: 8px;
+  background-color: white;
+  height: 800px;
+  z-index: 100;
+  box-shadow:
+      0 -0.8px 3.2px rgba(0, 0, 0, 0.024),
+      0 -0.3px 6.3px rgba(0, 0, 0, 0.036),
+      0 1.8px 9.5px rgba(0, 0, 0, 0.044),
+      0 5.4px 12.9px rgba(0, 0, 0, 0.052),
+      0 10.7px 16.8px rgba(0, 0, 0, 0.059),
+      0 18.1px 21.4px rgba(0, 0, 0, 0.065),
+      0 28.2px 27.4px rgba(0, 0, 0, 0.072),
+      0 41.8px 35.8px rgba(0, 0, 0, 0.08),
+      0 61.7px 49.5px rgba(0, 0, 0, 0.09),
+      0 100px 80px rgba(0, 0, 0, 0.11)
+;
+
 }
 .message-main-left{
-	width: 30%;
-	height: 100%;
-	border-right-style: solid;
-	border-right-width: 2px;
-	border-right-color: #b3e2ea;/*#f5f5f5;*/
-	overflow-y: hidden;
+  position: absolute;
+  width: calc(30% - 30px);
+  top: 20px;
+  left: 15px;
+  height: 95%;
+  border-radius: 8px;
+  background-color: #f2f7ff;
+  overflow: hidden;
+}
+.message-main-left .title{
+  margin-top: 18px;
+  margin-bottom: 18px;
+  font-family: "微软雅黑 Light";
+  font-weight: 600;
+  font-size: 20px;
 }
 .message-main-left:hover{
-	overflow-y: scroll;
+  overflow-y: scroll;
 }
 .message-main-left::-webkit-scrollbar {/*滚动条整体样式*/
-	width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
-	height: 1px;
-	color: transparent;
-	position: absolute;
-	display: none;/*滚动条暂时整不明白*/
+  display: none;/*滚动条暂时整不明白*/
 }
-.message-main-left::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-  border-radius: 10px;
-  background: #dadada;
- }
-.message-main-left::-webkit-scrollbar-thumb:hover {/*滚动条里面小方块*/
-  border-radius: 10px;
-  background: #b9b9b9;
- }
+/*.message-main-left::-webkit-scrollbar-thumb {!*滚动条里面小方块*!*/
+/*  border-radius: 10px;*/
+/*  background: #dadada;*/
+/* }*/
+/*.message-main-left::-webkit-scrollbar-thumb:hover {!*滚动条里面小方块*!*/
+/*  border-radius: 10px;*/
+/*  background: #b9b9b9;*/
+/* }*/
 .view_:last-child{
-	border-bottom: none;
+  border-bottom: none;
 }
 .message-main-right-top{
-	position: relative;
-	left: calc(30% + 2px);
-	top: -100%;
-	width: calc(70% - 2px);
-	height: calc(70% - 2px);
-	overflow-y: auto;
+  position: absolute;
+  width: calc(70% - 15px);
+  height:70%;
+  left: 30%;
+  border-radius: 8px;
+  top:20px;
+  background-color: #f2f7ff;
+  overflow-y: auto;
 }
 .message-main-right-top::-webkit-scrollbar{
-	display: none;
+  display: none;
 }
 .message-main-right-bottom{
-	position: relative;
-	left: calc(30% + 2px);
-	top: -100%;
-	width: calc(70% - 2px);
-	height: 30%;
-	outline: none;
-	overflow-y: scroll;
-	text-align: left;
-	border-top: 2px solid #b3e2ea;
+  position: absolute;
+  left:30%;
+  height:130px;
+  bottom: 75px;
+  width: calc(70% - 15px);
+  border-radius: 8px;
+  background-color: #f2f7ff;
+  text-align: left;
+}
+.message-main-right-bottom #inputbox{
+  height:120px;
+  margin-left:8px;
+  margin-top: 8px;
+  outline: none;
 }
 .message-main-right-bottom::-webkit-scrollbar{
-	display: none;
+  display: none;
 }
+.message-main-right-bottom .pressDownButton {
+  margin-top: 12px;
+  float: right;
+  width: 50px;
+  background-color: hsl(222, 100%, 95%);
+  padding: 12px 24px;
+  color: hsl(243, 80%, 62%);
+  border-radius: 6px;
+  border-bottom: 4px solid hsl(221, 89%, 85%);
+  border-top: 0px solid rgba(249, 250, 251,1);
+  transition: all 0.1s ease-in-out;
+}
+
+.message-main-right-bottom .pressDownButton:hover {
+  border-bottom-width: 0;
+  border-top-width: 4px;
+  cursor: pointer;
+}
+
 </style>

@@ -27,7 +27,7 @@
     text-align: left;
 }
 .iteminfo .goodtitle{
-    font:700 16px Arial,"microsoft yahei";
+    font:700 18px Arial,"microsoft yahei";
     color: #666;
     text-align: left;
 }
@@ -73,7 +73,7 @@
     height: 165px;
     padding: 14px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 15px;
     border: 2px dashed #cdcdcd;
 
 }

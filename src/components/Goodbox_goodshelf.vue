@@ -89,7 +89,8 @@ export default {
   border-style: solid;
   border-width: 3px;
   border-color: rgba(160,160,160,1);
-  transition: border-color 0.5s;
+  transition-property: border-color , box-shadow;
+  transition-duration:0.5s , 0.5s;
 }
 .box:hover{
   border:3px solid #ffd615;

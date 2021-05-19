@@ -14,7 +14,9 @@ import GoodShowPage from "@/components/GoodShowPage";
 import needsZone from "@/components/needsZone"
 import NeedShowPage from "@/components/NeedShowPage";
 import Carousel from "@/components/Carousel";
+import LoginWithRegister from "@/components/LoginWithRegister";
 import searchResult from "@/components/searchResult";
+import messagePart from "@/components/messagePart";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -23,7 +25,7 @@ const routes=[
     },
     {
         path:'/login',
-        component:login
+        component:LoginWithRegister
     },
     {
         path: '/home',
@@ -31,7 +33,7 @@ const routes=[
     },
     {
         path: '/register',
-        component:register
+        component:LoginWithRegister
     },
     {
         path: '/userinfo',
@@ -74,8 +76,9 @@ const routes=[
     },
     {
         path: '/moduletest',
-        component:Carousel
+        component:null
     },
+
 		{
 				path: '/searchResult',
 				component:searchResult
