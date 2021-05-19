@@ -1,5 +1,7 @@
 <template>
   <div v-if="loaded">
+    <div class="Show_Background">
+    </div>
   <div class="goodinfo">
     <div class="preview">
       <img :src="this.good.goodpicurl" alt="">
@@ -11,21 +13,53 @@
       <div class="goodtitle">
         {{good.goodname}}
       </div>
-      <div class="senderinfo">
+			<div v-if="myGood&&!priceediting&&!descriptionediting&&!addingTag" class="editname">
+				<el-button type="text" slot="reference" @click="nameediting=true" v-if="!nameediting">
+				  <span class="edittext">修改</span>
+				</el-button>
+				<el-input v-else v-model="name" @keyup.enter.native="editName"></el-input>
+			</div>
+			<div v-if="myGood&&!nameediting&&!descriptionediting&&!addingTag" class="editprice">
+				<el-button type="text" slot="reference" @click="priceediting=true" v-if="!priceediting">
+				  <span class="edittext">修改</span>
+				</el-button>
+				<el-input v-else v-model="price" @keyup.enter.native="editPrice"></el-input>
+			</div>
+			<div v-if="myGood&&!nameediting&&!priceediting&&!addingTag" class="editdescription">
+				<el-button type="text" slot="reference" @click="descriptionediting=true" v-if="!descriptionediting">
+				  <span class="edittext">修改</span>
+				</el-button>
+				<el-input v-else v-model="description" @keyup.enter.native="editDescription"></el-input>
+			</div>
+      <div class="senderinfo"  @click="addTemporaryContact">
         <div class="price">￥{{good.goodprice}}</div>
         <el-tooltip content="联系卖家" placement="bottom" effect="light">
         <div class="sendername">{{senderinfo.username}}</div>
         </el-tooltip>
-        <img :src="this.senderinfo.useravatarurl" class="circleImg">
+        <img :src="this.senderinfo.useravatarurl" class="Show_circleImg">
       </div>
       <el-divider></el-divider>
       <div class="description">
         {{good.gooddescription}}
       </div>
+			<el-tag :key="tag" v-for="(tag,index) in good.goodtags" :closable="myGood"
+				:disable-transitions="false" @close="handleClose(index)">
+					{{tag}}
+			</el-tag>
+			<div v-if="myGood">
+				<el-input v-if="addingTag" class="input-new-tag" v-model="tagInput"
+					ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
+				</el-input>
+				<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+			</div>
       <el-divider></el-divider>
       <div class="buy">
-        <div class="horizontalOverlay"><span>点击购买</span></div>
-        <div class="horizontalOverlay2"><span>了解更多</span></div>
+        <div class="horizontalOverlay" @click="intentionInputShow=!intentionInputShow"><span>点击购买</span></div>
+				<div class="createIntentionInput" v-show="intentionInputShow">
+					<input id="createIntentionInput">
+					<button @click="createIntention">提交意向</button>
+				</div>
+        <div class="horizontalOverlay2" @click="addTemporaryContact"><span>了解更多</span></div>
       </div>
     </div>
   </div>
@@ -64,11 +98,6 @@
       </el-tab-pane>
     </el-tabs>
   </div>
-    <div>
-      <el-backtop target=".el-main" :right="80">
-        <div class="pulseAnim"><i class="el-icon-top"></i></div>
-      </el-backtop>
-    </div>
   </div>
 </template>
 
@@ -94,7 +123,16 @@ export default {
       activeName:'first',
       commentcount:5,
       commentloading:false,
-      commentboxheight:'--height:'
+      commentboxheight:'--height:',
+			intentionInputShow:false,
+			tagInput:'',
+			addingTag:false,
+			name:'',
+			price:'',
+			description:'',
+			nameediting:false,
+			priceediting:false,
+			descriptionediting:false,
     }
   },
   computed: {
@@ -106,7 +144,10 @@ export default {
     },
     loginerid(){
       return this.$store.state.userid;
-    }
+    },
+		myGood(){
+			return this.senderinfo.userid==this.$store.state.userid;
+		}
   },
   created:async function() {
     if(!this.$route.query.goodid){
@@ -121,6 +162,7 @@ export default {
         this.good = response.data.good
         this.good.goodpicurl = 'http://123.56.42.47:10492' + this.good.goodpicurl
         url='http://123.56.42.47:10492/userinfo/'+this.good.goodsenderid;
+				if(this.good.goodtags===null) this.good.goodtags=[];
         this.axios.get(url).then((response)=>{
           this.senderinfo=response.data.user;
           this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
@@ -201,7 +243,102 @@ export default {
         this.commentcount += 5
         this.commentloading = false
       }, 2000)
-    }
+    },
+		addTemporaryContact:function(){
+			//console.log(this.senderinfo);
+			if(!this.$store.state.login||this.senderinfo.userid==this.$store.state.userid) return;
+			this.$store.commit('addTemporaryContact',this.senderinfo);
+			this.$store.commit('showMessage');
+		},
+		createIntention:function(){
+			var input=this.$el.querySelector('#createIntentionInput');
+			var v=Number(input.value),url="http://123.56.42.47:10492/sendIntention";
+			if(!isNaN(v)&&v>=0){
+				//this.intentionInputShow=false;
+				input.value='';
+				this.axios.post(url+'/'+this.goodid,null,{
+					params:{intentionprice:v},
+					headers:{'Authorization':this.$store.state.Authorization}
+				}).then((response)=>{
+					console.log('提交成功');
+				})
+			}
+		},
+		handleClose(index){
+			var tag=this.good.goodtags[index],url="http://123.56.42.47:10492/good/deleteTag";
+		  this.axios.post(url,null,{
+				params:{goodid:this.good.goodid,tag:tag},
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			this.good.goodtags.splice(index, 1);
+		},
+		showInput(){
+		  this.addingTag = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm(){
+		  let inputValue=this.tagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.good.goodtags.length;i++)
+					if(this.good.goodtags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat){
+					this.good.goodtags.push(inputValue);
+					var url="http://123.56.42.47:10492/good/addTag";
+					this.axios.post(url,null,{
+						params:{goodid:this.good.goodid,tag:inputValue},
+						headers:{'Authorization':this.$store.state.Authorization}
+					})
+				}
+		  }
+		  this.addingTag=false;
+		  this.tagInput='';
+		},
+		editName:function(){
+			if(this.name){
+				//console.log(this.name);
+				this.good.goodname=this.name;
+				var url='http://123.56.42.47:10492/editGood';
+				this.axios.post(url+'/'+this.good.goodid+'/name',null,{
+					params:{newname:this.name},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.name="";
+			this.nameediting=false;
+		},
+		editPrice:function(){
+			var v=Number(this.price);
+			if(!isNaN(v)&&v>=0){
+				//console.log(this.name);
+				this.good.goodprice=v;
+				var url='http://123.56.42.47:10492/editGood';
+				this.axios.post(url+'/'+this.good.goodid+'/price',null,{
+					params:{newprice:v},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.price="";
+			this.priceediting=false;
+		},
+		editDescription:function(){
+			if(this.description){
+				//console.log(this.name);
+				this.good.gooddescription=this.description;
+				var url='http://123.56.42.47:10492/editGood';
+				this.axios.post(url+'/'+this.good.goodid+'/description',null,{
+					params:{newdescription:this.description},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.description="";
+			this.descriptionediting=false;
+		}
   }
 }
 </script>
@@ -214,4 +351,50 @@ export default {
 .comment .infinite-list{
   height: var(--height);
 }
+.Show_Background{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  height: 1080px;
+  background-image: url('../assets/GoodShowPage/bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.editname{
+	position: absolute;
+}
+.editprice{
+	position: absolute;
+	top: 25%;
+}
+.editdescription{
+	position: absolute;
+	top: 35%;
+}
+.edittext{
+  font-size: 14px;
+  color: #919191;
+}
+.edittext:hover{
+	color: red;
+}
+/*以下是关于标签的，从element ui抄的,对button有改动*/
+.el-tag + .el-tag {
+	margin-left: 10px;
+}
+.button-new-tag {
+	margin-left: 10px;
+	height: 32px;
+	line-height: 30px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.input-new-tag {
+	width: 90px;
+	margin-left: 10px;
+	vertical-align: bottom;
+}
+/*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>

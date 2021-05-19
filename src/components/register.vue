@@ -1,5 +1,4 @@
 <template>
-    <div class="background">
       <div class="kuang">
         <h1>REGISTER</h1>
       <el-form ref="ruleForm" :model="formdata" :rules="rules" label-width="120px" @keyup.enter.native="submitForm('ruleForm')">
@@ -28,12 +27,15 @@
         <div class="jc">
           <jcrange :successFun="rangeSuccess"></jcrange>
         </div>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-upload" @click="submitForm('ruleForm')" round>注册</el-button>
-          <el-button class="reset" type="danger" icon="el-icon-delete" round @click="resetForm('ruleForm')">重置</el-button></el-form-item>
+<!--        <el-form-item>-->
+<!--          <el-button type="primary" icon="el-icon-upload" @click="submitForm('ruleForm')" round>注册</el-button>-->
+<!--          <el-button class="reset" type="danger" icon="el-icon-delete" round @click="resetForm('ruleForm')">重置</el-button></el-form-item>-->
       </el-form>
+        <div class="button">
+          <div class="magnifyBorder" @click="submitForm('ruleForm')"><i class="el-icon-upload" ></i>注册</div>
+          <div class="magnifyBorder2" @click="resetForm('ruleForm')"><i class="el-icon-delete"></i>重置</div>
+        </div>
       </div>
-    </div>
 </template>
 
 <script>
@@ -66,7 +68,7 @@ export default {
     var validatemail = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入邮箱'));
-      } else if (!/^([A-Za-z0-9_\-.])+@(163.com|qq.com)$/.test(this.formdata.useremail)) {
+      } else if (!/^([A-Za-z0-9_\-.])+@(163.com|qq.com|buaa.edu.cn)$/.test(this.formdata.useremail)) {
         callback(new Error('请您输入正确的163邮箱或者qq邮箱'));
       } else {
         callback();
@@ -180,49 +182,89 @@ export default {
 </script>
 
 <style>
-  .background{
-    position: relative;
-    width: 100%;
-    height: 1080px;
-    background-image: url("../assets/wallhaven-9mxz8k.jpg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-  }
+
   .kuang{
     width: 500px;
     height: 600px;
-    background-color: rgba(	220,220,250,0.6);
+    border-radius: 8px;
+    background-color: #e2f3f5;
     margin: 0 auto;
-    position: absolute;
-    left:37%;
-    top:10%
+    transition: box-shadow 0.5s;
+    box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);
   }
   .kuang h1{
-    margin: 20px;
+    padding-top: 20px;
     font-family:  Garamond, serif;
     font-weight: 700;
     font-size: 40px;
+    margin-bottom: 20px;
   }
   .el-form .el-form-item__content .reset{
     margin-left: 160px;
   }
-  .el-form .el-form-item__label{
+.kuang  .el-form .el-form-item__label{
+    font-family: "微软雅黑 Light";
+    font-weight: 600;
     font-size: 15px;
   }
   .kuang .el-input{
     font-size: 15px;
   }
   .kuang:hover{
-    background-color: rgba(	220,220,250,0.9);
-    box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);
+    box-shadow:
+        0 17px 5.6px rgba(0, 0, 0, 0.034),
+        0 21.4px 10.9px rgba(0, 0, 0, 0.051),
+        0 24.7px 17px rgba(0, 0, 0, 0.065),
+        0 28.5px 24.8px rgba(0, 0, 0, 0.077),
+        0 34.7px 35.8px rgba(0, 0, 0, 0.091),
+        0 52px 62px rgba(0, 0, 0, 0.11)
+  ;
+
   }
   .kuang .el-form{
     padding: 0px 40px 0px 20px;
   }
   .jc{
-    margin-left: 80px;
+    margin-left: 20px;
   }
   .jc .jc-range{
-    width: 320px;
+    width: 380px;
   }
+.kuang .magnifyBorder {
+  float: left;
+    margin-left: 120px;
+    margin-right: 105px;
+    width: 50px;
+    font-weight: 550;
+    padding: 10px 20px;
+    border-radius: 60px;
+    box-shadow: inset 0 0 0 2px #2c6bf5;
+    transition: 300ms box-shadow cubic-bezier(0.4, 0, 0.6, 1), 600ms background-color cubic-bezier(0.4, 0, 0.6, 1), 300ms color cubic-bezier(0.4, 0, 0.6, 1);;
+    color: #2d6cdf;
+    cursor: pointer;
+  }
+
+.kuang  .magnifyBorder:hover {
+    box-shadow: inset 0 0 0 8px #2c6bf5;
+    background-color: #2c6bf5;
+    color: #e2f3f5;
+  }
+.kuang .magnifyBorder2 {
+  float: left;
+    width: 50px;
+    font-weight: 550;
+    padding: 10px 20px;
+    border-radius: 60px;
+    box-shadow: inset 0 0 0 2px #fc5185;
+    cursor: pointer;
+    transition: 300ms box-shadow cubic-bezier(0.4, 0, 0.6, 1), 600ms background-color cubic-bezier(0.4, 0, 0.6, 1), 300ms color cubic-bezier(0.4, 0, 0.6, 1);;
+    color: #fc5185;
+  }
+
+.kuang  .magnifyBorder2:hover {
+    box-shadow: inset 0 0 0 8px #fc5185;
+    background-color: #fc5185;
+    color: #e2f3f5;
+  }
+
 </style>

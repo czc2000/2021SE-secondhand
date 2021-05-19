@@ -1,5 +1,4 @@
 <template>
-    <div class="login_background">
       <div class="loginform">
         <h1>LOGIN</h1>
       <el-form ref="ruleForm" :model="formdata" :rules="rules" label-width="120px" @keyup.enter.native="submitForm('ruleForm')">
@@ -9,13 +8,14 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="formdata.password" type="password" placeholder="请输入密码" prefix-icon="el-icon-lock" show-password clearable></el-input>
         </el-form-item>
-        <jcrange :successFun="rangeSuccess"></jcrange>
+        <div class="jc">
+          <jcrange :successFun="rangeSuccess"></jcrange>
+        </div>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-upload" @click="submitForm('ruleForm')" round>登录</el-button>
         </el-form-item>
       </el-form>
+        <div class="magnifyBorder" @click="submitForm('ruleForm')"><i class="el-icon-upload" ></i>登录</div>
       </div>
-    </div>
 
 </template>
 
@@ -115,38 +115,50 @@ export default {
 </script>
 
 <style>
-.login_background{
-  position: relative;
-  width: 100%;
-  height: 1080px;
-  background-image: url("../assets/wallhaven-9mxz8k.jpg");
-  background-size: 100%;
-  background-repeat: no-repeat;
-}
+
 .loginform{
-  position: absolute;
-  top: 25%;
-  left: 40%;
-  width: 400px;
-  height: 350px;
-  background-color: rgba(220,220,250,0.6);
+  width: 500px;
+  height: 600px;
+  border-radius: 8px;
+  background-color: #e2f3f5;
   margin: 0 auto;
+  box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.5s;
 }
 .loginform h1{
-  margin:20px 20px 20px 20px;
+  padding-top: 100px;
   font-family:  Garamond, serif;
   font-weight: 700;
-  font-size: 40px;
+  font-size: 44px;
 }
 .loginform:hover{
-  background-color:rgba(220,220,250,0.9) ;
-  box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);
+  box-shadow:
+      0 17px 5.6px rgba(0, 0, 0, 0.034),
+      0 21.4px 10.9px rgba(0, 0, 0, 0.051),
+      0 24.7px 17px rgba(0, 0, 0, 0.065),
+      0 28.5px 24.8px rgba(0, 0, 0, 0.077),
+      0 34.7px 35.8px rgba(0, 0, 0, 0.091),
+      0 52px 62px rgba(0, 0, 0, 0.11)
+;
+
 }
-.el-form .el-form-item__label{
-  font-size: 16px;
+.loginform .el-form .el-form-item__label{
+  font-family: "微软雅黑 Light";
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 20px;
 }
 .loginform .el-input{
   font-size: 15px;
+}
+.loginform .el-form-item__error{
+  color: #F56C6C;
+  font-size: 12px;
+  line-height: 1;
+  padding-top: 0;
+  position: absolute;
+  top:auto;
+  left: 0;
 }
 .el-form-item .el-button{
     position: absolute;
@@ -154,5 +166,24 @@ export default {
   }
 .loginform .el-form{
   padding: 0px 40px 0px 20px;
+}
+.loginform .magnifyBorder {
+  float: left;
+  margin-left: 210px;
+  width: 60px;
+  font-size: 18px;
+  font-weight: 550;
+  padding: 12px 24px;
+  border-radius: 60px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 2px #2c6bf5;
+  transition: 300ms box-shadow cubic-bezier(0.4, 0, 0.6, 1), 600ms background-color cubic-bezier(0.4, 0, 0.6, 1), 300ms color cubic-bezier(0.4, 0, 0.6, 1);;
+  color: #2d6cdf;
+}
+
+.loginform  .magnifyBorder:hover {
+  box-shadow: inset 0 0 0 8px #2c6bf5;
+  background-color: #2c6bf5;
+  color: #e2f3f5;
 }
 </style>

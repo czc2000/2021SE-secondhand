@@ -12,16 +12,20 @@ const state = {
 	username: null,
 	useravatar:null,
 	userdata: null,
-	needs: null,
-	favorites: null,
-	receivedintentions: null,
-	goods: null,
-	intentions: null,
+	needs: [],
+	favorites: [],
+	receivedintentions: [],
+	goods: [],
+	intentions:[],
 	pwd:null,
 	unreadNum:0,
 	messageShow:false,
 	scrollTop:0,
 	loadDone:false,
+	temporaryContact:null,
+	loadUserdataDone:false,
+	searchParams:null,
+	newSearch:false
 }
 const mutations = {
 	saveAu(state,Au) {
@@ -52,7 +56,7 @@ const mutations = {
 		state.userid=userdata_.userid;
 		window.localStorage.setItem('userid',state.userid);
 		state.username=userdata_.username;
-		window.localStorage.setItem('userid',state.username);
+		window.localStorage.setItem('username',state.username);
 		state.login=true;
 		state.userdata=userdata_;
 		//向localStorage中存放对象
@@ -116,9 +120,15 @@ const mutations = {
 				state.receivedintentions=response.data.receivedintentions;
 				state.goods=response.data.goods;
 				state.intentions=response.data.intentions;
+				state.loadUserdataDone=true;
+				state.Ibought=response.data.Ibought;
+				state.Isold=response.data.Isold;
 				//console.log(state.favorites.length);
 			}
 		})
+	},
+	prepareforUserdataReload(state){
+		state.loadUserdataDone=false;
 	},
 	showMessage(state){
 		state.messageShow=true;
@@ -131,6 +141,33 @@ const mutations = {
 	},
 	changeUnreadNum(state,num){
 		state.unreadNum=num;
+	},
+	addTemporaryContact(state,userdata){
+		this.state.temporaryContact=userdata;
+	},
+	clearTPContact(state){
+		this.state.temporaryContact=null;
+	},
+	saveSearchParams(state,params){
+		this.state.searchParams=params;
+		window.localStorage.setItem("searchParams",JSON.stringify(params));
+	},
+	clearSearchParams(state){
+		this.state.searchParams=null;
+		window.localStorage.removeItem("searchParams");
+	},
+	changeSearchPage(state,pageNum){
+		this.state.searchParams.pageNum=pageNum;
+		window.localStorage.setItem("searchParams",JSON.stringify(this.state.searchParams));
+	},
+	loadSearchParams(state){
+		this.state.searchParams=JSON.parse(window.localStorage.getItem("searchParams"));
+	},
+	newSearch(state){
+		this.state.newSearch=true;
+	},
+	endSearch(state){
+		this.state.newSearch=false;
 	}
 }
 export default new Vuex.Store({

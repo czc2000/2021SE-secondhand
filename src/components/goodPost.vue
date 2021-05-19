@@ -1,5 +1,7 @@
 <template>
-  <div class="formbox2">
+  <div class="PostPage">
+    <div class="PostBackground"></div>
+  <div class="Post_formbox">
     <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
       <el-form-item label="商品标题" prop="goodname">
         <el-input v-model="form.goodname"></el-input>
@@ -15,7 +17,17 @@
           <el-radio :label="4">其他</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="商品价格" prop="goodprice">
+			<el-tag :key="tag" v-for="(tag,index) in tags" closable
+				:disable-transitions="false" @close="handleClose(index)">
+					{{tag}}
+			</el-tag>
+			<el-input class="input-new-tag" v-if="inputVisible" v-model="tagInput"
+				ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm"
+				@blur="handleInputConfirm">
+			</el-input>
+			<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+      <br/><br/><br/>
+			<el-form-item label="商品价格" prop="goodprice">
         <p class="price">￥</p>
         <el-input-number v-model="form.goodprice" :precision="2" :step="1" :max="50000" :min="0" size="medium">
         </el-input-number>
@@ -23,6 +35,7 @@
       <div class="uploadImage">
         <el-upload
             action="#"
+            accept=".jpg,.jpeg,.png"
             :limit="1"
             :before-upload="beforeUpload"
             :on-change="getLocalImg"
@@ -34,9 +47,19 @@
         </el-upload>
         <transition name="el-zoom-in-top">
         <div v-show="form.goodpic" class="good_img">
-          <img :src="form.goodpic" />
+          <img :src="form.goodpic"/>
           <i class="el-icon-delete-solid" @click="removePic"></i>
         </div>
+        </transition>
+        <transition name="el-fade-in">
+          <el-alert
+              title="文件太大了"
+              type="error"
+              description="请上传2M以下的图片"
+              show-icon
+              v-show="picoversizeWarning"
+              @close="closeAlert1">
+          </el-alert>
         </transition>
         <transition name="el-fade-in">
           <el-alert
@@ -53,6 +76,7 @@
     <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
     <el-button @click="resetForm('ruleForm1')">重置</el-button>
   </div>
+  </div>
 </template>
 
 <script>
@@ -65,8 +89,11 @@ export default {
         gooddescription:'',
         goodname:'',
         goodpic:null,
-        goodprice:0.0
+        goodprice:0.0,
       },
+			tags:[],
+			inputVisible: false,
+			tagInput: '',
       isHidden:true,
       rules:{
         goodname: [
@@ -85,6 +112,7 @@ export default {
         ]
       },
       nopicWarning:false,
+      picoversizeWarning:false,
       formData:new FormData()
     }
   },
@@ -95,13 +123,45 @@ export default {
       this.removePic();
     },
     beforeUpload(file){
-      this.formData.append('goodpic',file)
-      this.nopicWarning=false;
+      //限制图片大小为2M以下
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        this.formData.append('goodpic',file)
+        this.nopicWarning=false;
+      }else{
+        this.picoversizeWarning=true;
+      }
       return false;//禁止elementUI的组件自动上传
     },
     closeAlert(){
       this.nopicWarning=false;
     },
+    closeAlert1(){
+      this.picoversizeWarning=false;
+    },
+		handleClose(index){
+		   this.tags.splice(index, 1);
+		 },
+		showInput(){
+		  this.inputVisible = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm(){
+		  let inputValue=this.tagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.tags.length;i++)
+					if(this.tags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat) this.tags.push(inputValue);
+		  }
+		  this.inputVisible=false;
+		  this.tagInput='';
+		},
     submitForm(formName){
       if(!this.form.goodpic) {
         this.nopicWarning=true
@@ -113,6 +173,10 @@ export default {
           this.formData.append('gooddescription',this.form.gooddescription)
           this.formData.append('goodname',this.form.goodname)
           this.formData.append('goodprice',this.form.goodprice)
+					var tagsToString='';
+					for(var i=0;i<this.tags.length;i++)
+						tagsToString+='#'+this.tags[i];
+					this.formData.append('goodtags',tagsToString);
           console.log(this.formData)
           this.axios.post('http://123.56.42.47:10492/sendGood',this.formData,{
             headers:{
@@ -133,16 +197,19 @@ export default {
     },
     getLocalImg(event){
       // 获取上传图片的本地url，用于上传前的本地预览
-      let url = '';
-      if (window.createObjectURL != undefined) {
-        url = window.createObjectURL(event.raw);
-      } else if (window.URL != undefined) {
-        url = window.URL.createObjectURL(event.raw);
-      } else if (window.webkitURL != undefined) {
-        url = window.webkitURL.createObjectURL(event.raw);
+      const isLt2M = event.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        let url = '';
+        if (window.createObjectURL != undefined) {
+          url = window.createObjectURL(event.raw);
+        } else if (window.URL != undefined) {
+          url = window.URL.createObjectURL(event.raw);
+        } else if (window.webkitURL != undefined) {
+          url = window.webkitURL.createObjectURL(event.raw);
+        }
+        this.form.goodpic = url;
+        this.picoversizeWarning=false;
       }
-      this.form.goodpic = url;
-      this.isHidden = false;
     },
     removePic(){
       this.form.goodpic=null;
@@ -152,31 +219,69 @@ export default {
 }
 </script>
 
-<style scoped>
-.formbox2 .el-form p{
+<style>
+.PostBackground{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  height: 1080px;
+  background-image: url('../assets/Post/bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.Post_formbox{
+  width: 35%;
+  margin: 60px auto 180px;
+  background-color: rgba(255,255,255,0.8);
+  box-shadow:
+      0 12.5px 2.6px rgba(0, 0, 0, 0.068),
+      0 16.4px 5.9px rgba(0, 0, 0, 0.09),
+      0 18.8px 10px rgba(0, 0, 0, 0.106),
+      0 21.1px 15.4px rgba(0, 0, 0, 0.118),
+      0 24.1px 22.8px rgba(0, 0, 0, 0.129),
+      0 28.8px 33.5px rgba(0, 0, 0, 0.14),
+      0 36.4px 50.2px rgba(0, 0, 0, 0.151),
+      0 50.3px 80px rgba(0, 0, 0, 0.166),
+      0 100px 150px rgba(0, 0, 0, 0.19)
+;
+  border-radius: 10px;
+  padding:50px 0;
+  transition-property: background-color , box-shadow;
+  transition-duration:0.5s , 0.5s;
+}
+.Post_formbox:hover{
+  box-shadow:
+      0 22.2px 5.4px rgba(0, 0, 0, 0.086),
+      0 27.6px 12px rgba(0, 0, 0, 0.114),
+      0 30.1px 20.3px rgba(0, 0, 0, 0.134),
+      0 31.6px 31.4px rgba(0, 0, 0, 0.149),
+      0 33.4px 46.5px rgba(0, 0, 0, 0.163),
+      0 36.4px 68.3px rgba(0, 0, 0, 0.177),
+      0 42px 102.4px rgba(0, 0, 0, 0.191),
+      0 53.4px 163.3px rgba(0, 0, 0, 0.21),
+      0 100px 306px rgba(0, 0, 0, 0.24)
+  ;
+  background-color: rgba(255,255,255,1);
+}
+.Post_formbox .el-form p{
   font-size: 20px;
   float: left;
 }
-.formbox2{
-  width: 35%;
-  margin:0 auto;
-  background-color: white;
-  padding-top:50px;
-  padding-bottom: 50px;
-}
-.formbox2 .el-form-item{
+.Post_formbox .el-form-item{
   padding:0px 25px;
 }
-.formbox2 .el-form .el-form-item__label{
-  font-size: 15px;
+.Post_formbox .el-form .el-form-item__label{
+  font-size: 16px;
 }
-.formbox2 .goodcategory .el-radio-group .el-radio__label{
-  font-size: 15px;
+.Post_formbox .goodcategory .el-radio-group .el-radio__label{
+  font-size: 16px;
 }
-.formbox2 .uploadImage{
+.Post_formbox .uploadImage{
   margin-bottom: 20px;
 }
-.good_img{
+.Post_formbox .good_img{
   position: relative;
   width: 90%;
   height: 360px;
@@ -188,28 +293,44 @@ export default {
   align-items:center;
 
 }
-.good_img img{
+.Post_formbox .good_img img{
   max-height: 90%;
   max-width: 95%;
   overflow: hidden;
   /*margin: 3% auto;*/
 }
-.good_img i{
+.Post_formbox .good_img i{
   display: none;
   position: absolute;
   float: left;
   font-size: 50px;
   color: white;
 }
-.good_img:hover{
+.Post_formbox .good_img:hover{
   box-shadow:  0 10px 9px 0 rgba(0, 0, 0, 0.4);
 }
-.good_img:hover img{
+.Post_formbox .good_img:hover img{
   filter: brightness(40%);
 }
-.good_img:hover i{
+.Post_formbox .good_img:hover i{
   display: block;
   cursor: pointer;
 }
-
+/*以下是关于标签的，从element ui抄的,对button有改动*/
+.el-tag + .el-tag {
+	margin-left: 10px;
+}
+.button-new-tag {
+	margin-left: 10px;
+	height: 32px;
+	line-height: 30px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.input-new-tag {
+	width: 90px;
+	margin-left: 10px;
+	vertical-align: bottom;
+}
+/*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>

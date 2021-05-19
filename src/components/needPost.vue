@@ -1,4 +1,6 @@
 <template>
+  <div class="PostPage">
+    <div class="PostBackground"></div>
   <div class="formbox">
   <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
     <el-form-item label="需求标题" prop="needname">
@@ -15,7 +17,17 @@
         <el-radio :label="4">其他</el-radio>
       </el-radio-group>
     </el-form-item>
-      <div class="uploadImage">
+		<el-tag :key="tag" v-for="(tag,index) in tags" closable
+			:disable-transitions="false" @close="handleClose(index)">
+				{{tag}}
+		</el-tag>
+		<el-input class="input-new-tag" v-if="inputVisible" v-model="tagInput"
+			ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" 
+			@blur="handleInputConfirm">
+		</el-input>
+		<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+		<br/><br/><br/>
+		<div class="uploadImage">
     <el-upload
           action="#"
           :limit="1"
@@ -34,6 +46,16 @@
       </div>
         </transition>
         <transition name="el-fade-in">
+          <el-alert
+              title="文件太大了"
+              type="error"
+              description="请上传2M以下的图片"
+              show-icon
+              v-show="picoversizeWarning"
+              @close="closeAlert1">
+          </el-alert>
+        </transition>
+        <transition name="el-fade-in">
     <el-alert
         title="请上传一张图片哟"
         type="error"
@@ -48,6 +70,7 @@
     <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
     <el-button @click="resetForm('ruleForm1')">重置</el-button>
   </div>
+  </div>
 </template>
 
 <script>
@@ -61,6 +84,9 @@ export default {
         needname:'',
         needpic:null
       },
+			tags:[],
+			inputVisible: false,
+			tagInput: '',
       isHidden:true,
       rules:{
         needname: [
@@ -76,6 +102,7 @@ export default {
         ],
       },
       nopicWarning:false,
+      picoversizeWarning:false,
       formData:new FormData()
     }
   },
@@ -86,13 +113,45 @@ export default {
       this.removePic();
     },
     beforeUpload(file){
-      this.formData.append('needpic',file)
-      this.nopicWarning=false;
+      //限制图片大小为2M以下
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        this.formData.append('needpic',file)
+        this.nopicWarning=false;
+      }else{
+        this.picoversizeWarning=true;
+      }
       return false;//禁止elementUI的组件自动上传
     },
     closeAlert(){
       this.nopicWarning=false;
     },
+    closeAlert1(){
+      this.picoversizeWarning=false;
+    },
+		handleClose(index){
+		   this.tags.splice(index, 1);
+		 },
+		showInput(){
+		  this.inputVisible = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm(){
+		  let inputValue=this.tagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.tags.length;i++)
+					if(this.tags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat) this.tags.push(inputValue);
+		  }
+		  this.inputVisible=false;
+		  this.tagInput='';
+		},
     submitForm(formName){
       if(!this.form.needpic) {
         this.nopicWarning=true
@@ -103,6 +162,11 @@ export default {
           this.formData.append('needcategory',this.form.needcategory)
           this.formData.append('needdescription',this.form.needdescription)
           this.formData.append('needname',this.form.needname)
+					var tagsToString='';
+					for(var i=0;i<this.tags.length;i++)
+						tagsToString+='#'+this.tags[i];
+					console.log(tagsToString);
+					this.formData.append('needtags',tagsToString);
           console.log(this.formData)
           this.axios.post('http://123.56.42.47:10492/sendneed',this.formData,{
             headers:{
@@ -121,17 +185,19 @@ export default {
       })
     },
     getLocalImg(event){
-      // 获取上传图片的本地url，用于上传前的本地预览
-      let url = '';
-      if (window.createObjectURL != undefined) {
-        url = window.createObjectURL(event.raw);
-      } else if (window.URL != undefined) {
-        url = window.URL.createObjectURL(event.raw);
-      } else if (window.webkitURL != undefined) {
-        url = window.webkitURL.createObjectURL(event.raw);
+      const isLt2M = event.size / 1024 / 1024 < 2;
+      if(isLt2M){
+        let url = '';
+        if (window.createObjectURL != undefined) {
+          url = window.createObjectURL(event.raw);
+        } else if (window.URL != undefined) {
+          url = window.URL.createObjectURL(event.raw);
+        } else if (window.webkitURL != undefined) {
+          url = window.webkitURL.createObjectURL(event.raw);
+        }
+        this.form.needpic = url;
+        this.picoversizeWarning=false;
       }
-      this.form.needpic = url;
-      this.isHidden = false;
     },
     removePic(){
       this.form.needpic=null;
@@ -142,12 +208,50 @@ export default {
 </script>
 
 <style >
+.PostBackground{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  height: 1080px;
+  background-image: url('../assets/Post/bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
 .formbox{
   width: 35%;
-  margin:0 auto;
-  background-color: white;
-  padding-top:50px;
-  padding-bottom: 50px;
+  margin: 80px auto 200px;
+  background-color: rgba(255,255,255,0.8);
+  box-shadow:
+      0 12.5px 2.6px rgba(0, 0, 0, 0.068),
+      0 16.4px 5.9px rgba(0, 0, 0, 0.09),
+      0 18.8px 10px rgba(0, 0, 0, 0.106),
+      0 21.1px 15.4px rgba(0, 0, 0, 0.118),
+      0 24.1px 22.8px rgba(0, 0, 0, 0.129),
+      0 28.8px 33.5px rgba(0, 0, 0, 0.14),
+      0 36.4px 50.2px rgba(0, 0, 0, 0.151),
+      0 50.3px 80px rgba(0, 0, 0, 0.166),
+      0 100px 150px rgba(0, 0, 0, 0.19)
+;
+  border-radius: 10px;
+  padding:50px 0;
+  transition-property: background-color , box-shadow;
+  transition-duration:0.5s , 0.5s;
+}
+.formbox:hover{
+  box-shadow:
+      0 22.2px 5.4px rgba(0, 0, 0, 0.086),
+      0 27.6px 12px rgba(0, 0, 0, 0.114),
+      0 30.1px 20.3px rgba(0, 0, 0, 0.134),
+      0 31.6px 31.4px rgba(0, 0, 0, 0.149),
+      0 33.4px 46.5px rgba(0, 0, 0, 0.163),
+      0 36.4px 68.3px rgba(0, 0, 0, 0.177),
+      0 42px 102.4px rgba(0, 0, 0, 0.191),
+      0 53.4px 163.3px rgba(0, 0, 0, 0.21),
+      0 100px 306px rgba(0, 0, 0, 0.24)
+;
+  background-color: rgba(255,255,255,1);
 }
 .formbox .el-form-item{
   padding:0px 25px;
@@ -196,5 +300,21 @@ export default {
   display: block;
   cursor: pointer;
 }
-
+/*以下是关于标签的，从element ui抄的,对button有改动*/
+.el-tag + .el-tag {
+	margin-left: 10px;
+}
+.button-new-tag {
+	margin-left: 10px;
+	height: 32px;
+	line-height: 30px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.input-new-tag {
+	width: 90px;
+	margin-left: 10px;
+	vertical-align: bottom;
+}
+/*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>

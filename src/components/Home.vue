@@ -41,7 +41,7 @@
             <div class="goodlist2">
               <Goodbox_home class="randomgood2" v-for="(item,index) in goodlist.slice(3)" :key="item.goodid"
                             :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
-                            :goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)">
+                            :goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index+3)">
               </Goodbox_home>
             </div>
           </div>
@@ -75,7 +75,6 @@ export default {
   },
   watch:{
     top(val){
-      console.log(val)
       if(val>=0){
         this.show1=true;
       }
@@ -98,13 +97,13 @@ export default {
 				for(var i=0;i<this.goodlist.length;i++)
 				{
 					if(!this.goodlist[i].favorite&&this.goodlist[i].favoriteNow){
-						//console.log('add '+this.goodlist[i].goodid);
+						//console.log('add '+this.goodlist[i].goodname);
 						this.goodlist[i].favorite=true;
 						this.axios.post(urlAdd+'/'+this.goodlist[i].goodid,null,{
 								headers:{'Authorization':this.$store.state.Authorization}
 						})}
 					else if(this.goodlist[i].favorite&&!this.goodlist[i].favoriteNow){
-						//console.log('cancel '+this.goodlist[i].goodid);
+						//console.log('cancel '+this.goodlist[i].goodname);
 						this.goodlist[i].favorite=false;
 						this.axios.post(urlCancel+'/'+this.goodlist[i].goodid,null,{
 								headers:{'Authorization':this.$store.state.Authorization}
@@ -136,13 +135,13 @@ export default {
 							temp.index=i;
 							resolve(temp);
 						}).then(function(temp){
-							if(!vm.$store.state.login) return temp;
+							if(!vm.$store.state.login){
+								vm.$set(vm.goodlist,temp.index,temp);
+								return;
+							}
 							vm.axios.post(urlCheck+'/'+vm.$store.state.userid+'/'+temp.goodid).then(function(response){
-							temp.favorite=response.data.isfavorite;
-							temp.favoriteNow=temp.favorite;
-							return temp;
-							}).then(function(temp){
-								//console.log('temp.i: '+temp.index+' temp.goodid: '+temp.goodid+' favorite: '+temp.favorite);
+								temp.favorite=response.data.isfavorite;
+								temp.favoriteNow=temp.favorite;
 								return temp;
 							}).then(function(temp){
 								vm.$set(vm.goodlist,temp.index,temp);
@@ -154,15 +153,16 @@ export default {
 			}
 			test();
     },
-    removeItems: function (index) {
-      this.goodlist.splice(index, 1);
-    },
 		turnFavoriteState: function(index){
 			var temp=this.goodlist[index];
 			temp.favoriteNow=!temp.favoriteNow;
 			this.$set(this.goodlist,index,temp);
 		}
   },
+	beforeRouteLeave(to,from,next){
+		this.postChange();
+		next();
+	}
 }
 
 </script>

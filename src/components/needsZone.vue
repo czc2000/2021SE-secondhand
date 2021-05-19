@@ -1,20 +1,29 @@
 <template>
-	<div class="needsZoneMain">
-		<ul class="nz-leftMenu">
-			<li v-for="(item,index) in leftMenu_items" :key="index" 
-			:class="classOfMenuItem(index)" @click="turnTo(index,1)">{{item.title}}</li>
-		</ul>
-		<el-button class="nz-lastPageButton" icon="el-icon-back" round @click="turnToLastPage">上一页</el-button>
-		<el-button class="nz-nextPageButton" round @click="turnToNextPage">下一页<i class="el-icon-right el-icon--right"></i></el-button>
-		<transition name="el-zoom-in-center">
-		<div class="needcontainer" v-show="show">
-		      <needbox_needShelf class="need" v-for="(item,index) in needlist" :key="item.needid"
-		               :needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needsenderid="item.needsenderid" 
-										:needid="item.needid" :needDescription="item.needdescription">
-		      </needbox_needShelf>
-		</div>
-		</transition>
-	</div>
+  <div class="needsZoneMain">
+    <div class="NZone_banner">
+      <img src="../assets/NeedZone/banner.jpg" alt="">
+    </div>
+    <div class="NZone_menu">
+      <ul class="nz-Menu">
+        <li v-for="(item,index) in leftMenu_items" :key="index"
+            :class="{activeItem:index==partFocused}" @click="turnTo(index,1)"><a>{{item.title}}</a></li>
+      </ul>
+    </div>
+    <div class="NZone_goodcontainer" v-show="show">
+      <needbox_needShelf class="Zone_need" v-for="(item,index) in needlist" :key="item.needid"
+                         :needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needsenderid="item.needsenderid"
+                         :needid="item.needid" :needDescription="item.needdescription">
+      </needbox_needShelf>
+    </div>
+    <div class="changePage">
+      <a @click="turnToLastPage" class="page-link link-left">
+        <span><i class="el-icon-caret-left"></i></span>
+      </a>
+      <a @click="turnToNextPage" class="page-link">
+        <span><i class="el-icon-caret-right"></i></span>
+      </a>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -27,10 +36,10 @@ export default {
 	data: function(){
 		return{
 			leftMenu_items:[
-				{title:"分区1",pageNum:null},
-				{title:"分区2",pageNum:null},
-				{title:"分区3",pageNum:null},
-				{title:"分区4",pageNum:null},
+        {title:"生活用品",pageNum:null},
+        {title:"电子产品",pageNum:null},
+        {title:"书籍资料",pageNum:null},
+        {title:"其它类型",pageNum:null},
 			],
 			partFocused:null,
 			pageNow:null,
@@ -181,68 +190,121 @@ export default {
 </script>
 
 <style>
-.needsZoneMain{
-	height:720px;
-	background-color: #f5f5f5;
+.NZone_banner{
+  max-width: 100%;
+  overflow-x: hidden;
 }
-.nz-leftMenu{
-	position: relative;
-	left: 70px;
-	top: 50px;
-	width: 100px;
-	height: 200px;
-	background-color: #ebffff;
-	border-color: white;
-	border-style: solid;
-	border-width: 2px;
+.NZone_menu{
+  width: 75%;
+  height: 80px;
+  margin: 50px auto 0;
+  background-color: #364f6b;
+  border-radius: 8px;
 }
-.nz-leftMenu>li{
-	width: 100px;
-	height: 49px;
-	text-align: center;
-	line-height: 49px;
-	font-family: "microsoft yahei";
-	cursor: pointer;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-bottom-color: #dddddd;
+.nz-Menu{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  width: 50%;
+  margin: 0 auto ;
 }
-.nz-leftMenu>li:last-child{
-	height: 50px;
-	border-bottom-style: none;
+.nz-Menu li{
+  display: inline-block;
 }
-.nz-leftMenu>li:hover{
-	background-color: #dff1f1;
-	font-weight: bolder;
+.nz-Menu a {
+  position: relative;
+  color: #0e153a;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 5px;
+  background-color: white;
+  transition: background-color 0.8s;
+  cursor: pointer;
 }
-.nz-leftMenu>li:active{
-	background-color: #dde8e8;
-	font-weight: bolder;
-	color: #4169e1;
+.nz-Menu .activeItem a{
+  color: white;
+  background-color: #ee4c80;
 }
-.nz-leftMenu-itemFocused{
-	background-color: #dde8e8;
-	font-weight: bolder;
-	color: #4169e1;
+.nz-Menu a:hover {
+  color: white;
+  background-color: #ee4c80;
 }
-.need{
+
+.nz-Menu a::before {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ee4c80;
+  border-width: 0 0 3px 3px;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.nz-Menu a::after {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ee4c80;
+  border-width: 3px 3px 0 0;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.nz-Menu a:hover::before {
+  left: -12px;
+  bottom: -12px;
+  opacity: 1;
+}
+
+.nz-Menu a:hover::after {
+  top: -12px;
+  right: -12px;
+  opacity: 1;
+}
+.NZone_goodcontainer{
+  width: 80%;
+  margin: 0 auto;
+  background-color: white;
+  overflow: hidden;
+}
+.Zone_need{
   float: left;
-  margin: 5px 5px;
+  margin-top: 60px;
+  margin-left: 50px;
 }
-.needcontainer{
-  margin-left: 120px;
-	position: relative;
-	left: 100px;
-	top: -230px;
+.changePage{
+  height: 60px;
+  margin: 60px auto;
 }
-.nz-lastPageButton{
-	position: relative;
-	left: -580px;
-	top: 80px;
+.page-link{
+  display: inline-block;
+  font-size: 40px;
+  padding: 0 5px;
+  margin-left: 20px;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.8s;
+
 }
-.nz-nextPageButton{
-	position: relative;
-	left: -700px;
-	top: 150px;
+.link-left{
+  border-top-right-radius: 0rem;
+  border-bottom-right-radius: 0rem;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.page-link:hover{
+  background-color: #5c2678;
+  color: white;
 }
 </style>

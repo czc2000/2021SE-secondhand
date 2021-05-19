@@ -1,27 +1,44 @@
 <template>
-  <transition name="el-zoom-in-center">
-    <div v-show="show" class="goodbox">
-      <div  class=box>
-        <img :src="goodpicurl" alt="" @click="toShowPage">
-        <p class="review" @click="toShowPage">{{goodname}}</p>
-				<!--<p class="Id">{{goodid}}</p>-->
-        <!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
-        <p class="price">￥{{goodprice}}</p>
-        <el-button type="success" icon="el-icon-shopping-cart-1" size='mini' circle></el-button>
-        <el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="$emit('cancelFavorite');show = !show"></el-button>
-      </div>
-    </div>
-  </transition>
+	<div>
+		<transition name="el-zoom-in-center">
+			<div v-show="show" class="goodbox">
+				<div  class=box>
+					<img :src="goodpicurl" alt="" @click="toShowPage">
+					<p class="review" @click="toShowPage">{{goodname}}</p>
+					<!--<p class="Id">{{goodid}}</p>-->
+					<!--<p class="sender"><i class="el-icon-user"></i>senderid:{{goodsenderid}}</p>-->
+					<p class="price">￥{{goodprice}}</p>
+					<el-button v-if="pos=='favorite'" type="success" icon="el-icon-shopping-cart-1" size='mini' circle v-popover:pop @click="createIntention"></el-button>
+					<el-button v-else type="primary" icon="el-icon-edit" size='mini' circle @click="$emit('edit')"></el-button>
+					<el-button type="danger"  icon="el-icon-delete"  size='mini' circle @click="$emit('cancelFavorite');show = !show"></el-button>
+				</div>
+			</div>
+		</transition>
+		<el-popover trigger="click" ref="pop" placement="bottom" v-model="intentioning">
+			<div v-if="!intentioned">
+				<p class="bid">出价</p>
+				<el-input-number v-model="bid" :precision="2" :step="1" :max="50000" :min="0" size="medium">
+				</el-input-number>
+				<br/>
+				<el-button class="prop-icon" type="info" icon="el-icon-close" size="small" circle @click="cancelIntention"></el-button>
+				<el-button class="prop-icon" type="primary" icon="el-icon-s-promotion" size="small" circle v-popover:pop2 @click="sendIntention"></el-button>
+			</div>
+			<p v-else>已发送意向:)</p>
+		</el-popover>
+	</div>
 </template>
 
 <script>
 export default {
   name: "Goodbox_favoriteshelf",
-  props:['goodpicurl','goodname','goodprice','goodsenderid','goodid'],
+  props:['goodpicurl','goodname','goodprice','goodsenderid','goodid','pos'],
   data:function(){
     return{
       isActive:true,
-      show:true
+      show:true,
+			bid:null,
+			intentioning:false,
+			intentioned:false,
     }
   },
   methods:{
@@ -30,7 +47,24 @@ export default {
     },
     toShowPage:function (){
       this.$router.push({path:'/goodinfo',query:{goodid:this.goodid}})
-    }
+    },
+		createIntention:function(){
+			if(!this.$store.state.login) return;
+			this.bid=this.goodprice;
+			this.intentioned=false;
+		},
+		cancelIntention:function(){
+			this.intentioning=false;
+		},
+		sendIntention:function(){
+			var url="http://123.56.42.47:10492/sendIntention";
+			console.log(this.goodid+' '+this.bid);
+			this.axios.post(url+'/'+this.goodid,null,{
+				params:{intentionprice:this.bid},
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			this.intentioned=true;
+		}
   }
 }
 </script>
@@ -106,5 +140,12 @@ export default {
 	font-size:15px;
 	border-style: solid;
 	border-width: 2px;
+}
+.bid{
+	text-align: center;
+}
+.prop-icon{
+	margin-top: 5%;
+	margin-left: 20%;
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
   <div v-if="this.loaded">
+    <div class="Show_Background">
+    </div>
     <div class="needinfo">
       <div class="preview">
         <img :src="this.need.needpicurl" alt="">
@@ -11,10 +13,22 @@
         <div class="needtitle">
           {{need.needname}}
         </div>
+				<div v-if="myNeed" class="editname_">
+					<el-button type="text" slot="reference" @click="nameediting=true" v-if="!nameediting">
+					  <span class="edittext">修改</span>
+					</el-button>
+					<el-input v-else v-model="name" @keyup.enter.native="editName"></el-input>
+				</div>
+				<div v-if="myNeed" class="editdescription_">
+					<el-button type="text" slot="reference" @click="descriptionediting=true" v-if="!descriptionediting">
+					  <span class="edittext">修改</span>
+					</el-button>
+					<el-input v-else v-model="description" @keyup.enter.native="editDescription"></el-input>
+				</div>
         <div class="senderinfo">
           <div class="price"></div>
-          <el-tooltip content="联系卖家" placement="bottom" effect="light">
-            <div class="sendername">{{senderinfo.username}}</div>
+          <el-tooltip content="联系买家" placement="bottom" effect="light">
+            <div class="sendername" @click="addTemporaryContact">{{senderinfo.username}}</div>
           </el-tooltip>
           <img :src="this.senderinfo.useravatarurl" class="circleImg">
         </div>
@@ -22,9 +36,19 @@
         <div class="description">
           {{need.needdescription}}
         </div>
+				<el-tag :key="tag" v-for="(tag,index) in need.needtags" :closable="myNeed"
+					:disable-transitions="false" @close="handleClose(index)">
+						{{tag}}
+				</el-tag>
+				<div v-if="myNeed">
+					<el-input v-if="addingTag" class="input-new-tag" v-model="tagInput"
+						ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
+					</el-input>
+					<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+				</div>
         <el-divider></el-divider>
         <div class="buy">
-          <div class="horizontalOverlay2"><span>联系买家</span></div>
+          <div class="horizontalOverlay2" @click="addTemporaryContact"><span>联系买家</span></div>
         </div>
       </div>
     </div>
@@ -63,11 +87,6 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div>
-      <el-backtop target=".el-main" :right="80">
-        <div class="pulseAnim"><i class="el-icon-top"></i></div>
-      </el-backtop>
-    </div>
   </div>
 </template>
 
@@ -92,7 +111,14 @@ export default {
       activeName:'first',
       commentcount:5,
       commentloading:false,
-      commentboxheight:'--height:'
+      commentboxheight:'--height:',
+			intentionInputShow:false,
+			tagInput:'',
+			addingTag:false,
+			name:'',
+			description:'',
+			nameediting:false,
+			descriptionediting:false,
     }
   },
   computed: {
@@ -104,7 +130,10 @@ export default {
     },
     loginerid(){
       return this.$store.state.userid;
-    }
+    },
+		myNeed(){
+			return this.senderinfo.userid==this.$store.state.userid;
+		}
   },
   created:async function() {
     if(!this.$route.query.needid){
@@ -118,6 +147,8 @@ export default {
       if(response.data.Need!=null){
         this.need = response.data.Need
         this.need.needpicurl = 'http://123.56.42.47:10492' + this.need.needpicurl
+				if(this.need.needtags===null) this.need.needtags=[];
+				//console.log(this.need.needtags);
         this.senderinfo=response.data.NeedSender;
         this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
       }
@@ -195,7 +226,74 @@ export default {
         this.commentcount += 5
         this.commentloading = false
       }, 2000)
-    }
+    },
+		addTemporaryContact:function(){
+			//console.log(this.senderinfo);
+			if(!this.$store.state.login||this.senderinfo.userid==this.$store.state.userid) return;
+			this.$store.commit('addTemporaryContact',this.senderinfo);
+			this.$store.commit('showMessage');
+		},
+		handleClose(index){
+			var tag=this.need.needtags[index],url="http://123.56.42.47:10492/need/deleteTag";
+		  this.axios.post(url,null,{
+				params:{needid:this.need.needid,tag:tag},
+				headers:{'Authorization':this.$store.state.Authorization}
+			})
+			this.need.needtags.splice(index, 1);
+		},
+		showInput(){
+		  this.addingTag = true;
+		  this.$nextTick(_ => {
+				this.$refs.saveTagInput.$refs.input.focus();
+		  });
+		},
+		handleInputConfirm(){
+		  let inputValue=this.tagInput;
+		  if (inputValue){
+				var repeat=false;
+				for(var i=0;i<this.need.needtags.length;i++)
+					if(this.need.needtags[i]==inputValue){
+						repeat=true;
+						break;
+					}
+		    if(!repeat){
+					this.need.needtags.push(inputValue);
+					var url="http://123.56.42.47:10492/need/addTag";
+					this.axios.post(url,null,{
+						params:{needid:this.need.needid,tag:inputValue},
+						headers:{'Authorization':this.$store.state.Authorization}
+					})
+				}
+		  }
+		  this.addingTag=false;
+		  this.tagInput='';
+		},
+		editName:function(){
+			if(this.name){
+				//console.log(this.name);
+				this.need.needname=this.name;
+				var url='http://123.56.42.47:10492/editNeed';
+				this.axios.post(url+'/'+this.need.needid+'/name',null,{
+					params:{newNeedName:this.name},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.name="";
+			this.nameediting=false;
+		},
+		editDescription:function(){
+			if(this.description){
+				//console.log(this.name);
+				this.need.needdescription=this.description;
+				var url='http://123.56.42.47:10492/editNeed';
+				this.axios.post(url+'/'+this.need.needid+'/description',null,{
+					params:{newdescription:this.description},
+					headers:{'Authorization':this.$store.state.Authorization}
+				})
+			}
+			this.description="";
+			this.descriptionediting=false;
+		}
   }
 }
 </script>
@@ -208,4 +306,47 @@ export default {
 .comment .infinite-list{
     height: var(--height);
   }
+.Show_Background{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  height: 940px;
+  background-image: url('../assets/GoodShowPage/bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.editname_{
+	position: absolute;
+}
+.editdescription_{
+	position: absolute;
+	top: 35%;
+}
+.edittext{
+  font-size: 14px;
+  color: #919191;
+}
+.edittext:hover{
+	color: red;
+}
+/*以下是关于标签的，从element ui抄的,对button有改动*/
+.el-tag + .el-tag {
+	margin-left: 10px;
+}
+.button-new-tag {
+	margin-left: 10px;
+	height: 32px;
+	line-height: 30px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.input-new-tag {
+	width: 90px;
+	margin-left: 10px;
+	vertical-align: bottom;
+}
+/*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>
