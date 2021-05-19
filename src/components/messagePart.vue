@@ -59,6 +59,7 @@ export default{
 			choosenI:null,
 			tpContacts:[],
 			tpContactNum:0,
+
 		}
 	},
 	computed:{
@@ -135,7 +136,7 @@ export default{
 		console.log('messagePage created');
 		this.$set(this.isContact,0,false);
 	},
-	beforeDestroy:function(){
+  beforeDestroy:function(){
 		console.log('取消信息刷新');
 		clearInterval(this.timer);
 		clearInterval(this.timer2);
@@ -254,28 +255,30 @@ export default{
 				vm.checkUnread(true);
 			})
 		},
-		submitMsg:function(){
-			if(this.isContact[this.choosen]==false){
-				var urlAdd="http://123.56.42.47:10492/addContact";
-				this.axios.post(urlAdd,null,{
-					params:{contactId:this.choosen},
-					headers:{'Authorization':this.$store.state.Authorization},
-				})
-			}
-			var inputbox=document.getElementById('inputbox'),
-				url='http://123.56.42.47:10492/sendMessage',
-				vm=this;
-			//console.log('get it!');
-			this.setScrollOfMsgBoxTop();
-			this.axios.post(url+'/'+this.choosen,null,{
-				params:{messagecontent:inputbox.innerText},
-				headers:{'Authorization':this.$store.state.Authorization}
-			}).then((response)=>{
-				this.checkUnread(true);
-			})
-			this.$set(this.beforeSendTo,this.choosen,"");
-			inputbox.innerText="";
-		},
+    submitMsg:function(){
+      var inputbox=document.getElementById('inputbox'),
+          url='http://123.56.42.47:10492/sendMessage',
+          vm=this;
+      if(inputbox.innerText.length==3&&inputbox.innerText.charCodeAt(2)==10)
+        return;
+      if(this.isContact[this.choosen]==false){
+        var urlAdd="http://123.56.42.47:10492/addContact";
+        this.axios.post(urlAdd,null,{
+          params:{contactId:this.choosen},
+          headers:{'Authorization':this.$store.state.Authorization},
+        })
+      }
+      //console.log('get it!');
+      this.setScrollOfMsgBoxTop();
+      this.axios.post(url+'/'+this.choosen,null,{
+        params:{messagecontent:inputbox.innerText},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then((response)=>{
+        this.checkUnread(true);
+      })
+      this.$set(this.beforeSendTo,this.choosen,"");
+      inputbox.innerText="";
+    },
 		checkUnread:function(thenGetContact){
 			if(!this.$store.state.login) return;
 			var urlGetUnread='http://123.56.42.47:10492/getUnreadMsg';
@@ -387,7 +390,7 @@ export default{
 				this.setScrollOfMsgBoxTop();
 				if(this.isContact[id]==true) this.finishRead();
 			}
-		}
+		},
 	}
 }
 </script>

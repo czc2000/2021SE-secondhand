@@ -57,10 +57,12 @@ export default {
           this.$store.commit('saveAu', response.data.Authorization)
 					this.$store.commit('savePWD',this.formdata.password)
           this.tips = 'post成功'
-          this.$alert('快去寻找你想要的商品吧！', '登录成功', {
-            confirmButtonText: '确定',
-            center: true,
-          });
+          this.$notify({
+            title: '登录成功',
+            message: '快去寻找你想要的商品吧',
+            type: 'success',
+            duration: 2000
+          },)
           this.afterlogin()
           this.$router.push('/home');
           }

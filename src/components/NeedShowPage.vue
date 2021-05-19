@@ -4,8 +4,8 @@
     </div>
     <div class="needinfo">
       <div class="preview">
-        <img :src="this.need.needpicurl" alt="">
-        <div class="previewbottom">
+        <div>
+          <img :src="this.need.needpicurl" alt="">
           <p>举报</p>
         </div>
       </div>
@@ -13,17 +13,13 @@
         <div class="needtitle">
           {{need.needname}}
         </div>
-				<div v-if="myNeed" class="editname_">
-					<el-button type="text" slot="reference" @click="nameediting=true" v-if="!nameediting">
-					  <span class="edittext">修改</span>
-					</el-button>
-					<el-input v-else v-model="name" @keyup.enter.native="editName"></el-input>
-				</div>
-				<div v-if="myNeed" class="editdescription_">
-					<el-button type="text" slot="reference" @click="descriptionediting=true" v-if="!descriptionediting">
-					  <span class="edittext">修改</span>
-					</el-button>
-					<el-input v-else v-model="description" @keyup.enter.native="editDescription"></el-input>
+				<div v-if="myNeed" class="editname_" ref="editname">
+          <el-button type="info" icon="el-icon-edit" size="small"  circle slot="reference"  v-if="!nameediting">
+          </el-button>
+          <div v-if="nameediting" class="editname_input">
+            <el-input  v-model="name" :placeholder="need.needname" @keyup.enter.native="editName"></el-input>
+            <el-button type="primary" icon="el-icon-edit" size="small" circle @click="editName"></el-button>
+          </div>
 				</div>
         <div class="senderinfo">
           <div class="price"></div>
@@ -40,7 +36,7 @@
 					:disable-transitions="false" @close="handleClose(index)">
 						{{tag}}
 				</el-tag>
-				<div v-if="myNeed">
+				<div style="display:inline-block" v-if="myNeed">
 					<el-input v-if="addingTag" class="input-new-tag" v-model="tagInput"
 						ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 					</el-input>
@@ -147,7 +143,8 @@ export default {
       if(response.data.Need!=null){
         this.need = response.data.Need
         this.need.needpicurl = 'http://123.56.42.47:10492' + this.need.needpicurl
-				if(this.need.needtags===null) this.need.needtags=[],
+        if(this.need.needtags===null) this.need.needtags=[];
+        //console.log(this.need.needtags);
         this.senderinfo=response.data.NeedSender;
         this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
       }
@@ -158,6 +155,12 @@ export default {
     })
     // //获取评论列表
     this.getComment();
+  },
+  mounted() {
+    document.addEventListener('click', this.handleDocumentClick);
+  },
+  destroyed() {
+    document.removeEventListener('click', this.handleDocumentClick);
   },
   methods:{
     sendComment:function (){
@@ -292,13 +295,29 @@ export default {
 			}
 			this.description="";
 			this.descriptionediting=false;
-		}
+		},
+    handleDocumentClick(e) {
+      if (
+          this.nameediting&& this.$refs.editname&& !this.$refs.editname.contains(e.target)
+      ){
+        this.nameediting= false
+      }else if(!this.nameediting&&this.$refs.editname&&this.$refs.editname.contains(e.target)){
+        this.nameediting=true
+      }
+      if (
+          this.priceediting&& this.$refs.editprice&& !this.$refs.editprice.contains(e.target)
+      ){
+        this.priceediting=false
+      }else if(!this.priceediting&&this.$refs.editprice&&this.$refs.editprice.contains(e.target)){
+        this.priceediting=true
+      }
+    },
   }
 }
 </script>
 
 <style scoped>
-@import "../assets/NeedShowPage.css";
+@import "../assets/NeedShowPage/NeedShowPage.css";
 .comment {
   --height: 100px;
 }
@@ -319,17 +338,15 @@ export default {
 
 .editname_{
 	position: absolute;
+  top: 15px;
+  left: 20px;
 }
-.editdescription_{
-	position: absolute;
-	top: 35%;
+.editname_input{
+  margin-left: 40px;
+  width: 590px;
 }
-.edittext{
-  font-size: 14px;
-  color: #919191;
-}
-.edittext:hover{
-	color: red;
+.editname_input .el-input{
+  width: 80%;
 }
 /*以下是关于标签的，从element ui抄的,对button有改动*/
 .el-tag + .el-tag {

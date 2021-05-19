@@ -46,17 +46,17 @@
     </div>
     <movingimage v-if="getPath=='/home'" class="movingimage"></movingimage>
 		<el-popover ref="pop" placement="bottom" v-model="searching" @keyup.enter.native="confirmSearch">
-			<el-form ref="searchForm" :model="searchForm" label-width="13%">
+			<el-form ref="searchForm" :model="searchForm" label-width="40px">
 				<el-form-item label="分区">
 					<el-radio-group v-model="searchForm.blockId">
-						<el-radio label="0">全部</el-radio>
+						<el-radio label="0">全部商品</el-radio>
 						<el-radio label="1">生活用品</el-radio>
 						<el-radio label="2">电子产品</el-radio>
 						<el-radio label="3">书籍资料</el-radio>
 						<el-radio label="4">其他类型</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="排列方式">
+				<el-form-item label="排序">
 					<el-radio-group v-model="searchForm.searchType">
 						<el-radio label="1">从旧到新</el-radio>
 						<el-radio label="2">从新到旧</el-radio>

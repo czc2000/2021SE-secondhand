@@ -131,23 +131,11 @@ export default {
             this.$alert('抱歉,'+response.data.description, '注册失败', {
               confirmButtonText: '确定',
               center:true,
-              callback: action => {
-                this.$message({
-                  type: 'info',
-                  message: `action: ${ action }`
-                });
-              }
             });
           } else {
             this.$alert('请到您的邮箱内激活账号', '注册成功', {
               confirmButtonText: '确定',
               center:true,
-              callback: action => {
-                this.$message({
-                  type: 'info',
-                  message: `action: ${ action }`
-                });
-              }
             });
             this.$router.push('/login');
           }

@@ -28,7 +28,7 @@
 			<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
       <br/><br/><br/>
 			<el-form-item label="商品价格" prop="goodprice">
-        <p class="price">￥</p>
+        <span style="font-weight: bold">￥</span>
         <el-input-number v-model="form.goodprice" :precision="2" :step="1" :max="50000" :min="0" size="medium">
         </el-input-number>
       </el-form-item>
@@ -264,10 +264,6 @@ export default {
       0 100px 306px rgba(0, 0, 0, 0.24)
   ;
   background-color: rgba(255,255,255,1);
-}
-.Post_formbox .el-form p{
-  font-size: 20px;
-  float: left;
 }
 .Post_formbox .el-form-item{
   padding:0px 25px;
