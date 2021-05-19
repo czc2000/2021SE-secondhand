@@ -247,6 +247,11 @@ export default{
 			})
 		},
 		submitMsg:function(){
+			var inputbox=document.getElementById('inputbox'),
+				url='http://123.56.42.47:10492/sendMessage',
+				vm=this;
+			if(inputbox.innerText.length==3&&inputbox.innerText.charCodeAt(2)==10)
+				return;
 			if(this.isContact[this.choosen]==false){
 				var urlAdd="http://123.56.42.47:10492/addContact";
 				this.axios.post(urlAdd,null,{
@@ -254,9 +259,6 @@ export default{
 					headers:{'Authorization':this.$store.state.Authorization},
 				})
 			}
-			var inputbox=document.getElementById('inputbox'),
-				url='http://123.56.42.47:10492/sendMessage',
-				vm=this;
 			//console.log('get it!');
 			this.setScrollOfMsgBoxTop();
 			this.axios.post(url+'/'+this.choosen,null,{
