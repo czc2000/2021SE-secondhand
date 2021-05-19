@@ -14,6 +14,7 @@ import GoodShowPage from "@/components/GoodShowPage";
 import needsZone from "@/components/needsZone"
 import NeedShowPage from "@/components/NeedShowPage";
 import Carousel from "@/components/Carousel";
+import Administrator from "@/components/Administrator";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -74,7 +75,12 @@ const routes=[
     {
         path: '/moduletest',
         component:Carousel
+    },
+    {
+        path:'/administrator',
+        component: Administrator
     }
+
 ]
 const vueRouter = new VueRouter({
     routes,

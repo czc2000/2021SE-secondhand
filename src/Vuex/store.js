@@ -73,6 +73,7 @@ const mutations = {
 		state.userid=window.localStorage.getItem('userid');
 		state.username=window.localStorage.getItem('username');
 		state.pwd=window.localStorage.getItem('pwd');
+		state.userdata=window.localStorage.getItem('userdata');
 		//从localStorage中读取对象(只在个人信息页面才需要，故取消)
 		//state.userdata=JSON.parse(window.localStorage.getItem('userdata'));
 		//调试信息 console.log('from loadFromLocalStorage\n');
