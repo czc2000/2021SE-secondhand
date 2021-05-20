@@ -1,186 +1,250 @@
 <template>
-  <div class="background_userinfo">
-		<div class="userinfo-main">
-			<ul class="menu1">
-				<li @click="modeTo('info')" :style="isChoosen('info')">资料</li>
-				<li @click="modeTo('order')" :style="isChoosen('order')">订单</li>
-				<ul class="submenu_fold order_fold" v-if="isMode('order')">
-					<li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>
-					<li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>
-				</ul>
-				<li @click="modeTo('favorite')" :style="isChoosen('favorite')">收藏</li>
-				<li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>
-				<li @click="modeTo('good')" :style="isChoosen('good')">商品</li>
-				<li @click="modeTo('intention')" :style="isChoosen('intention')">意向</li>
-				<ul class="submenu_fold intention_fold" v-if="isMode('intention')">
-					<li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>
-					<li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>
-				</ul>
-			</ul>
-			
-			<div class="info userinfo-maincard" v-if="isMode('info')">
-				<div class="info-head">
-					<profileUpload ref="avatar"></profileUpload>
-					<img :src="getUseravatar" alt="">
-					<div class="imgCover" @click="changeAvatar"><p>更换我的头像</p></div>
-					<p>头像</p>
-				</div>
-				<el-form :model="form" class="info-body" :rules="rules" ref="ruleForm" label-width="65px">
-					<el-form-item label="用户id">
-						<el-input v-model="form.userid" prefix-icon="el-icon-user-solid" :disabled="true"></el-input>
-					</el-form-item>
-					<el-form-item label="用户名">
-						<el-input v-model="form.username" prefix-icon="el-icon-user" :disabled="true"></el-input>
-					</el-form-item>
-					<el-form-item label="性别">
-						<el-select v-model="form.usersex" style="width:100%" :disabled="!isEditMode">
-							<i slot="prefix" class="el-input__incon el-icon-search"></i>
-							<el-option value=0 label="女"></el-option>
-							<el-option value=1 label="男"></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="邮箱" prop="useremail">
-						<el-input v-model="form.useremail" prefix-icon="el-icon-message" :disabled="!isEditMode"></el-input>
-					</el-form-item>
-					<el-form-item label="手机" prop="userphonenumber">
-						<el-input v-model="form.userphonenumber" prefix-icon="el-icon-mobile phone" :disabled="!isEditMode"></el-input>
-					</el-form-item>
-				</el-form>
-				<el-button class="info-edit" plain @click="enterEditMode" v-show="!isEditMode&&!isPWDChangeMode">修改信息</el-button>
-				<el-button class="info-save" plain @click="saveEdit" v-show="isEditMode">保存修改</el-button>
-				<el-button class="info-cancel" plain @click="leaveEditMode" v-show="isEditMode">取消修改</el-button>
-				<el-form :model="form2" class="info-body2" :rules="rules2" ref="ruleForm2" label-width="75px" v-show="isPWDChangeMode">
-					<el-form-item label="现有密码" prop="pwdNow">
-						<el-input v-model="form2.pwdNow" prefix-icon="el-icon-lock"></el-input>
-					</el-form-item>
-					<el-form-item label="新密码" prop="pwdNew">
-						<el-input v-model="form2.pwdNew" prefix-icon="el-icon-key"></el-input>
-					</el-form-item>
-				</el-form>
-				<el-button class="pwd-change" plain @click="enterPWDChangeMode" v-show="!isPWDChangeMode&&!isEditMode">修改密码</el-button>
-				<el-button class="pwd-save" plain @click="savePWDChangeMode" v-show="isPWDChangeMode">保存修改</el-button>
-				<el-button class="pwd-cancel" plain @click="leavePWDChangeMode" v-show="isPWDChangeMode">取消修改</el-button>
-			</div>
-			
-			<div class="order userinfo-maincard" v-if="isMode('order')">
-				<div class="rectangleContainer" v-if="isMode2('fromMe')">
-					<orderbox v-for="(item,index) in this.Isold" :key="item.order.orderid" :index="index" towho="买家"
-						:good="item.good" :order="item.order" :buyer="item.buyer" :seller={}
-						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
-						@confirm="sellerConfirm(item.order.orderid,index)" @postComment="postSellerComment">
-					</orderbox>
-				</div>
-				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
-					<orderbox v-for="(item,index) in this.Ibought" :key="item.order.orderid" :index="index" towho="卖家"
-						:good="item.good" :order="item.order" :buyer={} :seller="item.seller"
-						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
-						@confirm="buyerConfirm(item.order.orderid,index)" @postComment="postBuyerComment">
-					</orderbox>
-				</div>
-			</div>
-			
-			<div class="favorite userinfo-maincard" v-if="isMode('favorite')">
-				<el-divider class="favorite-divider1"></el-divider>
-				<el-divider class="favorite-divider2"></el-divider>
-				<div class="favorite-goodContainer">
-					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.favorites" :key="item.goodid" pos="favorite"
-						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
-						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="recordCancel(item.goodid,index)">
-					</Goodbox_favoriteshelf>
-				</div>
-			</div>
-			
-			<div class="demand userinfo-maincard" v-if="isMode('demand')">
-				<el-dialog title="修改需求" :visible.sync="needEditing" width="30%" :show-close="false" :modal-append-to-body='false'>
-						<el-form label-position="right" ref="ruleForm4" :rules="rules4" :model="form4" label-width="90px">
-						  <el-form-item label="需求标题" prop="needname">
-						    <el-input v-model="form4.needname"></el-input>
-						  </el-form-item>
-						  <el-form-item label="需求描述" prop="needdescription">
-						    <el-input type="textarea" v-model="form4.needdescription"></el-input>
-						  </el-form-item>
-							<el-tag :key="tag" v-for="(tag,index) in form4.needtags" closable
-								:disable-transitions="false" @close="handleClose2(index)">
-									{{tag}}
-							</el-tag>
-							<el-input class="input-new-tag" v-if="needTagsEditing" v-model="needTagInput"
-								ref="saveTagInput2" size="small" @keyup.enter.native="handleInputConfirm2" @blur="handleInputConfirm2">
-							</el-input>
-							<el-button v-else class="button-new-tag" size="small" @click="showInput2">+ New Tag</el-button>
-						  <br/><br/><br/>
-						</el-form>
-					  <span slot="footer" class="dialog-footer">
-					    <el-button @click="cancelNeedEdit">取 消</el-button>
-					    <el-button type="primary" @click="confirmNeedEdit">确 定</el-button>
-					  </span>
-				</el-dialog>
-				<el-divider class="demand-divider1"></el-divider>
-				<el-divider class="demand-divider2"></el-divider>
-				<div class="demand-needContainer">
-					<needbox_infoShelf class="needs" v-for="(item,index) in this.needs" :key="item.needid"
-						:needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needid="item.needid"
-						:needsenderid="item.needsenderid" :needDescription="item.needdescription" @deleteNeed="recordDelete(item.needid,index)" @edit="editNeed(item.needid,index)">
-					</needbox_infoShelf>
-				</div>
-			</div>
-			
-			<div class="good___ userinfo-maincard" v-if="isMode('good')">
-				<el-dialog title="修改商品" :visible.sync="goodEditing" width="30%" :show-close="false" :modal-append-to-body='false'>
-						<el-form label-position="right" ref="ruleForm3" :rules="rules3" :model="form3" label-width="90px">
-						  <el-form-item label="商品标题" prop="goodname">
-						    <el-input v-model="form3.goodname"></el-input>
-						  </el-form-item>
-						  <el-form-item label="商品描述" prop="gooddescription">
-						    <el-input type="textarea" v-model="form3.gooddescription"></el-input>
-						  </el-form-item>
-							<el-tag :key="tag" v-for="(tag,index) in form3.goodtags" closable
-								:disable-transitions="false" @close="handleClose1(index)">
-									{{tag}}
-							</el-tag>
-							<el-input class="input-new-tag" v-if="goodTagsEditing" v-model="goodTagInput"
-								ref="saveTagInput1" size="small" @keyup.enter.native="handleInputConfirm1" @blur="handleInputConfirm1">
-							</el-input>
-							<el-button v-else class="button-new-tag" size="small" @click="showInput1">+ New Tag</el-button>
-						  <br/><br/><br/>
-							<el-form-item label="商品价格" prop="goodprice">
-						    <p class="price">￥</p>
-						    <el-input-number v-model="form3.goodprice" :precision="2" :step="1" :max="50000" :min="0" size="medium">
-						    </el-input-number>
-						  </el-form-item>
-						</el-form>
-					  <span slot="footer" class="dialog-footer">
-					    <el-button @click="cancelGoodEdit">取 消</el-button>
-					    <el-button type="primary" @click="confirmGoodEdit">确 定</el-button>
-					  </span>
-				</el-dialog>
-				<el-divider class="favorite-divider1"></el-divider>
-				<el-divider class="favorite-divider2"></el-divider>
-				<div class="favorite-goodContainer">
-					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.goods" :key="item.goodid" pos="good"
-						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
-						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="deleteGood(item.goodid)" @edit="editGood(item.goodid,index)">
-					</Goodbox_favoriteshelf>
-				</div>
-			</div>
-			
-			<div class="intention_ userinfo-maincard" v-if="isMode('intention')">
-				<div class="rectangleContainer" v-if="isMode2('fromMe')">
-					<intentionbox v-for="(item,index) in this.intentions" :key="item.intention.intentionid"
-						:avatar="'http://123.56.42.47:10492'+item.seller.useravatarurl" :name="item.seller.username" 
-						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
-						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="卖家" @deleteIntention="deleteIntention(item.intention.intentionid,index,0)">
-					</intentionbox>
-				</div>
-				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
-					<intentionbox v-for="(item,index) in this.receivedintentions" :key="item.intention.intentionid"
-						:avatar="'http://123.56.42.47:10492'+item.buyer.useravatarurl" :name="item.buyer.username" 
-						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
-						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="买家"
-						@accpet="acceptIntention(item.intention.intentionid,index)" @refuse="refuseIntention(item.intention.intentionid,index)" @deleteIntention="deleteIntention(item.intention.intentionid,index,1)">
-					</intentionbox>
-				</div>
-			</div>
-			
+  <div class="background_userinfo" style="overflow-y: hidden">
+    <div class="background_img">
+      <vue-particles
+          color="#6843d1"
+          :particleOpacity="0.85"
+          :particlesNumber="100"
+          shapeType="circle"
+          :particleSize="5"
+          linesColor="#8DD1FE"
+          :linesWidth="1"
+          :lineLinked="true"
+          :lineOpacity="0.6"
+          :linesDistance="180"
+          :moveSpeed="3"
+          :hoverEffect="true"
+          hoverMode="grab"
+          :clickEffect="true"
+          clickMode="push"
+      >
+      </vue-particles>
+    </div>
+<!--    <ul class="menu1">-->
+<!--      <li @click="modeTo('info')" :style="isChoosen('info')">资料</li>-->
+<!--      <li @click="modeTo('order')" :style="isChoosen('order')">订单</li>-->
+<!--      <ul class="submenu_fold order_fold" v-if="isMode('order')">-->
+<!--        <li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>-->
+<!--        <li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>-->
+<!--      </ul>-->
+<!--      <li @click="modeTo('favorite')" :style="isChoosen('favorite')">收藏</li>-->
+<!--      <li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>-->
+<!--      <li @click="modeTo('good')" :style="isChoosen('good')">商品</li>-->
+<!--      <li @click="modeTo('intention')" :style="isChoosen('intention')">意向</li>-->
+<!--      <ul class="submenu_fold intention_fold" v-if="isMode('intention')">-->
+<!--        <li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>-->
+<!--        <li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>-->
+<!--      </ul>-->
+<!--    </ul>-->
+		<div class="userinfo-main" :style="maincard+';'+maincardmargin">
+      <div class="maincardwidth" >
+
+        <div class="info userinfo-maincard" v-if="isMode('info')">
+          <div class="info-head">
+            <profileUpload ref="avatar"></profileUpload>
+            <img :src="getUseravatar" alt="">
+            <div class="imgCover" @click="changeAvatar"><p><i class="el-icon-refresh"></i></p></div>
+          </div>
+          <el-form :model="form" class="info-body" :rules="rules" ref="ruleForm" label-width="65px">
+            <el-form-item label="用户名">
+              <el-input v-model="form.username" prefix-icon="el-icon-user" :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-select v-model="form.usersex" style="width:100%" :disabled="!isEditMode">
+                <i slot="prefix" class="el-input__incon el-icon-search"></i>
+                <el-option value=0 label="女"></el-option>
+                <el-option value=1 label="男"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="邮箱" prop="useremail">
+              <el-input v-model="form.useremail" prefix-icon="el-icon-message" :disabled="!isEditMode"></el-input>
+            </el-form-item>
+            <el-form-item label="手机" prop="userphonenumber">
+              <el-input v-model="form.userphonenumber" prefix-icon="el-icon-mobile phone" :disabled="!isEditMode"></el-input>
+            </el-form-item>
+          </el-form>
+          <div class="info-bottom">
+            <el-button class="info-edit" plain @click="enterEditMode" v-show="!isEditMode&&!isPWDChangeMode">修改信息</el-button>
+            <el-button class="info-save" plain @click="saveEdit" v-show="isEditMode">保存修改</el-button>
+            <el-button class="info-cancel" plain @click="leaveEditMode" v-show="isEditMode">取消修改</el-button>
+            <el-form :model="form2" class="info-body2" :rules="rules2" ref="ruleForm2" label-width="75px" v-show="isPWDChangeMode">
+              <el-form-item label="现有密码" prop="pwdNow">
+                <el-input v-model="form2.pwdNow" prefix-icon="el-icon-lock"></el-input>
+              </el-form-item>
+              <el-form-item label="新密码" prop="pwdNew">
+                <el-input v-model="form2.pwdNew" prefix-icon="el-icon-key"></el-input>
+              </el-form-item>
+            </el-form>
+            <el-button class="pwd-change" plain @click="enterPWDChangeMode" v-show="!isPWDChangeMode&&!isEditMode">修改密码</el-button>
+            <el-button class="pwd-save" plain @click="savePWDChangeMode" v-show="isPWDChangeMode">保存修改</el-button>
+            <el-button class="pwd-cancel" plain @click="leavePWDChangeMode" v-show="isPWDChangeMode">取消修改</el-button>
+          </div>
+        </div>
+
+
+
+        <div class="favorite userinfo-maincard" v-if="isMode('favorite')">
+          				<div class="favorite-goodContainer">
+          					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.favorites" :key="item.goodid" pos="favorite"
+          						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
+          						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="recordCancel(item.goodid,index)">
+          					</Goodbox_favoriteshelf>
+          				</div>
+        </div>
+
+        <div class="order userinfo-maincard" v-if="isMode('order')">
+
+          				<div class="rectangleContainer" v-if="isMode2('fromMe')">
+          					<orderbox v-for="(item,index) in this.Isold" :key="item.order.orderid" :index="index" towho="买家"
+          						:good="item.good" :order="item.order" :buyer="item.buyer" :seller={}
+          						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
+          						@confirm="sellerConfirm(item.order.orderid,index)" @postComment="postSellerComment">
+          					</orderbox>
+          				</div>
+          				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
+          					<orderbox v-for="(item,index) in this.Ibought" :key="item.order.orderid" :index="index" towho="卖家"
+          						:good="item.good" :order="item.order" :buyer={} :seller="item.seller"
+          						:buyercomment="item.buyercomment" :sellercomment="item.sellercomment"
+          						@confirm="buyerConfirm(item.order.orderid,index)" @postComment="postBuyerComment">
+          					</orderbox>
+          				</div>
+                  <div class="radiusPulse"  @click="submodeTo('fromOthers')"><span><i class="el-icon-shopping-bag-1"></i></span></div>
+                  <div class="radiusPulse radiusPulse2" @click="submodeTo('fromMe')"><span><i class="el-icon-sell"></i></span></div>
+        </div>
+
+        <div class="demand userinfo-maincard" v-if="isMode('demand')">
+          				<el-dialog title="修改需求" :visible.sync="needEditing" width="30%" :show-close="false" :modal-append-to-body='false'>
+          						<el-form label-position="right" ref="ruleForm4" :rules="rules4" :model="form4" label-width="90px">
+          						  <el-form-item label="需求标题" prop="needname">
+          						    <el-input v-model="form4.needname"></el-input>
+          						  </el-form-item>
+          						  <el-form-item label="需求描述" prop="needdescription">
+          						    <el-input type="textarea" v-model="form4.needdescription"></el-input>
+          						  </el-form-item>
+          							<el-tag :key="tag" v-for="(tag,index) in form4.needtags" closable
+          								:disable-transitions="false" @close="handleClose2(index)">
+          									{{tag}}
+          							</el-tag>
+          							<el-input class="input-new-tag" v-if="needTagsEditing" v-model="needTagInput"
+          								ref="saveTagInput2" size="small" @keyup.enter.native="handleInputConfirm2" @blur="handleInputConfirm2">
+          							</el-input>
+          							<el-button v-else class="button-new-tag" size="small" @click="showInput2">+ New Tag</el-button>
+          						  <br/><br/><br/>
+          						</el-form>
+          					  <span slot="footer" class="dialog-footer">
+          					    <el-button @click="cancelNeedEdit">取 消</el-button>
+          					    <el-button type="primary" @click="confirmNeedEdit">确 定</el-button>
+          					  </span>
+          				</el-dialog>
+          				<div class="demand-needContainer">
+          					<needbox_infoShelf class="needs" v-for="(item,index) in this.needs" :key="item.needid"
+          						:needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needid="item.needid"
+          						:needsenderid="item.needsenderid" :needDescription="item.needdescription" @deleteNeed="recordDelete(item.needid,index)" @edit="editNeed(item.needid,index)">
+          					</needbox_infoShelf>
+          				</div>
+        </div>
+
+        <div class="good___ userinfo-maincard" v-if="isMode('good')">
+          				<el-dialog title="修改商品" :visible.sync="goodEditing" width="30%" :show-close="false" :modal-append-to-body='false'>
+          						<el-form label-position="right" ref="ruleForm3" :rules="rules3" :model="form3" label-width="90px">
+          						  <el-form-item label="商品标题" prop="goodname">
+          						    <el-input v-model="form3.goodname"></el-input>
+          						  </el-form-item>
+          						  <el-form-item label="商品描述" prop="gooddescription">
+          						    <el-input type="textarea" v-model="form3.gooddescription"></el-input>
+          						  </el-form-item>
+          							<el-tag :key="tag" v-for="(tag,index) in form3.goodtags" closable
+          								:disable-transitions="false" @close="handleClose1(index)">
+          									{{tag}}
+          							</el-tag>
+          							<el-input class="input-new-tag" v-if="goodTagsEditing" v-model="goodTagInput"
+          								ref="saveTagInput1" size="small" @keyup.enter.native="handleInputConfirm1" @blur="handleInputConfirm1">
+          							</el-input>
+          							<el-button v-else class="button-new-tag" size="small" @click="showInput1">+ New Tag</el-button>
+          						  <br/><br/><br/>
+          							<el-form-item label="商品价格" prop="goodprice">
+          						    <span>￥</span>
+          						    <el-input-number v-model="form3.goodprice" :precision="2" :step="1" :max="50000" :min="0" size="medium">
+          						    </el-input-number>
+          						  </el-form-item>
+          						</el-form>
+          					  <span slot="footer" class="dialog-footer">
+          					    <el-button @click="cancelGoodEdit">取 消</el-button>
+          					    <el-button type="primary" @click="confirmGoodEdit">确 定</el-button>
+          					  </span>
+          				</el-dialog>
+          				<div class="favorite-goodContainer">
+          					<Goodbox_favoriteshelf class="goods" v-for="(item,index) in this.goods" :key="item.goodid" pos="good"
+          						:goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :goodid="item.goodid"
+          						:goodprice="item.goodprice" :goodsenderid="item.goodsenderid" @cancelFavorite="deleteGood(item.goodid)" @edit="editGood(item.goodid,index)">
+          					</Goodbox_favoriteshelf>
+          				</div>
+        </div>
+
+        <div class="intention_ userinfo-maincard" v-if="isMode('intention')">
+          				<div class="rectangleContainer" v-if="isMode2('fromMe')">
+          					<intentionbox v-for="(item,index) in this.intentions" :key="item.intention.intentionid"
+          						:avatar="'http://123.56.42.47:10492'+item.seller.useravatarurl" :name="item.seller.username"
+          						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
+          						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="卖家" @deleteIntention="deleteIntention(item.intention.intentionid,index,0)">
+          					</intentionbox>
+          				</div>
+          				<div class="rectangleContainer" v-if="isMode2('fromOthers')">
+          					<intentionbox v-for="(item,index) in this.receivedintentions" :key="item.intention.intentionid"
+          						:avatar="'http://123.56.42.47:10492'+item.buyer.useravatarurl" :name="item.buyer.username"
+          						:intentionprice="item.intention.intentionprice" :goodprice="item.good.goodprice" :goodavatar="'http://123.56.42.47:10492'+item.good.goodpicurl"
+          						:goodname="item.good.goodname" :status="item.intention.intentionstatus" towho="买家"
+          						@accpet="acceptIntention(item.intention.intentionid,index)" @refuse="refuseIntention(item.intention.intentionid,index)" @deleteIntention="deleteIntention(item.intention.intentionid,index,1)">
+          					</intentionbox>
+          				</div>
+              <div class="radiusPulse"  @click="submodeTo('fromMe')"><span><i class="el-icon-shopping-bag-1"></i></span></div>
+              <div class="radiusPulse radiusPulse2" @click="submodeTo('fromOthers')"><span><i class="el-icon-sell"></i></span></div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="navigation" :class="{active:menuactive}">
+          <ul>
+            <li @click="modeTo('info')" :class="{Lichoosen:isMode('info')}">
+              <a>
+                <span class="icon"><i class="el-icon-user-solid"></i></span>
+                <span class="title">个人资料</span>
+              </a>
+            </li>
+            <li @click="modeTo('order')" :class="{Lichoosen:isMode('order')}">
+              <a>
+                <span class="icon"><i class="el-icon-s-order"></i></span>
+                <span class="title">订单</span>
+              </a>
+            </li>
+            <li @click="modeTo('favorite')" :class="{Lichoosen:isMode('favorite')}" >
+              <a>
+                <span class="icon"><i class="el-icon-star-on"></i></span>
+                <span class="title">收藏</span>
+              </a>
+            </li>
+            <li @click="modeTo('good')" :class="{Lichoosen:isMode('good')}">
+              <a>
+                <span class="icon"><i class="el-icon-s-goods"></i></span>
+                <span class="title">商品</span>
+              </a>
+            </li>
+            <li @click="modeTo('demand')" :class="{Lichoosen:isMode('demand')}">
+              <a>
+                <span class="icon"><i class="el-icon-sold-out"></i></span>
+                <span class="title">需求帖子</span>
+              </a>
+            </li>
+            <li @click="modeTo('intention')" :class="{Lichoosen:isMode('intention')}">
+              <a>
+                <span class="icon"><i class="el-icon-s-comment"></i></span>
+                <span class="title">意向</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="toggle" @click="menuactive=!menuactive"><i class="el-icon-caret-left" v-if="menuactive"></i><i class="el-icon-caret-right" v-else></i></div>
+      </div>
 		</div>
   </div>
 </template>
@@ -239,8 +303,8 @@ export default {
 			mode:"info",
 			submode:"fromMe",
 			menu1ChoosenOptionSytle:{
-				"background-color": "#d2dede",
-				"color": "#4169e1"
+				// "background-color": "#d2dede",
+				// "color": "#4169e1"
 			},
 			form:{},
 			fPage:0,
@@ -301,7 +365,10 @@ export default {
 				goodsendtime:"2021-05-15T13:12:28.000+00:00",
 				goodsenderid:102,
 				goodtags:null,
-			}
+			},
+			menuactive:true,
+      maincard:'--width:650px;--height:600px',
+      maincardmargin:'--leftmar:200px'
     }
   },
   computed:{
@@ -367,7 +434,14 @@ export default {
 				})
 				this.$store.commit('prepareforUserdataReload');
 			}
-		}
+		},
+    menuactive(val){
+      if(val==true){
+        this.maincardmargin='--leftmar:200px';
+      }else{
+        this.maincardmargin='--leftmar:80px'
+      }
+    }
   },
   created:function (){
 			this.$store.commit('loadUserdataFromLocalStorage');
@@ -381,7 +455,15 @@ export default {
       this.$refs.avatar.toggleShow();
 			},
     modeTo:function(pattern){
-			this.mode=pattern; 
+			this.mode=pattern;
+			if(pattern=='info'){
+			  this.maincard='--width:650px;--height:600px'
+
+      }else if(pattern=='order'||pattern=='intention'){
+			  this.maincard='--width:1000px;--height:800px'
+      }else{
+			  this.maincard='--width:750px;--height:800px'
+      }
 		},
     submodeTo:function(pattern){
 			this.submode=pattern; 

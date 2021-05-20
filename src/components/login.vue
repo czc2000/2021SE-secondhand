@@ -121,7 +121,7 @@ export default {
   width: 500px;
   height: 600px;
   border-radius: 8px;
-  background-color: #e2f3f5;
+  background-color: #f2f7ff;
   margin: 0 auto;
   box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.5s;

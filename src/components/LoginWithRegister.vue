@@ -146,7 +146,7 @@ export default {
 }
 .leftbox .desc span, .rightbox .desc span{
   font-weight: bolder;
-  color: #288b98;
+  color: #6843d1;
 }
 .leftbox img, .rightbox img{
   margin-top: 30px;
@@ -160,7 +160,7 @@ export default {
   margin:30px auto;
   width: 40px;
   padding: 10px 24px;
-  border: 2px solid #22d1ee;
+  border: 2px solid #88bef5;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
@@ -183,11 +183,11 @@ export default {
   top: 50%;
   left: 0;
   border-radius: 6px;
-  border: 2px solid #22d1ee;
+  border: 2px solid #88bef5;
   transform: translate(-101%, -50%);
   width: 100%;
   height: 100%;
-  background-color:#22d1ee;
+  background-color:#88bef5;
   transition: transform 0.4s cubic-bezier(0.53, 0.21, 0, 1);;
 }
 
