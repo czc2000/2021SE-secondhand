@@ -128,6 +128,7 @@ export default {
 }
 .loginform h1{
   padding-top: 100px;
+  margin-bottom: 30px;
   font-family:  Garamond, serif;
   font-weight: 700;
   font-size: 44px;

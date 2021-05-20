@@ -460,7 +460,7 @@ export default {
 			  this.maincard='--width:650px;--height:600px'
 
       }else if(pattern=='order'||pattern=='intention'){
-			  this.maincard='--width:1000px;--height:800px'
+			  this.maincard='--width:1200px;--height:800px'
       }else{
 			  this.maincard='--width:750px;--height:800px'
       }
