@@ -107,6 +107,7 @@ export default {
         }
       }).then(response=>{
         this.userdata=response.data.WhoAmI
+        console.log(this.userdata)
         this.userdata.useravatarurl='http://123.56.42.47:10492'+this.userdata.useravatarurl
         this.$store.commit("saveuserinfo",this.userdata)
       })

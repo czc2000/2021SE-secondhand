@@ -143,8 +143,8 @@ export default {
       if(response.data.Need!=null){
         this.need = response.data.Need
         this.need.needpicurl = 'http://123.56.42.47:10492' + this.need.needpicurl
-        if(this.need.needtags===null) this.need.needtags=[];
-        //console.log(this.need.needtags);
+				if(this.need.needtags===null) this.need.needtags=[];
+				//console.log(this.need.needtags);
         this.senderinfo=response.data.NeedSender;
         this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
       }

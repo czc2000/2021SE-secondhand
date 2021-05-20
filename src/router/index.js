@@ -14,6 +14,7 @@ import GoodShowPage from "@/components/GoodShowPage";
 import needsZone from "@/components/needsZone"
 import NeedShowPage from "@/components/NeedShowPage";
 import Carousel from "@/components/Carousel";
+import Administrator from "@/components/Administrator";
 import LoginWithRegister from "@/components/LoginWithRegister";
 import searchResult from "@/components/searchResult";
 import messagePart from "@/components/messagePart";
@@ -78,7 +79,10 @@ const routes=[
         path: '/moduletest',
         component:null
     },
-
+    {
+        path:'/administrator',
+        component: Administrator
+    },
 		{
 				path: '/searchResult',
 				component:searchResult

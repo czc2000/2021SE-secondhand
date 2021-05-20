@@ -165,6 +165,7 @@ export default {
 					var tagsToString='';
 					for(var i=0;i<this.tags.length;i++)
 						tagsToString+='#'+this.tags[i];
+					console.log(tagsToString);
 					this.formData.append('needtags',tagsToString);
           console.log(this.formData)
           this.axios.post('http://123.56.42.47:10492/sendneed',this.formData,{
