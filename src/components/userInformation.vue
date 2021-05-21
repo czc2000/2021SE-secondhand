@@ -729,12 +729,21 @@ export default {
 					this.$set(this.intentions,i,temp);
 				}
 			for(var i=0;i<this.receivedintentions.length;i++)
+			{
+				/*if(this.receivedintentions[i].intention.intentionstatus==-1)
+				{
+					this.receivedintentions.splice(i,1);
+					i--;
+					continue;
+				}*/
 				if(this.receivedintentions[i].good===null)
 				{
 					var temp=this.receivedintentions[i];
 					temp.good=this.invalid;
 					this.$set(this.receivedintentions,i,temp);
 				}
+			}
+				
 			for(var i=0;i<this.Isold.length;i++)
 				if(this.Isold[i].good===null)
 				{
@@ -776,7 +785,7 @@ export default {
 			this.axios.post(url+'/'+intentionid,null,{
 				headers:{'Authorization':this.$store.state.Authorization}
 			})
-			var temp=this.receivedintentions[index];
+			var temp=JSON.parse(JSON.stringify(this.receivedintentions[index]));
 			temp.intention.intentionstatus=-1;
 			this.$set(this.receivedintentions,index,temp);
 		},
@@ -788,6 +797,9 @@ export default {
 			})
 			if(type==0) this.intentions.splice(index,1);
 			else this.receivedintentions.splice(index,1);
+		},
+		test:function(){
+			console.log(this.receivedintentions);
 		},
 		enterEditMode: function(){
 			console.log('enter edit mode');
