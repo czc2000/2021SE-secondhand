@@ -24,7 +24,7 @@ export default{
 	props:['avatar','name','intentionprice','goodprice','goodavatar','goodname','status','towho'],
 	data:function(){
 		return{
-			show: true
+			show: true,
 		}
 	},
 	computed:{
@@ -42,11 +42,6 @@ export default{
 		}
 	},
 	watch:{
-		showOptions(val){
-			if(val==false&&this.status==-1){
-				this.show=false;
-			}
-		}
 	}
 }
 </script>

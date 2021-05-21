@@ -87,10 +87,6 @@ export default {
 		border-width: 3px;
 		border-color: #f5f5f5;
   }
-  .box:hover{
-    border:3px solid darkorange;
-    box-shadow:  0 6px 12px 0 rgba(0, 0, 0, 0.1);
-  }
   .box img{
 		width: 180px;
 		height: 180px;
@@ -101,7 +97,7 @@ export default {
   .review{
 		position: relative;
 		top: -30px;
-    height: 56px;
+    height: 32px;
     font-size:10px;
     margin-top: 30px;
     overflow: hidden;/* 超出的文本隐藏 */
@@ -119,8 +115,8 @@ export default {
   }
   .price{
 		position: relative;
-		top: -25px;
-		font-size: 15px;
+		top: -10px;
+		font-size: 16px;
     height: 20px;
 		width: 130px;
     font-weight: bolder;
@@ -131,16 +127,9 @@ export default {
   }
 	.box .el-button{
 		position: relative;
-		top: -50px;
+		top: -30px;
 		left: 50px;
 	}
-.Id{
-	position: relative;
-	top: -20px;
-	font-size:15px;
-	border-style: solid;
-	border-width: 2px;
-}
 .bid{
 	text-align: center;
 }

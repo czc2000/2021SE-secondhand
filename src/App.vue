@@ -93,7 +93,7 @@ export default {
           clearInterval(scrollToptimer);
         }
       }, 20)
-    }
+    },
   },
   destroyed () {
     window.removeEventListener('scroll', this.handleScroll);
