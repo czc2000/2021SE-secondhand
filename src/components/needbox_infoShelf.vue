@@ -35,14 +35,10 @@ export default{
 	padding: 5px;
 	border-radius: 8px;
 	background-color: #fff;
-	border-style: solid;
-	border-width: 3px;
-	border-color: #ffffff;
+  border-style: solid;
+  border-width: 3px;
+  border-color: #f2f7ff;
 	margin: 6px;
-}
-.needbox_:hover{
-	border:3px solid darkorange;
-	box-shadow:  0 6px 12px 0 rgba(0, 0, 0, 0.1);
 }
 .needbox_ img{
 	width: 160px;
@@ -51,8 +47,9 @@ export default{
 }
 .needname_{
 	position: relative;
+  left: 4px;
 	top: -35px;
-	height: 37px;
+	height: 22px;
 	font-size:15px;
 	color: RoyalBlue;
 	margin-top: 30px;
@@ -60,9 +57,22 @@ export default{
 	text-overflow: ellipsis; /* 溢出用省略号显示 */
 	display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */
 	-webkit-box-orient: vertical; /*  从上到下垂直排列子元素（设置伸缩盒子的子元素排列方式） */
-	-webkit-line-clamp: 3; /* 这个属性不是css的规范属性，需要组合上面两个属性，表示显示的行数 */
+	-webkit-line-clamp: 1; /* 这个属性不是css的规范属性，需要组合上面两个属性，表示显示的行数 */
 	text-align: left;
 	cursor: pointer;
+}
+.needbox_ .needDescription_{
+  position: relative;
+  left: 4px;
+  height: 42px;
+  font-size:14px;
+  overflow: hidden;/* 超出的文本隐藏 */
+  text-overflow: ellipsis; /* 溢出用省略号显示 */
+  display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */
+  -webkit-box-orient: vertical; /*  从上到下垂直排列子元素（设置伸缩盒子的子元素排列方式） */
+  -webkit-line-clamp: 3; /* 这个属性不是css的规范属性，需要组合上面两个属性，表示显示的行数 */
+  text-align: left;
+  cursor: pointer;
 }
 .needsender{
 	font-size: 13px;

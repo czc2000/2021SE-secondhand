@@ -1,36 +1,34 @@
 <template>
-  <div v-if="loaded">
+  <div class="ShowPage" :class="{blackshape:intentionInputShow}" v-if="loaded">
     <div class="Show_Background">
     </div>
   <div class="goodinfo">
     <div class="preview">
-      <img :src="this.good.goodpicurl" alt="">
-      <div class="previewbottom">
+      <div>
+        <img :src="this.good.goodpicurl" alt="">
         <p>举报</p>
       </div>
     </div>
-    <div class="iteminfo">
+    <div class="gooditeminfo">
       <div class="goodtitle">
         {{good.goodname}}
       </div>
-			<div v-if="myGood&&!priceediting&&!descriptionediting&&!addingTag" class="editname">
-				<el-button type="text" slot="reference" @click="nameediting=true" v-if="!nameediting">
-				  <span class="edittext">修改</span>
+			<div v-if="myGood&&!priceediting&&!descriptionediting&&!addingTag" ref="editname" class="editname">
+				<el-button type="info" icon="el-icon-edit" size="small"  circle slot="reference"  v-if="!nameediting">
 				</el-button>
-				<el-input v-else v-model="name" @keyup.enter.native="editName"></el-input>
+        <div v-if="nameediting" class="editname_input">
+          <el-input  v-model="name" :placeholder="good.goodname" @keyup.enter.native="editName"></el-input>
+          <el-button type="primary" icon="el-icon-edit" size="small" circle @click="editName"></el-button>
+        </div>
 			</div>
-			<div v-if="myGood&&!nameediting&&!descriptionediting&&!addingTag" class="editprice">
-				<el-button type="text" slot="reference" @click="priceediting=true" v-if="!priceediting">
-				  <span class="edittext">修改</span>
+			<div v-if="myGood&&!nameediting&&!descriptionediting&&!addingTag" ref="editprice" class="editprice">
+				<el-button type="info" icon="el-icon-edit" size="small" circle slot="reference"v-if="!priceediting">
 				</el-button>
-				<el-input v-else v-model="price" @keyup.enter.native="editPrice"></el-input>
-			</div>
-			<div v-if="myGood&&!nameediting&&!priceediting&&!addingTag" class="editdescription">
-				<el-button type="text" slot="reference" @click="descriptionediting=true" v-if="!descriptionediting">
-				  <span class="edittext">修改</span>
-				</el-button>
-				<el-input v-else v-model="description" @keyup.enter.native="editDescription"></el-input>
-			</div>
+        <div class="editprice_input"  v-if="priceediting">
+          <el-input-number :precision="2" :step="1" :max="50000" :min="0"  v-model="price" @keyup.enter.native="editPrice"></el-input-number>
+          <el-button type="primary" icon="el-icon-edit" size="small" circle @click="editPrice"></el-button>
+        </div>
+      </div>
       <div class="senderinfo"  @click="addTemporaryContact">
         <div class="price">￥{{good.goodprice}}</div>
         <el-tooltip content="联系卖家" placement="bottom" effect="light">
@@ -46,7 +44,7 @@
 				:disable-transitions="false" @close="handleClose(index)">
 					{{tag}}
 			</el-tag>
-			<div v-if="myGood">
+			<div style="display: inline-block" v-if="myGood">
 				<el-input v-if="addingTag" class="input-new-tag" v-model="tagInput"
 					ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 				</el-input>
@@ -54,13 +52,22 @@
 			</div>
       <el-divider></el-divider>
       <div class="buy">
-        <div class="horizontalOverlay" @click="intentionInputShow=!intentionInputShow"><span>点击购买</span></div>
-				<div class="createIntentionInput" v-show="intentionInputShow">
-					<input id="createIntentionInput">
-					<button @click="createIntention">提交意向</button>
-				</div>
+        <div class="horizontalOverlay" @click="createIntention" ref="popBtn"><span>点击购买</span></div>
         <div class="horizontalOverlay2" @click="addTemporaryContact"><span>了解更多</span></div>
       </div>
+      <transition name="el-fade-in">
+      <div ref="pop" class="createIntentionInput" v-show="intentionInputShow">
+        <h1>发出意向</h1>
+        <p>向卖家发出你的购买意向和你的心水价格，卖家接受后就会自动创建订单</p>
+        <div class="input">
+          出价￥
+          <el-input-number v-model="bid" :precision="2" :step="1" :max="50000" :min="0" size="medium">
+          </el-input-number>
+        </div>
+        <div class="pressDownButton" @click="sendIntention"><i class="el-icon-s-promotion"></i>提交意向</div>
+        <div class="pressDownButton greybutton" @click="cancelIntention" ><i class="el-icon-close"></i>取消发送</div>
+      </div>
+      </transition>
     </div>
   </div>
   <div class="comment" :style="commentboxheight">
@@ -133,6 +140,7 @@ export default {
 			nameediting:false,
 			priceediting:false,
 			descriptionediting:false,
+      bid:0
     }
   },
   computed: {
@@ -173,9 +181,16 @@ export default {
         return;
       }
     })
+
     // //获取评论列表
     this.getComment();
     },
+  mounted() {
+    document.addEventListener('click', this.handleDocumentClick);
+  },
+  destroyed() {
+    document.removeEventListener('click', this.handleDocumentClick);
+  },
   methods:{
     sendComment:function (){
       if(!this.$store.state.login){
@@ -251,19 +266,29 @@ export default {
 			this.$store.commit('showMessage');
 		},
 		createIntention:function(){
-			var input=this.$el.querySelector('#createIntentionInput');
-			var v=Number(input.value),url="http://123.56.42.47:10492/sendIntention";
-			if(!isNaN(v)&&v>=0){
-				//this.intentionInputShow=false;
-				input.value='';
-				this.axios.post(url+'/'+this.goodid,null,{
-					params:{intentionprice:v},
-					headers:{'Authorization':this.$store.state.Authorization}
-				}).then((response)=>{
-					console.log('提交成功');
-				})
-			}
+      if(!this.$store.state.login) return;
+      this.bid=this.good.goodprice;
+      this.intentionInputShow=true;
 		},
+    cancelIntention:function (){
+      this.intentionInputShow=false;
+    },
+    sendIntention:function(){
+      var url="http://123.56.42.47:10492/sendIntention";
+      this.axios.post(url+'/'+this.goodid,null,{
+        params:{intentionprice:this.bid},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then(response=>{
+        console.log(response)
+        this.$notify({
+          title: '发出意向成功',
+          message: '等待卖家的回复，可以在个人信息界面删除你的意向哦',
+          type: 'success',
+          duration: 2000
+        })
+      })
+      this.intentionInputShow=false;
+    },
 		handleClose(index){
 			var tag=this.good.goodtags[index],url="http://123.56.42.47:10492/good/deleteTag";
 		  this.axios.post(url,null,{
@@ -338,13 +363,35 @@ export default {
 			}
 			this.description="";
 			this.descriptionediting=false;
-		}
+		},
+    handleDocumentClick(e) {
+      if (
+          !this.intentionInputShow|| !this.$refs.pop || this.$refs.pop.contains(e.target) ||
+          (this.$refs.popBtn && this.$refs.popBtn.contains(e.target))
+      ){
+      }else
+        this.intentionInputShow= false
+      if (
+          this.nameediting&& this.$refs.editname&& !this.$refs.editname.contains(e.target)
+      ){
+        this.nameediting= false
+      }else if(!this.nameediting&&this.$refs.editname&&this.$refs.editname.contains(e.target)){
+        this.nameediting=true
+      }
+      if (
+          this.priceediting&& this.$refs.editprice&& !this.$refs.editprice.contains(e.target)
+      ){
+        this.priceediting=false
+      }else if(!this.priceediting&&this.$refs.editprice&&this.$refs.editprice.contains(e.target)){
+        this.priceediting=true
+      }
+    },
   }
 }
 </script>
 
-<style>
-@import "../assets/GoodShowPage.css";
+<style scoped>
+@import "../assets/GoodShowPage/GoodShowPage.css";
 .comment {
   --height: 100px;
 }
@@ -364,11 +411,25 @@ export default {
 }
 .editname{
 	position: absolute;
+  top: 15px;
+  left: 20px;
+}
+.editname_input{
+  margin-left: 40px;
+  width: 590px;
+}
+.editname_input .el-input{
+  width: 80%;
 }
 .editprice{
 	position: absolute;
-	top: 25%;
+	top: 72px;
+  left: 20px;
 }
+.editprice_input{
+  margin-left: 40px;
+}
+
 .editdescription{
 	position: absolute;
 	top: 35%;

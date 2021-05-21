@@ -30,13 +30,14 @@
 						</ol>
           </li>
           <li>
-            <div class="header"><img :src="getUseravatar" alt="" class="circleImg"></div>
+            <div class="header"><img :src="getUseravatar" alt="" class="circleImg" @click="infoClick"></div>
             <ol>
                 <li v-show="!getloginstate"><a href="javascript:;"  @click="loginClick">登录/注册</a></li>
-                <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人信息</a></li>
+                <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人主页</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
+                <li v-show="getloginstate && this.$store.state.userdata.userid===24" ><a href="javascript:;" @click="gotoadmin">系统管理</a></li>
             </ol>
           </li>
           <!-- 这个元素来定义滑动的线条 -->
@@ -46,17 +47,17 @@
     </div>
     <movingimage v-if="getPath=='/home'" class="movingimage"></movingimage>
 		<el-popover ref="pop" placement="bottom" v-model="searching" @keyup.enter.native="confirmSearch">
-			<el-form ref="searchForm" :model="searchForm" label-width="13%">
+			<el-form ref="searchForm" :model="searchForm" label-width="40px">
 				<el-form-item label="分区">
 					<el-radio-group v-model="searchForm.blockId">
-						<el-radio label="0">全部</el-radio>
+						<el-radio label="0">全部商品</el-radio>
 						<el-radio label="1">生活用品</el-radio>
 						<el-radio label="2">电子产品</el-radio>
 						<el-radio label="3">书籍资料</el-radio>
 						<el-radio label="4">其他类型</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="排列方式">
+				<el-form-item label="排序">
 					<el-radio-group v-model="searchForm.searchType">
 						<el-radio label="1">从旧到新</el-radio>
 						<el-radio label="2">从新到旧</el-radio>
@@ -178,6 +179,9 @@ export default {
     },
     moduleTest:function (){
       this.$router.push('/moduletest')
+    },
+    gotoadmin:function (){
+      this.$router.push('/Administrator')
     },
     loginout:function (){
       this.$confirm('确定要退出登录吗？', '退出登录', {

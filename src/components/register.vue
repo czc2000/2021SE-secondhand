@@ -131,23 +131,11 @@ export default {
             this.$alert('抱歉,'+response.data.description, '注册失败', {
               confirmButtonText: '确定',
               center:true,
-              callback: action => {
-                this.$message({
-                  type: 'info',
-                  message: `action: ${ action }`
-                });
-              }
             });
           } else {
             this.$alert('请到您的邮箱内激活账号', '注册成功', {
               confirmButtonText: '确定',
               center:true,
-              callback: action => {
-                this.$message({
-                  type: 'info',
-                  message: `action: ${ action }`
-                });
-              }
             });
             this.$router.push('/login');
           }
@@ -187,7 +175,7 @@ export default {
     width: 500px;
     height: 600px;
     border-radius: 8px;
-    background-color: #e2f3f5;
+    background-color: #f2f7ff;
     margin: 0 auto;
     transition: box-shadow 0.5s;
     box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);

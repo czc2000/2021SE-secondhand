@@ -57,10 +57,12 @@ export default {
           this.$store.commit('saveAu', response.data.Authorization)
 					this.$store.commit('savePWD',this.formdata.password)
           this.tips = 'post成功'
-          this.$alert('快去寻找你想要的商品吧！', '登录成功', {
-            confirmButtonText: '确定',
-            center: true,
-          });
+          this.$notify({
+            title: '登录成功',
+            message: '快去寻找你想要的商品吧',
+            type: 'success',
+            duration: 2000
+          },)
           this.afterlogin()
           this.$router.push('/home');
           }
@@ -105,6 +107,7 @@ export default {
         }
       }).then(response=>{
         this.userdata=response.data.WhoAmI
+        console.log(this.userdata)
         this.userdata.useravatarurl='http://123.56.42.47:10492'+this.userdata.useravatarurl
         this.$store.commit("saveuserinfo",this.userdata)
       })
@@ -119,13 +122,14 @@ export default {
   width: 500px;
   height: 600px;
   border-radius: 8px;
-  background-color: #e2f3f5;
+  background-color: #f2f7ff;
   margin: 0 auto;
   box-shadow:  0 15px 12px 0 rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.5s;
 }
 .loginform h1{
   padding-top: 100px;
+  margin-bottom: 30px;
   font-family:  Garamond, serif;
   font-weight: 700;
   font-size: 44px;

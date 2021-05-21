@@ -59,6 +59,7 @@ export default{
 			choosenI:null,
 			tpContacts:[],
 			tpContactNum:0,
+
 		}
 	},
 	computed:{
@@ -135,7 +136,7 @@ export default{
 		console.log('messagePage created');
 		this.$set(this.isContact,0,false);
 	},
-	beforeDestroy:function(){
+  beforeDestroy:function(){
 		console.log('取消信息刷新');
 		clearInterval(this.timer);
 		clearInterval(this.timer2);
@@ -403,7 +404,7 @@ export default{
 				this.setScrollOfMsgBoxTop();
 				if(this.isContact[id]==true) this.finishRead();
 			}
-		}
+		},
 	}
 }
 </script>
