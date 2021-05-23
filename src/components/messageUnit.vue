@@ -3,9 +3,10 @@
     <div class="message-unit differ-fromOthers" v-if="messageUnitClass=='message-unit differ-fromOthers'">
       <div>
         <img :src="avatarurl" alt="">
-        <div class="chat-content">
-          <p class="mainText">{{text}}</p>
+        <div class="chat-content" >
+          <p class="mainText" @mouseenter="enter" @mouseleave="leave">{{text}}</p>
         </div>
+        <el-button type="text" @click="$emit('report')" v-show="seen">举报</el-button>
       </div>
       <p class="sendtime">{{sendtime}}</p>
     </div>
@@ -25,6 +26,11 @@
 export default{
 	name: "messageUnit",
 	props: ['senderid','contactname','text','sendtime','avatar'],
+  data:function (){
+	  return {
+      seen: false
+    }
+  },
 	computed: {
 		messageUnitClass(){
 			return this.senderid==this.$store.state.userid?"message-unit differ-fromMe":"message-unit differ-fromOthers";
@@ -36,6 +42,16 @@ export default{
 		  return this.senderid==this.$store.state.userid?this.$store.state.useravatar:this.avatar;
     }
 	},
+  methods:{
+	  enter:function (){
+	    this.seen=true;
+    },
+    leave:function (){
+      setTimeout(() => {
+        this.seen=false;0
+      }, 1500)
+    }
+  }
 }
 </script>
 

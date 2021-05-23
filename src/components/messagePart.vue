@@ -14,7 +14,9 @@
 			<div v-if="choosen!=0&&isContact[choosen]" class="message-main-right-top" id="msgbox">
 				<messageUnit v-for="(item,index) in history[choosen]" :key="item.messageid"
 				:senderid="item.messagesenderid" :contactname="contactList[choosenI].username"
-				:text="item.messagecontent" :sendtime="item.messagesendtime" :avatar="'http://123.56.42.47:10492'+contactList[choosenI].useravatarurl"></messageUnit>
+				:text="item.messagecontent" :sendtime="item.messagesendtime" :avatar="'http://123.56.42.47:10492'+contactList[choosenI].useravatarurl"
+        @report="reportMessage(item.messageid)">
+        </messageUnit>
 			</div>
       <div v-if="choosen!=0&&isContact[choosen]" class="message-main-right-bottom">
         <div id="inputbox" contenteditable=true @keyup.enter="submitMsg">
@@ -24,12 +26,39 @@
 			<div v-if="choosen!=0&&!isContact[choosen]" class="message-main-right-top" id="msgbox">
 				<messageUnit v-for="(item,index) in history[choosen]" :key="item.messageid"
 				:senderid="item.messagesenderid" :contactname="tpContacts[choosenI].username"
-				:text="item.messagecontent" :sendtime="item.messagesendtime" :avatar="'http://123.56.42.47:10492'+tpContacts[choosenI].useravatarurl"></messageUnit>
+				:text="item.messagecontent" :sendtime="item.messagesendtime"
+        :avatar="'http://123.56.42.47:10492'+tpContacts[choosenI].useravatarurl"
+         @report="reportMessage(item.messageid)">
+        </messageUnit>
 			</div>
       <div v-if="choosen!=0&&!isContact[choosen]" class="message-main-right-bottom">
         <div id="inputbox" contenteditable=true @keyup.enter="submitMsg"></div>
         <div class="pressDownButton" @click="submitMsg"><i class="el-icon-chat-line-round"></i>发送</div>
       </div>
+      <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px">
+        <el-form :model="form">
+          <el-form-item label="举报描述" :label-width="formLabelWidth">
+            <el-input v-model="form.description" placeholder="请描述举报内容" autocomplete="off"></el-input>
+          </el-form-item>
+          <template>
+            <el-radio-group v-model="form.reason">
+              <el-radio :label="1">包含色情信息</el-radio>
+              <el-radio :label="2">恶意辱骂</el-radio>
+              <el-radio :label="3">发表反动言论</el-radio>
+              <el-radio :label="4">其他</el-radio>
+            </el-radio-group>
+          </template>
+<!--          <el-form-item label="举报原因" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.reason" placeholder="请输入举报原因" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="reportFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="sendToAdmin($store.state.messageId,form.description,form.reason)">确 定</el-button>
+        </div>
+      </el-dialog>
+
     </div>
 </template>
 
@@ -44,6 +73,12 @@ export default{
 	},
 	data:function(){
 		return{
+      reportFormVisible:false,
+      form: {
+        description:'',
+        reason:'',
+      },
+      formLabelWidth: '120px',
 			timer:null,
 			timer2:null,
 			timer3:null,
@@ -142,6 +177,25 @@ export default{
 		clearInterval(this.timer2);
 	},
 	methods:{
+	  sendToAdmin:function (messageid,description,reason){
+      let url='http://123.56.42.47:10492/report/message'
+      this.axios.post(url,null,{
+        params:{messageid:messageid, reportDescription:description,reportReason:reason},
+        headers:{'Authorization':this.$store.state.Authorization},
+      }).then((response)=>{
+        if(response.data.description==="举报成功！"){
+          this.$alert("举报成功")
+          this.reportFormVisible=false;
+        }
+        else{
+          this.$alert("举报失败，请重新填写信息")
+        }
+      })
+    },
+	  reportMessage:function (messageid){
+      this.$store.commit('storeMessageId',messageid)
+	    this.reportFormVisible=true
+    },
 		gotoCheckUnread:function(){
 			this.checkUnread(false)
 		},

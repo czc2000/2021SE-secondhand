@@ -18,7 +18,6 @@ import Administrator from "@/components/Administrator";
 import LoginWithRegister from "@/components/LoginWithRegister";
 import searchResult from "@/components/searchResult";
 import messagePart from "@/components/messagePart";
-import Report from "@/components/Report";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -87,10 +86,6 @@ const routes=[
     {
         path: '/searchResult',
         component:searchResult
-    },
-    {
-        path:'/report',
-        component:Report
     }
 ]
 const vueRouter = new VueRouter({

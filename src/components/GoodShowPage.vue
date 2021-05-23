@@ -6,7 +6,31 @@
     <div class="preview">
       <div>
         <img :src="this.good.goodpicurl" alt="">
-        <p>举报</p>
+        <p><el-button type="danger" @click="reportFormVisible=true">举报</el-button></p>
+        <div>
+        <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px">
+          <el-form :model="form">
+            <el-form-item label="举报描述" :label-width="formLabelWidth">
+              <el-input v-model="form.description" placeholder="请描述举报内容" autocomplete="off"></el-input>
+            </el-form-item>
+            <template>
+              <el-radio-group v-model="form.reason">
+                <el-radio :label="1">违禁品</el-radio>
+                <el-radio :label="2">包含不文明用语</el-radio>
+                <el-radio :label="3">图片违规</el-radio>
+                <el-radio :label="4">其它</el-radio>
+              </el-radio-group>
+            </template>
+            <!--          <el-form-item label="举报原因" :label-width="formLabelWidth">-->
+            <!--            <el-input v-model="form.reason" placeholder="请输入举报原因" autocomplete="off"></el-input>-->
+            <!--          </el-form-item>-->
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="reportFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="sendToAdmin(form.description,form.reason)">确 定</el-button>
+          </div>
+        </el-dialog>
+        </div>
       </div>
     </div>
     <div class="gooditeminfo">
@@ -118,6 +142,12 @@ export default {
   },
   data:function (){
     return{
+      reportFormVisible:false,
+      form: {
+        description:'',
+        reason:'',
+      },
+      formLabelWidth: '120px',
       loaded:false,
       goodid:'',
       good:{},
@@ -192,6 +222,20 @@ export default {
     document.removeEventListener('click', this.handleDocumentClick);
   },
   methods:{
+    sendToAdmin:function (description,reason) {
+      let url = 'http://123.56.42.47:10492/report/good'
+      this.axios.post(url, null, {
+        params: {goodid: this.goodid, reportDescription: description, reportReason: reason},
+        headers: {'Authorization': this.$store.state.Authorization},
+      }).then((response) => {
+        if (response.data.description === "举报成功！") {
+          this.$alert("举报成功")
+          this.reportFormVisible = false;
+        } else {
+          this.$alert("举报失败，请重新填写信息")
+        }
+      })
+    },
     sendComment:function (){
       if(!this.$store.state.login){
         this.$alert('登录之后才可以进行评论哦', '未登录', {

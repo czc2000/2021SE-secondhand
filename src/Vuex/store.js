@@ -12,6 +12,7 @@ const state = {
 	username: null,
 	useravatar:null,
 	userdata: null,
+	messageId:null,
 	needs: [],
 	favorites: [],
 	receivedintentions: [],
@@ -28,6 +29,9 @@ const state = {
 	newSearch:false
 }
 const mutations = {
+	storeMessageId(state,messageid){
+		state.messageId=messageid;
+	},
 	saveAu(state,Au) {
 		state.Authorization=Au;
 		window.localStorage.setItem('Authorization',state.Authorization);
