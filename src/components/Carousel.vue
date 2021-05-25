@@ -191,14 +191,16 @@ export default {
   background-color: #e2f3f5;
   cursor: pointer;
   box-shadow:
-      0 0.5px 1.2px rgba(0, 0, 0, 0.084),
-      0 1.1px 3px rgba(0, 0, 0, 0.118),
-      0 2.1px 5.6px rgba(0, 0, 0, 0.141),
-      0 3.8px 10.1px rgba(0, 0, 0, 0.163),
-      0 7.1px 18.8px rgba(0, 0, 0, 0.19),
-      0 17px 45px rgba(0, 0, 0, 0.26)
+      0 1px 1.5px rgba(0, 0, 0, 0.098),
+      0 2.4px 3.5px rgba(0, 0, 0, 0.141),
+      0 4.5px 6.6px rgba(0, 0, 0, 0.175),
+      0 8px 11.8px rgba(0, 0, 0, 0.209),
+      0 15px 22.1px rgba(0, 0, 0, 0.252),
+      0 36px 53px rgba(0, 0, 0, 0.35)
+;
 }
 .el-carousel{
-  background-color: #e2f3f5;
+  background-color: #ecfdff;
+  padding: 50px 0;
 }
 </style>

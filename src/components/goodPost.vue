@@ -1,81 +1,82 @@
 <template>
   <div class="PostPage">
     <div class="PostBackground"></div>
-  <div class="Post_formbox">
-    <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
-      <el-form-item label="商品标题" prop="goodname">
-        <el-input v-model="form.goodname"></el-input>
-      </el-form-item>
-      <el-form-item label="商品描述" prop="gooddescription">
-        <el-input type="textarea" v-model="form.gooddescription"></el-input>
-      </el-form-item>
-      <el-form-item class="goodcategory" label="商品类型" prop="goodcategory">
-        <el-radio-group v-model="form.goodcategory" placeholder="生活用品">
-          <el-radio :label="1">生活用品</el-radio>
-          <el-radio :label="2">电子产品</el-radio>
-          <el-radio :label="3">书籍资料</el-radio>
-          <el-radio :label="4">其他</el-radio>
-        </el-radio-group>
-      </el-form-item>
-			<el-tag :key="tag" v-for="(tag,index) in tags" closable
-				:disable-transitions="false" @close="handleClose(index)">
-					{{tag}}
-			</el-tag>
-			<el-input class="input-new-tag" v-if="inputVisible" v-model="tagInput"
-				ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm"
-				@blur="handleInputConfirm">
-			</el-input>
-			<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
-      <br/><br/><br/>
-			<el-form-item label="商品价格" prop="goodprice">
-        <span style="font-weight: bold">￥</span>
-        <el-input-number v-model="form.goodprice" :precision="2" :step="1" :max="50000" :min="0" size="medium">
-        </el-input-number>
-      </el-form-item>
-      <div class="uploadImage">
-        <el-upload
-            action="#"
-            accept=".jpg,.jpeg,.png"
-            :limit="1"
-            :before-upload="beforeUpload"
-            :on-change="getLocalImg"
-            list-type="picture-card"
-            v-show="!form.goodpic">
-          <div class="need_upload">
-            <i slot="default" class="el-icon-plus"></i>
-          </div>
-        </el-upload>
-        <transition name="el-zoom-in-top">
-        <div v-show="form.goodpic" class="good_img">
-          <img :src="form.goodpic"/>
-          <i class="el-icon-delete-solid" @click="removePic"></i>
+    <div class="Post_formbox">
+      <h1 style="margin-bottom: 30px;font-family: '微软雅黑 Light';font-weight: bold">发布商品</h1>
+      <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
+        <el-form-item label="商品标题" prop="goodname">
+          <el-input v-model="form.goodname"></el-input>
+        </el-form-item>
+        <el-form-item label="商品描述" prop="gooddescription">
+          <el-input type="textarea" v-model="form.gooddescription"></el-input>
+        </el-form-item>
+        <el-form-item class="goodcategory" label="商品类型" prop="goodcategory">
+          <el-radio-group v-model="form.goodcategory" placeholder="生活用品">
+            <el-radio :label="1">生活用品</el-radio>
+            <el-radio :label="2">电子产品</el-radio>
+            <el-radio :label="3">书籍资料</el-radio>
+            <el-radio :label="4">其他</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-tag :key="tag" v-for="(tag,index) in tags" closable
+                :disable-transitions="false" @close="handleClose(index)">
+          {{tag}}
+        </el-tag>
+        <el-input class="input-new-tag" v-if="inputVisible" v-model="tagInput"
+                  ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm">
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+        <br/><br/><br/>
+        <el-form-item label="商品价格" prop="goodprice">
+          <span style="font-weight: bold">￥</span>
+          <el-input-number v-model="form.goodprice" :precision="2" :step="1" :max="50000" :min="0" size="medium">
+          </el-input-number>
+        </el-form-item>
+        <div class="uploadImage">
+          <el-upload
+              action="#"
+              accept=".jpg,.jpeg,.png"
+              :limit="1"
+              :before-upload="beforeUpload"
+              :on-change="getLocalImg"
+              list-type="picture-card"
+              v-show="!form.goodpic">
+            <div class="need_upload">
+              <i slot="default" class="el-icon-plus"></i>
+            </div>
+          </el-upload>
+          <transition name="el-zoom-in-top">
+            <div v-show="form.goodpic" class="good_img">
+              <img :src="form.goodpic"/>
+              <i class="el-icon-delete-solid" @click="removePic"></i>
+            </div>
+          </transition>
+          <transition name="el-fade-in">
+            <el-alert
+                title="文件太大了"
+                type="error"
+                description="请上传2M以下的图片"
+                show-icon
+                v-show="picoversizeWarning"
+                @close="closeAlert1">
+            </el-alert>
+          </transition>
+          <transition name="el-fade-in">
+            <el-alert
+                title="请上传一张图片哟"
+                type="error"
+                description="上传一张图片可以让你的商品更快卖出"
+                show-icon
+                v-show="nopicWarning"
+                @close="closeAlert">
+            </el-alert>
+          </transition>
         </div>
-        </transition>
-        <transition name="el-fade-in">
-          <el-alert
-              title="文件太大了"
-              type="error"
-              description="请上传2M以下的图片"
-              show-icon
-              v-show="picoversizeWarning"
-              @close="closeAlert1">
-          </el-alert>
-        </transition>
-        <transition name="el-fade-in">
-          <el-alert
-              title="请上传一张图片哟"
-              type="error"
-              description="上传一张图片可以让你的商品更快卖出"
-              show-icon
-              v-show="nopicWarning"
-              @close="closeAlert">
-          </el-alert>
-        </transition>
-      </div>
-    </el-form>
-    <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
-    <el-button @click="resetForm('ruleForm1')">重置</el-button>
-  </div>
+      </el-form>
+      <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
+      <el-button @click="resetForm('ruleForm1')">重置</el-button>
+    </div>
   </div>
 </template>
 
@@ -91,9 +92,9 @@ export default {
         goodpic:null,
         goodprice:0.0,
       },
-			tags:[],
-			inputVisible: false,
-			tagInput: '',
+      tags:[],
+      inputVisible: false,
+      tagInput: '',
       isHidden:true,
       rules:{
         goodname: [
@@ -139,29 +140,29 @@ export default {
     closeAlert1(){
       this.picoversizeWarning=false;
     },
-		handleClose(index){
-		   this.tags.splice(index, 1);
-		 },
-		showInput(){
-		  this.inputVisible = true;
-		  this.$nextTick(_ => {
-				this.$refs.saveTagInput.$refs.input.focus();
-		  });
-		},
-		handleInputConfirm(){
-		  let inputValue=this.tagInput;
-		  if (inputValue){
-				var repeat=false;
-				for(var i=0;i<this.tags.length;i++)
-					if(this.tags[i]==inputValue){
-						repeat=true;
-						break;
-					}
-		    if(!repeat) this.tags.push(inputValue);
-		  }
-		  this.inputVisible=false;
-		  this.tagInput='';
-		},
+    handleClose(index){
+      this.tags.splice(index, 1);
+    },
+    showInput(){
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+    handleInputConfirm(){
+      let inputValue=this.tagInput;
+      if (inputValue){
+        var repeat=false;
+        for(var i=0;i<this.tags.length;i++)
+          if(this.tags[i]==inputValue){
+            repeat=true;
+            break;
+          }
+        if(!repeat) this.tags.push(inputValue);
+      }
+      this.inputVisible=false;
+      this.tagInput='';
+    },
     submitForm(formName){
       if(!this.form.goodpic) {
         this.nopicWarning=true
@@ -173,10 +174,10 @@ export default {
           this.formData.append('gooddescription',this.form.gooddescription)
           this.formData.append('goodname',this.form.goodname)
           this.formData.append('goodprice',this.form.goodprice)
-					var tagsToString='';
-					for(var i=0;i<this.tags.length;i++)
-						tagsToString+='#'+this.tags[i];
-					this.formData.append('goodtags',tagsToString);
+          var tagsToString='';
+          for(var i=0;i<this.tags.length;i++)
+            tagsToString+='#'+this.tags[i];
+          this.formData.append('goodtags',tagsToString);
           console.log(this.formData)
           this.axios.post('http://123.56.42.47:10492/sendGood',this.formData,{
             headers:{
@@ -262,7 +263,7 @@ export default {
       0 42px 102.4px rgba(0, 0, 0, 0.191),
       0 53.4px 163.3px rgba(0, 0, 0, 0.21),
       0 100px 306px rgba(0, 0, 0, 0.24)
-  ;
+;
   background-color: rgba(255,255,255,1);
 }
 .Post_formbox .el-form-item{
@@ -314,19 +315,19 @@ export default {
 }
 /*以下是关于标签的，从element ui抄的,对button有改动*/
 .el-tag + .el-tag {
-	margin-left: 10px;
+  margin-left: 10px;
 }
 .button-new-tag {
-	margin-left: 10px;
-	height: 32px;
-	line-height: 30px;
-	padding-top: 0;
-	padding-bottom: 0;
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .input-new-tag {
-	width: 90px;
-	margin-left: 10px;
-	vertical-align: bottom;
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 /*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>

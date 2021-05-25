@@ -15,8 +15,8 @@
     color: hsl(222, 25%, 14%);
 }
 .home .borderLeftRight{
-    color: white;
-    font-weight: 600;
+    color: #0e153a;
+    font-weight: 700;
 }
 .borderLeftRight::after {
     content: '';

@@ -37,8 +37,8 @@
                 <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="gotoReport">举报</a></li>
-                <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
-                <li v-show="getloginstate && this.$store.state.userdata.userid===24" ><a href="javascript:;" @click="gotoadmin">系统管理</a></li>
+              <li v-show="getloginstate && this.$store.state.userdata.userid===24" ><a href="javascript:;" @click="gotoadmin">系统管理</a></li>
+              <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
             </ol>
           </li>
           <!-- 这个元素来定义滑动的线条 -->
