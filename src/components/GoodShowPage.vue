@@ -189,7 +189,7 @@ export default {
   },
   created:async function() {
     if(!this.$route.query.goodid){
-      console.log('没有商品id');
+      this.$router.push('/404');
       return;
     }
     this.goodid=this.$route.query.goodid;
@@ -207,7 +207,7 @@ export default {
         })
       }
       else{
-        console.log('没有该商品');
+        this.$router.push('/404');
         return;
       }
     })

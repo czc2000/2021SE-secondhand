@@ -18,6 +18,7 @@ import Administrator from "@/components/Administrator";
 import LoginWithRegister from "@/components/LoginWithRegister";
 import searchResult from "@/components/searchResult";
 import messagePart from "@/components/messagePart";
+import NotFoundPage from "@/components/NotFoundPage";
 Vue.use(VueRouter);
 const routes=[
     {
@@ -77,7 +78,7 @@ const routes=[
     },
     {
         path: '/moduletest',
-        component:null
+        component:NotFoundPage
     },
     {
         path:'/administrator',
@@ -86,6 +87,14 @@ const routes=[
     {
         path: '/searchResult',
         component:searchResult
+    },
+    {
+        path: '/404',
+        component: NotFoundPage
+    },
+    {
+        path:'*',
+        redirect: '/404',
     }
 ]
 const vueRouter = new VueRouter({

@@ -163,7 +163,7 @@ export default {
   },
   created:async function() {
     if(!this.$route.query.needid){
-      console.log('没有需求id');
+      this.$router.push('/404');
       return;
     }
     this.needid=this.$route.query.needid;
@@ -179,7 +179,7 @@ export default {
         this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
       }
       else{
-        console.log('没有该需求');
+        this.$router.push('/404');
         return;
       }
     })
