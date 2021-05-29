@@ -12,14 +12,14 @@
             </div>
           </div>
         <div class="rightbox">
-          <h2 class="title">网站标题</h2>
+          <h2 class="title" style="font-family: '微软雅黑 Light';color: #4e66b4">花母猪二手平台</h2>
           <p class="desc">开始你的<span>二手</span>交易之旅</p>
           <img class="logo" src="../assets/LoginWithRegister/fakelogo.png" />
           <p class="account">已经注册账户了吗？</p>
           <div class="overlayLeftBtn" @click="toLogin"><span>登录</span></div>
         </div>
         <div class="leftbox">
-          <h2 class="title">网站标题</h2>
+          <h2 class="title" style="font-family: '微软雅黑 Light';color: #4e66b4">花母猪二手平台</h2>
           <p class="desc">欢迎回到<span>二手</span>交易平台</p>
           <img class="logo" src="../assets/LoginWithRegister/fakelogo.png" />
           <p class="account">还没有注册账号吗？</p>
@@ -127,7 +127,7 @@ export default {
   transition: 1s all ease;
 }
 .LoginWithRe .leftbox img, .rightbox img{
-  width: 300px;
+  width: 375px;
 }
 .rightbox{
   right: -2%;

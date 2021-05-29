@@ -1,6 +1,12 @@
 <template>
   <div class="appheader">
     <div class="navbar" :class="{home:getPath=='/home'}">
+      <div class="logo">
+        <img src="../assets/Header/logo.png" alt="">
+      </div>
+<!--      <div class="logo2">-->
+<!--        <img src="../assets/Header/logo2.png" alt="">-->
+<!--      </div>-->
       <div class="search">
         <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable v-popover:pop @keyup.enter.native="confirmSearch"></el-input>
       </div>
@@ -208,5 +214,5 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/appheader.css";
+@import "../assets/Header/appheader.css";
 </style>

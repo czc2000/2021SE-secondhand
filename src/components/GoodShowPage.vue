@@ -6,7 +6,7 @@
     <div class="preview">
       <div>
         <img :src="this.good.goodpicurl" alt="">
-        <p><el-button type="danger" @click="reportFormVisible=true">举报</el-button></p>
+        <p><el-button type="danger" size="small" @click="reportFormVisible=true">举报</el-button></p>
         <div>
         <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px">
           <el-form :model="form">
@@ -449,7 +449,7 @@ export default {
   width: 100%;
   z-index: -1;
   height: 1080px;
-  background-image: url('../assets/GoodShowPage/bg.jpg');
+  background-image: url('../assets/GoodShowPage/bg.png');
   background-size: cover;
   background-position: center;
 }

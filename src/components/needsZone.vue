@@ -275,9 +275,10 @@ export default {
   margin: 0 auto;
   background-color: white;
   overflow: hidden;
+  display: flex;
+  justify-content: start;
 }
 .Zone_need{
-  float: left;
   margin-top: 60px;
   margin-left: 50px;
 }

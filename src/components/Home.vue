@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow-x: hidden">
     <div>
       <Carousel></Carousel>
     </div>
@@ -220,7 +220,7 @@ export default {
 .home_goodcontainer{
   position: relative;
   background-color: #fafaf6;
-  width: 100%;
+  min-width: 100%;
   height: 850px;
   margin: 0px auto;
   overflow: hidden;
