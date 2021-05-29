@@ -82,5 +82,12 @@ export default {
 </script>
 
 <style>
+.vue-image-crop-upload .vicp-wrap{
+  padding: 40px;
+  border-radius: 8px;
+}
+.vue-image-crop-upload .vicp-wrap .vicp-operate a{
+  color: #6843d1;
+}
 .btn{background-color: indianred;padding: 7px 12px;color: white;}
 </style>

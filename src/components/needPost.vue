@@ -1,8 +1,9 @@
 <template>
-  <div class="PostPage">
-    <div class="PostBackground"></div>
-  <div class="formbox">
+<div class="PostPage">
+<div class="PostBackground"></div>
+<div class="formbox">
   <el-form label-position="right" ref="ruleForm1" :rules="rules" :model="form" label-width="90px">
+    <h1 style="margin-bottom: 30px;font-family: '微软雅黑 Light';font-weight: bold">发布需求</h1>
     <el-form-item label="需求标题" prop="needname">
       <el-input v-model="form.needname"></el-input>
     </el-form-item>
@@ -17,18 +18,18 @@
         <el-radio :label="4">其他</el-radio>
       </el-radio-group>
     </el-form-item>
-		<el-tag :key="tag" v-for="(tag,index) in tags" closable
-			:disable-transitions="false" @close="handleClose(index)">
-				{{tag}}
-		</el-tag>
-		<el-input class="input-new-tag" v-if="inputVisible" v-model="tagInput"
-			ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" 
-			@blur="handleInputConfirm">
-		</el-input>
-		<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
-		<br/><br/><br/>
-		<div class="uploadImage">
-    <el-upload
+    <el-tag :key="tag" v-for="(tag,index) in tags" closable
+            :disable-transitions="false" @close="handleClose(index)">
+      {{tag}}
+    </el-tag>
+    <el-input class="input-new-tag" v-if="inputVisible" v-model="tagInput"
+              ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm">
+    </el-input>
+    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+    <br/><br/><br/>
+    <div class="uploadImage">
+      <el-upload
           action="#"
           :limit="1"
           :before-upload="beforeUpload"
@@ -39,38 +40,38 @@
           <i slot="default" class="el-icon-plus"></i>
         </div>
       </el-upload>
-        <transition name="el-zoom-in-top">
-      <div v-show="form.needpic" class="need_img">
-        <img :src="form.needpic" />
-        <i class="el-icon-delete-solid" @click="removePic"></i>
-      </div>
-        </transition>
-        <transition name="el-fade-in">
-          <el-alert
-              title="文件太大了"
-              type="error"
-              description="请上传2M以下的图片"
-              show-icon
-              v-show="picoversizeWarning"
-              @close="closeAlert1">
-          </el-alert>
-        </transition>
-        <transition name="el-fade-in">
-    <el-alert
-        title="请上传一张图片哟"
-        type="error"
-        description="上传一张图片可以让大家更好的明白你的需求"
-        show-icon
-        v-show="nopicWarning"
-        @close="closeAlert">
-    </el-alert>
-        </transition>
+      <transition name="el-zoom-in-top">
+        <div v-show="form.needpic" class="need_img">
+          <img :src="form.needpic" />
+          <i class="el-icon-delete-solid" @click="removePic"></i>
+        </div>
+      </transition>
+      <transition name="el-fade-in">
+        <el-alert
+            title="文件太大了"
+            type="error"
+            description="请上传2M以下的图片"
+            show-icon
+            v-show="picoversizeWarning"
+            @close="closeAlert1">
+        </el-alert>
+      </transition>
+      <transition name="el-fade-in">
+        <el-alert
+            title="请上传一张图片哟"
+            type="error"
+            description="上传一张图片可以让大家更好的明白你的需求"
+            show-icon
+            v-show="nopicWarning"
+            @close="closeAlert">
+        </el-alert>
+      </transition>
     </div>
   </el-form>
-    <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
-    <el-button @click="resetForm('ruleForm1')">重置</el-button>
-  </div>
-  </div>
+  <el-button type="primary" @click="submitForm('ruleForm1')">立即创建</el-button>
+  <el-button @click="resetForm('ruleForm1')">重置</el-button>
+</div>
+</div>
 </template>
 
 <script>
@@ -84,9 +85,9 @@ export default {
         needname:'',
         needpic:null
       },
-			tags:[],
-			inputVisible: false,
-			tagInput: '',
+      tags:[],
+      inputVisible: false,
+      tagInput: '',
       isHidden:true,
       rules:{
         needname: [
@@ -129,29 +130,29 @@ export default {
     closeAlert1(){
       this.picoversizeWarning=false;
     },
-		handleClose(index){
-		   this.tags.splice(index, 1);
-		 },
-		showInput(){
-		  this.inputVisible = true;
-		  this.$nextTick(_ => {
-				this.$refs.saveTagInput.$refs.input.focus();
-		  });
-		},
-		handleInputConfirm(){
-		  let inputValue=this.tagInput;
-		  if (inputValue){
-				var repeat=false;
-				for(var i=0;i<this.tags.length;i++)
-					if(this.tags[i]==inputValue){
-						repeat=true;
-						break;
-					}
-		    if(!repeat) this.tags.push(inputValue);
-		  }
-		  this.inputVisible=false;
-		  this.tagInput='';
-		},
+    handleClose(index){
+      this.tags.splice(index, 1);
+    },
+    showInput(){
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+    handleInputConfirm(){
+      let inputValue=this.tagInput;
+      if (inputValue){
+        var repeat=false;
+        for(var i=0;i<this.tags.length;i++)
+          if(this.tags[i]==inputValue){
+            repeat=true;
+            break;
+          }
+        if(!repeat) this.tags.push(inputValue);
+      }
+      this.inputVisible=false;
+      this.tagInput='';
+    },
     submitForm(formName){
       if(!this.form.needpic) {
         this.nopicWarning=true
@@ -162,11 +163,11 @@ export default {
           this.formData.append('needcategory',this.form.needcategory)
           this.formData.append('needdescription',this.form.needdescription)
           this.formData.append('needname',this.form.needname)
-					var tagsToString='';
-					for(var i=0;i<this.tags.length;i++)
-						tagsToString+='#'+this.tags[i];
-					console.log(tagsToString);
-					this.formData.append('needtags',tagsToString);
+          var tagsToString='';
+          for(var i=0;i<this.tags.length;i++)
+            tagsToString+='#'+this.tags[i];
+          console.log(tagsToString);
+          this.formData.append('needtags',tagsToString);
           console.log(this.formData)
           this.axios.post('http://123.56.42.47:10492/sendneed',this.formData,{
             headers:{
@@ -174,12 +175,12 @@ export default {
               'Authorization': this.$store.state.Authorization
             }
           }).then(response=>{
-              if(response.data.msg==200){
-                this.$alert("发布需求成功", '发布成功', {
-                  confirmButtonText: '确定',
-                  center: true,
-                });
-              }
+            if(response.data.msg==200){
+              this.$alert("发布需求成功", '发布成功', {
+                confirmButtonText: '确定',
+                center: true,
+              });
+            }
           })
         }
       })
@@ -275,6 +276,7 @@ export default {
   display:flex;
   justify-content:center;
   align-items:center;
+  transition: 0.5s all;
 
 }
 .need_img img{
@@ -282,6 +284,7 @@ export default {
   max-width: 95%;
   overflow: hidden;
   /*margin: 3% auto;*/
+  transition: 0.5s all;
 }
 .need_img i{
   display: none;
@@ -302,19 +305,19 @@ export default {
 }
 /*以下是关于标签的，从element ui抄的,对button有改动*/
 .el-tag + .el-tag {
-	margin-left: 10px;
+  margin-left: 10px;
 }
 .button-new-tag {
-	margin-left: 10px;
-	height: 32px;
-	line-height: 30px;
-	padding-top: 0;
-	padding-bottom: 0;
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .input-new-tag {
-	width: 90px;
-	margin-left: 10px;
-	vertical-align: bottom;
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 /*以上是关于标签的，从element ui抄的,对button有改动*/
 </style>

@@ -1,6 +1,12 @@
 <template>
   <div class="appheader">
     <div class="navbar" :class="{home:getPath=='/home'}">
+      <div class="logo">
+        <img src="../assets/Header/logo.png" alt="">
+      </div>
+<!--      <div class="logo2">-->
+<!--        <img src="../assets/Header/logo2.png" alt="">-->
+<!--      </div>-->
       <div class="search">
         <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable v-popover:pop @keyup.enter.native="confirmSearch"></el-input>
       </div>
@@ -36,8 +42,8 @@
                 <li v-show="getloginstate"><a href="javascript:;" @click="infoClick">个人主页</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="needpost">发布需求</a></li>
                 <li v-show="getloginstate"><a href="javascript:;" @click="goodpost">发布商品</a></li>
-                <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
-                <li v-show="getloginstate && this.$store.state.userdata.userid===24" ><a href="javascript:;" @click="gotoadmin">系统管理</a></li>
+              <li v-show="getloginstate && this.$store.state.userid=='24'" ><a href="javascript:;" @click="gotoadmin">系统管理</a></li>
+              <li v-show="getloginstate"><a href="javascript:;" @click="loginout">登出</a></li>
             </ol>
           </li>
           <!-- 这个元素来定义滑动的线条 -->
@@ -208,5 +214,5 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/appheader.css";
+@import "../assets/Header/appheader.css";
 </style>

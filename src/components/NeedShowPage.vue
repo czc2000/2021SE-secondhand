@@ -6,7 +6,7 @@
       <div class="preview">
         <div>
           <img :src="this.need.needpicurl" alt="">
-          <p><el-button type="danger" @click="reportFormVisible=true">举报</el-button></p>
+          <p><el-button type="danger" size="small" @click="reportFormVisible=true">举报</el-button></p>
           <div>
             <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px">
               <el-form :model="form">
@@ -163,7 +163,7 @@ export default {
   },
   created:async function() {
     if(!this.$route.query.needid){
-      console.log('没有需求id');
+      this.$router.push('/404');
       return;
     }
     this.needid=this.$route.query.needid;
@@ -179,7 +179,7 @@ export default {
         this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
       }
       else{
-        console.log('没有该需求');
+        this.$router.push('/404');
         return;
       }
     })
@@ -375,7 +375,7 @@ export default {
   width: 100%;
   z-index: -1;
   height: 940px;
-  background-image: url('../assets/GoodShowPage/bg.jpg');
+  background-image: url('../assets/GoodShowPage/bg.png');
   background-size: cover;
   background-position: center;
 }

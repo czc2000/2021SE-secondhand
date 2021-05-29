@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div style="margin-bottom: 50px">
+  <div style="overflow-x: hidden">
+    <div>
       <Carousel></Carousel>
     </div>
     <div class="divider1">
@@ -206,7 +206,7 @@ export default {
 }
 .slide-top {
   position: relative;
-  animation: slide-top 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-top 1.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 
 @keyframes slide-top {
@@ -220,7 +220,7 @@ export default {
 .home_goodcontainer{
   position: relative;
   background-color: #fafaf6;
-  width: 100%;
+  min-width: 100%;
   height: 850px;
   margin: 0px auto;
   overflow: hidden;

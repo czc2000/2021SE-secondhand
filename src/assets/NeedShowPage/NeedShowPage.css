@@ -3,7 +3,7 @@
     width: 1280px;
     height: 580px;
     border-radius: 8px;
-    background-color: rgba(226,243,245,0.6);
+    background-color: rgba(242,247,255,0.7);
     box-shadow:
             0 2px 2.2px rgba(0, 0, 0, 0.017),
             0 4.8px 5.3px rgba(0, 0, 0, 0.024),
@@ -145,7 +145,7 @@
     font-size: 16px;
 }
 .comment .el-tabs--border-card{
-    background-color: rgba(226,243,245,0.7);
+    background-color: rgba(242,247,255,0.7);
     border-radius: 10px;
 }
 

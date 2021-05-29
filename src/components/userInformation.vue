@@ -20,22 +20,6 @@
       >
       </vue-particles>
     </div>
-<!--    <ul class="menu1">-->
-<!--      <li @click="modeTo('info')" :style="isChoosen('info')">资料</li>-->
-<!--      <li @click="modeTo('order')" :style="isChoosen('order')">订单</li>-->
-<!--      <ul class="submenu_fold order_fold" v-if="isMode('order')">-->
-<!--        <li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>-->
-<!--        <li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>-->
-<!--      </ul>-->
-<!--      <li @click="modeTo('favorite')" :style="isChoosen('favorite')">收藏</li>-->
-<!--      <li @click="modeTo('demand')" :style="isChoosen('demand')">需求</li>-->
-<!--      <li @click="modeTo('good')" :style="isChoosen('good')">商品</li>-->
-<!--      <li @click="modeTo('intention')" :style="isChoosen('intention')">意向</li>-->
-<!--      <ul class="submenu_fold intention_fold" v-if="isMode('intention')">-->
-<!--        <li @click="submodeTo('fromMe')" :style="isChoosen2('fromMe')">发的</li>-->
-<!--        <li @click="submodeTo('fromOthers')" :style="isChoosen2('fromOthers')">收的</li>-->
-<!--      </ul>-->
-<!--    </ul>-->
 		<div class="userinfo-main" :style="maincard+';'+maincardmargin">
       <div class="maincardwidth" >
 
@@ -943,5 +927,5 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/userInformation.css";
+@import "../assets/UserInfo/userInformation.css";
 </style>

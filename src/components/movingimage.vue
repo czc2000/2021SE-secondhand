@@ -1,11 +1,10 @@
 <template>
   <div class="banner">
-    <div class="image" ref="image"><img width="2000" height="250" src="../assets/images/bg.png"> </div>
-    <div class="image" ref="image"><img width="1800" height="165" src="../assets/images/girl1.png"> </div>
-    <div class="image" ref="image"><img width="3000" height="250" src="../assets/images/grassland.png"> </div>
-    <div class="image" ref="image"><img width="1800" height="160" src="../assets/images/mushroom.png"> </div>
-    <div class="image" ref="image"><img width="1800" height="165" src="../assets/images/spirit.png"> </div>
-    <div class="image" ref="image"><img width="1950" height="178" src="../assets/images/leaf.png"> </div>
+    <div class="image" ref="image"><img width="3000" height="250" src="../assets/Home/images/bg.png"> </div>
+    <div class="image" ref="image"><img width="3000" height="165" src="../assets/Home/images/cloud1.png"> </div>
+    <div class="image" ref="image"><img width="3000" height="250" src="../assets/Home/images/cloud2.png"> </div>
+    <div class="image" ref="image"><img width="3000" height="160" src="../assets/Home/images/cloud3.png"> </div>
+    <div class="image" ref="image"><img width="3000" height="165" src="../assets/Home/images/plane.png"> </div>
   </div>
 </template>
 
@@ -22,22 +21,28 @@ export default {
       let window_width = document.documentElement.clientWidth;
       let step = window_width / 2 / 5;
       let data_images = [
-        { x: 0, b: 4 },
         { x: 0, b: 0 },
-        { x: 0, b: 1 },
-        { x: 0, b: 4 },
-        { x: 0, b: 5 },
-        { x: 0, b: 6 },
+        { x: 0, b: 0 },
+        { x: 0, b: 2 },
+        { x: 0, b: 3 },
+        { x: 0, b: 0 },
       ]
       let init = () => {
+        // images[0].children[0].style = 'transform: translate(0px); filter: blur(4px);';
+        // images[1].children[0].style = 'transform: translate(0px); filter: blur(0px);';
+        // images[2].children[0].style = 'transform: translate(0px); filter: blur(1px);';
+        // images[3].children[0].style = 'transform: translate(0px); filter: blur(4px);';
+        // images[4].children[0].style = 'transform: translate(0px); filter: blur(5px);';
+        // images[5].children[0].style = 'transform: translate(0px); filter: blur(6px);';
         for (const key in images) {
           if (images.hasOwnProperty(key)) {
             const element = images[key];
             const element_data = data_images[key];
-            element.children[0].style = 'transition: .2s linear; transform: translate(' + element_data.x + 'px); ';
+            element.children[0].style = 'transition: .2s linear; transform: translate(' + element_data.x + 'px);';
           }
         }
       }
+
       banner.addEventListener('mouseover', (e) => {
         x = e.clientX;
         // console.log(x);
@@ -49,15 +54,17 @@ export default {
         // console.log(x_offset);
         for (const key in images) {
           if (images.hasOwnProperty(key)) {
-            let level = (6 - parseInt(key)) * 10;
+            let level = (5 - parseInt(key)) * 10;
             const element = images[key];
             const element_data = data_images[key];
             let l_new = 0 - (x_offset / level);
-            element.children[0].style = 'transform: translate(' + 2*l_new + 'px); ';
+            element.children[0].style = 'transform: translate(' + 1.5*l_new + 'px);';
           }
         }
 
       });
+
+
       banner.addEventListener("mouseout", (e) => {
         init();
       });

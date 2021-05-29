@@ -6,7 +6,7 @@
         <div class="chat-content" >
           <p class="mainText" @mouseenter="enter" @mouseleave="leave">{{text}}</p>
         </div>
-        <el-button type="text" @click="$emit('report')" v-show="seen">举报</el-button>
+        <el-button type="text" style="color: #F56C6C;" @click="$emit('report')" v-show="seen">举报</el-button>
       </div>
       <p class="sendtime">{{sendtime}}</p>
     </div>
