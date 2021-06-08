@@ -219,7 +219,6 @@
 }
 .infinite-list::-webkit-scrollbar {
     /*隐藏滚轮*/
-    display: none;
 }
 .ShowPage .pressDownButton {
     margin-top:10px;

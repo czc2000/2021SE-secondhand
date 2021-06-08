@@ -29,10 +29,9 @@
             <div class="header flex " @click="goodsClick"><div class="borderLeftRight">购买区</div></div>
           </li>
           <li>
-            <div class="header flex " @click="testClick"><div class="borderLeftRight">测试</div></div>
+            <div class="header flex " @click="testClick"><div class="borderLeftRight">商品展示</div></div>
 						<ol>
-							<li><a href="javascript:;" @click="needTestClick">测试2</a></li>
-							<li><a href="javascript:;" @click="moduleTest">单元测试</a></li>
+							<li><a href="javascript:;" @click="needTestClick">需求展示</a></li>
 						</ol>
           </li>
           <li>

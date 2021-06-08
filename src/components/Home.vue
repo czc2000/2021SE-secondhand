@@ -328,4 +328,7 @@ export default {
   transform: scale(1);
   opacity  : 1;
 }
+::-webkit-scrollbar{
+  display: none;
+}
 </style>

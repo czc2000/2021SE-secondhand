@@ -69,10 +69,10 @@ a {
 .navbar .logo,.logo2{
     position: absolute;
     top: 5px;
-    left: 25px;
+    right: 25px;
 }
 .navbar .logo img{
-    width: 60px;
+    width: 160px;
 }
 .navbar .logo2 img{
     width: 80px;

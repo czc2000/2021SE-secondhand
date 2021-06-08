@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header :height="headerHeight" id="target">
+    <el-header  :height="headerHeight" id="target">
       <appheader></appheader>
     </el-header>
     <el-main>
@@ -152,4 +152,5 @@ export default {
     box-shadow: 0 0 0 0 rgba(64, 158, 255, 0);
   }
 }
+
 </style>

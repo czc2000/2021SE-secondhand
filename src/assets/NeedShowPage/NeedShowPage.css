@@ -149,9 +149,9 @@
     border-radius: 10px;
 }
 
-.infinite-list::-webkit-scrollbar {
+.infinite-list::-webkit-scrollbar-thumb {
     /*隐藏滚轮*/
-    display: none;
+    background-color: #bbc6e1;
 }
 .comment .pressDownButton {
     margin-top:10px;

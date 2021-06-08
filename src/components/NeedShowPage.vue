@@ -374,7 +374,7 @@ export default {
   left: 0;
   width: 100%;
   z-index: -1;
-  height: 940px;
+  height: 1080px;
   background-image: url('../assets/GoodShowPage/bg.png');
   background-size: cover;
   background-position: center;

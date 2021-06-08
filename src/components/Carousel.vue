@@ -145,7 +145,7 @@ export default {
       rev2.reveal();
       var rev3 = new RevealFx(document.querySelector('.rev-' + number3), {
         revealSettings: {
-          bgcolor: '#409EFF',
+          bgcolor: '#85e1ea',
           delay: 500,
           onCover: function (contentEl, revealerEl) {
             contentEl.style.opacity = 1;

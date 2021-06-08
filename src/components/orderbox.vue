@@ -175,7 +175,7 @@ export default{
   border-radius: 8px;
   position: relative;
   background-color: #f2f7ff;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 .orderbox-left{
   display: flex;
