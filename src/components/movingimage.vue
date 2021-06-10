@@ -1,5 +1,5 @@
 <template>
-  <div class="banner">
+  <div class="banner" style="width: 100%;">
     <div class="image" ref="image"><img width="3000" height="250" src="../assets/Home/images/bg.png"> </div>
     <div class="image" ref="image"><img width="3000" height="165" src="../assets/Home/images/cloud1.png"> </div>
     <div class="image" ref="image"><img width="3000" height="250" src="../assets/Home/images/cloud2.png"> </div>

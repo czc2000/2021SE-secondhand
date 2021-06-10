@@ -1,5 +1,5 @@
 <template>
-  <div style="overflow-x: hidden">
+  <div>
     <div>
       <Carousel></Carousel>
     </div>
@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-      <div class="divider2">
+      <div class="divider2"  style="::-webkit-scrollbar{display: none;}">
         <div class="home_goodcontainer slide-top" v-show="show2">
           <div class="title">还等什么，来看看这些商品吧!</div>
           <div class="changecontainer" @click="getrandom">
@@ -201,7 +201,7 @@ export default {
   font-weight: 700;
 }
 .divider2{
-  width: 100%;
+  width: 1920px;
   height: 850px;
 }
 .slide-top {
@@ -328,7 +328,5 @@ export default {
   transform: scale(1);
   opacity  : 1;
 }
-::-webkit-scrollbar{
-  display: none;
-}
+
 </style>
