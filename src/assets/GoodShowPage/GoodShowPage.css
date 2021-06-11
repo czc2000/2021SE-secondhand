@@ -145,7 +145,7 @@
 	height: 305px;
     z-index: 1;
     border-radius: 8px;
-    background-color:#e3f1f3;
+    background-color:#f2f7ff;
     box-shadow:
             0 7.6px 4.6px rgba(0, 0, 0, 0.04),
             0 15.8px 11.7px rgba(0, 0, 0, 0.058),
@@ -240,7 +240,7 @@
 }
 
 .ShowPage .goodinfo .pressDownButton{
-    border-top: 0px solid #e2f3f5;
+    border-top: 0px solid #f2f7ff;
     margin-top: 30px;
     margin-left: 24px;
     margin-right: 100px;
@@ -254,7 +254,7 @@
     background-color: #e1e1e1;
     color: #4c4c4c;
     border-bottom: 4px solid #a4a4a4;
-    border-top: 0px solid #e2f3f5;
+    border-top: 0px solid #f2f7ff;
 }
 .ShowPage .greybutton:hover {
     border-bottom-width: 0;

@@ -15,7 +15,7 @@
         <div class="chat-content">
           <p class="mainText">{{text}}</p>
         </div>
-        <img :src="avatarurl" alt="">
+          <img :src="avatarurl" alt="">
       </div>
       <p class="sendtime">{{sendtime}}</p>
     </div>
@@ -58,17 +58,16 @@ export default{
 <style>
 .message-unit{
 	display: block;
-  height: 100px;
 	margin-top: 20px;
 	/*width: 50%;*/
 	text-align: left;
 	border: 2px black;
 }
 .message-unit img{
-  margin-top: 10px;
   border-radius: 25px;
   width:50px;
   height:50px;
+  background: white;
 }
 .differ-fromMe{
   text-align: right;
@@ -111,22 +110,29 @@ export default{
   border: 8px solid #ffffff00;
   border-right: 8px solid white;
   position: absolute;
-  top: 8px;
+  bottom: 10px;
   left: -15px;
 }
 
 
 .differ-fromMe .chat-content{
+  max-width: 500px;
   color: white;
   margin:0px 10px 0px 0;
   background-color: #0e153a;
+}
+.chat-content .mainText{
+  text-align: left;
+  max-width: 500px;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 .differ-fromMe .chat-content ::after{
   content: '';
   border: 8px solid #ffffff00;
   border-left: 8px solid #0e153a;
   position: absolute;
-  top: 8px;
+  bottom: 10px;
   right: -15px;
 }
 </style>

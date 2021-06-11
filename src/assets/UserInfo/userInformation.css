@@ -320,6 +320,7 @@
 	top: 25px;
 	left: 5px;
 	height: 750px;
+	overflow: auto;
 }
 .favorite-goodContainer::-webkit-scrollbar {
 /*隐藏滚轮*/

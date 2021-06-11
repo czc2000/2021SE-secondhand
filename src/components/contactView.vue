@@ -71,9 +71,8 @@ export default {
   background-color: hsl(243, 80%, 62%);
 }
 .choosen img{
-  border: 1px solid white;
+  background-color: white;
 }
-
 .unchoosen{
   background-color: #f2f7ff;
 }
@@ -102,7 +101,7 @@ export default {
   color: white;
 }
 .unchoosen:hover img{
-  border: 1px solid white;
+  background-color: white;
 }
 .contactView-main-unreadN{
   position: absolute;

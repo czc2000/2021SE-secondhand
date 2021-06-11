@@ -277,6 +277,7 @@ export default {
   overflow: hidden;
   display: flex;
   justify-content: start;
+  flex-wrap:wrap;
 }
 .Zone_need{
   margin-top: 60px;

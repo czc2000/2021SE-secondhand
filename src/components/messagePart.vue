@@ -314,7 +314,7 @@ export default{
 				url='http://123.56.42.47:10492/sendMessage',
 				vm=this;
 			var empty=true;
-			for(var i=2;i<inputbox.innerText.length;i++)
+			for(var i=0;i<inputbox.innerText.length;i++)
 			{
 				//console.log(inputbox.innerText.charCodeAt(i));
 				if(inputbox.innerText.charCodeAt(i)!=10)
@@ -530,8 +530,8 @@ export default{
   background-color: #f2f7ff;
   overflow-y: auto;
 }
-.message-main-right-top::-webkit-scrollbar{
-  display: none;
+.message-main-right-top::-webkit-scrollbar-thumb{
+  background-color: #c2cde0;
 }
 .message-main-right-bottom{
   position: absolute;
@@ -548,9 +548,10 @@ export default{
   margin-left:8px;
   margin-top: 8px;
   outline: none;
+  overflow-y: auto;
 }
-.message-main-right-bottom::-webkit-scrollbar{
-  display: none;
+.message-main-right-bottom #inputbox::-webkit-scrollbar-thumb{
+  background-color: #c2cde0;
 }
 .message-main-right-bottom .pressDownButton {
   margin-top: 12px;
