@@ -8,7 +8,12 @@
 <!--        <img src="../assets/Header/logo2.png" alt="">-->
 <!--      </div>-->
       <div class="search">
-        <el-input  type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable v-popover:pop @keyup.enter.native="confirmSearch"></el-input>
+        <el-input  class="input-with-select" type="text" v-model="searchkey" placeholder="搜索"  prefix-icon="el-icon-search" clearable v-popover:pop @keyup.enter.native="confirmSearch">
+          <el-select v-model="select" slot="prepend" placeholder="选择">
+            <el-option label="商品" value="1"></el-option>
+            <el-option label="需求" value="2"></el-option>
+          </el-select>
+        </el-input>
       </div>
       <div class="searchbutton">
         <el-button class="headerButton" type="primary" circle size="medium"><i class="el-icon-search" @click="confirmSearch"></i></el-button>
@@ -94,7 +99,8 @@ export default {
 			searchForm:{
 				blockId:'0',
 				searchType:'1'
-			}
+			},
+      select:'1',
     }
   },
 	created:function(){

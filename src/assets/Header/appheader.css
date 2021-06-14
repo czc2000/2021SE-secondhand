@@ -251,3 +251,26 @@ a {
 	top: -55px;
 	left: 25px;
 }
+.el-select .el-input {
+    width: 105px;
+}
+.input-with-select .el-input-group__prepend {
+    color: #000000;
+    font-size: 15px;
+    background-color: #f2f7ff;
+    border-color: #f2f7ff;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+#target > div > div.navbar.home > div.search > div > div > div > div > input{
+    color: #0e153a;
+    font-weight: 700;
+}
+#target > div > div.navbar.home> div.search > div > div > div > div > span > span > i{
+    color: #0e153a;
+    font-weight: bold;
+}
+#target > div > div.navbar> div.search > div > input{
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
