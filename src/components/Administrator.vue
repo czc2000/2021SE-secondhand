@@ -5,7 +5,7 @@
         <el-menu>
           <el-menu-item style="font-size:25px">
             <el-button type="info" size="mini" plain @click="toShowLastUser">上一页</el-button>
-            用户列表
+            <el-button type="success" style="width: 150px;height: 50px" @click="clickUser">用户列表</el-button>
             <el-button type="info" size="mini" plain @click="toShowNextUser">下一页</el-button>
           </el-menu-item>
           <div>
@@ -15,7 +15,7 @@
           </div>
           <el-menu-item style="font-size:25px">
             <el-button type="info" size="mini" plain @click="toShowLastGood">上一页</el-button>
-            商品列表
+            <el-button type="success" style="width: 150px;height: 50px" @click="clickGood">商品列表</el-button>
             <el-button type="info" size="mini" plain @click="toShowNextGood">下一页</el-button>
           </el-menu-item>
           <div>
@@ -25,7 +25,7 @@
           </div>
           <el-menu-item style="font-size:25px">
             <el-button type="info" size="mini" plain @click="toShowLastNeed">上一页</el-button>
-            需求列表
+            <el-button type="success" style="width: 150px;height: 50px" @click="clickNeed">需求列表</el-button>
             <el-button type="info" size="mini" plain @click="toShowNextNeed">下一页</el-button>
           </el-menu-item>
           <div>
@@ -37,7 +37,7 @@
             <template slot="title"><i style="font-size: 20px" class="el-icon-message"></i><span style="font-size: 25px">举报信息列表</span></template>
             <el-menu-item style="font-size:20px">
               <el-button type="info" size="mini" plain @click="toShowLastMessageReport">上一页</el-button>
-              消息举报
+              <el-button type="success" style="width: 150px;height: 50px" @click="clickMessageReport">消息举报</el-button>
               <el-button type="info" size="mini" plain @click="toShowNextMessageReport">下一页</el-button>
             </el-menu-item>
             <div>
@@ -47,7 +47,7 @@
             </div>
             <el-menu-item style="font-size:20px">
               <el-button type="info" size="mini" plain @click="toShowLastGoodReport">上一页</el-button>
-              商品举报
+              <el-button type="success" style="width: 150px;height: 50px" @click="clickGoodReport">商品举报</el-button>
               <el-button type="info" size="mini" plain @click="toShowNextGoodReport">下一页</el-button>
             </el-menu-item>
             <div>
@@ -57,7 +57,7 @@
             </div>
             <el-menu-item style="font-size:20px">
               <el-button type="info" size="mini" plain @click="toShowLastNeedReport">上一页</el-button>
-              需求举报
+              <el-button type="success" style="width: 150px;height: 50px" @click="clickNeedReport">需求举报</el-button>
               <el-button type="info" size="mini" plain @click="toShowNextNeedReport">下一页</el-button>
             </el-menu-item>
             <div>
@@ -329,6 +329,47 @@ export default {
         }
       })
     },
+    clickUser:function (){
+      this.showUser = true
+      this.showGood = false
+      this.showNeed = false
+      this.showMessageReport=false
+      this.showGoodReport=false
+      this.showNeedReport=false
+      if(this.userPage>0){
+      }
+      else{
+        this.userPage=1
+      }
+      this.userList.splice(0,this.userList.length)
+      this.userTableData.splice(0,this.userTableData.length)
+      let url='http://123.56.42.47:10492/admin/user/'+this.userPage
+      this.axios.get(url, {
+        params:{PageNumber:this.userPage},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then(response=> {
+        for (var i = 0; i < response.data.userList.length; i++) {
+          this.userList.push({
+            userId: response.data.userList[i].userid,
+            userName: response.data.userList[i].username,
+            userSex: response.data.userList[i].usersex,
+            userPhone: response.data.userList[i].userphonenumber,
+            userMail: response.data.userList[i].useremail
+          })
+        }
+        for(var i=0 ; i<response.data.userList.length ; i++){
+          if(this.userList[i].userSex===0){
+            this.userList[i].userSex='女'
+          }
+          else{
+            this.userList[i].userSex='男'
+          }
+        }
+        for (var i = 0; i < response.data.userList.length; i++) {
+          this.userTableData.push(this.userList[i])
+        }
+      })
+    },
     toShowLastUser:function (){
       this.showUser = true
       this.showGood = false
@@ -441,6 +482,38 @@ export default {
           }
       })
     },
+    clickGood:function (){
+      this.showGood=true
+      this.showUser=false
+      this.showNeed=false
+      this.showMessageReport=false
+      this.showGoodReport=false
+      this.showNeedReport=false
+      if(this.goodPage>0){
+      }
+      else{
+        this.goodPage=1
+      }
+      this.goodList.splice(0,this.goodList.length)
+      this.goodTableData.splice(0,this.goodTableData.length)
+      let url='http://123.56.42.47:10492/admin/good/'+this.goodPage
+      this.axios.get(url, {
+        params:{PageNumber:this.goodPage},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then(response=>{
+        for(var i=0 ; i<response.data.goodList.length ; i++){
+          this.goodList.push({
+            goodId:response.data.goodList[i].goodid,
+            goodName:response.data.goodList[i].goodname,
+            goodPrice:response.data.goodList[i].goodprice,
+            goodDescription: response.data.goodList[i].gooddescription,
+            goodPicture:"http://123.56.42.47:10492"+response.data.goodList[i].goodpicurl})
+        }
+        for(var i=0 ; i<response.data.goodList.length ; i++) {
+          this.goodTableData.push(this.goodList[i])
+        }
+      })
+    },
     toShowNextGood:function (){
       this.showGood=true
       this.showUser=false
@@ -514,6 +587,38 @@ export default {
       this.showNeedReport=false
       if(this.needPage<=0||this.needPage>this.totalNeedPage){
         this.$alert("请输入正确的页码")
+      }
+      this.needList.splice(0,this.needList.length)
+      this.needTableData.splice(0,this.needTableData.length)
+      let url='http://123.56.42.47:10492/admin/need/'+this.needPage
+      this.axios.get(url, {
+        params:{PageNumber:this.needPage},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then(response=>{
+        for(var i=0 ; i<response.data.needList.length ; i++){
+          this.needList.push({
+            needId:response.data.needList[i].needid,
+            needName:response.data.needList[i].needname,
+            needDescription:response.data.needList[i].needdescription,
+            needSenderId: response.data.needList[i].needsenderid,
+            needPicture:"http://123.56.42.47:10492"+response.data.needList[i].needpicurl})
+        }
+        for(var i=0 ; i<response.data.needList.length ; i++) {
+          this.needTableData.push(this.needList[i])
+        }
+      })
+    },
+    clickNeed:function (){
+      this.showUser=false
+      this.showGood=false
+      this.showNeed=true
+      this.showMessageReport=false
+      this.showGoodReport=false
+      this.showNeedReport=false
+      if(this.needPage>0){
+      }
+      else{
+        this.needPage=1
       }
       this.needList.splice(0,this.needList.length)
       this.needTableData.splice(0,this.needTableData.length)
@@ -698,6 +803,51 @@ export default {
       this.showNeedReport=false
       if(this.messageReportPage>this.messageReportTotalPage||this.messageReportPage<=0){
         this.$alert("请输入正确的页码")
+      }
+      this.messageReportList.splice(0,this.messageReportList.length)
+      this.messageReportTableData.splice(0,this.messageReportTableData.length)
+      let url='http://123.56.42.47:10492/admin/messageReport/'+this.messageReportPage
+      this.axios.get(url, {
+        params:{PageNumber:this.messageReportPage},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then(response=>{
+        const that=this
+        const a=response.data.messageReportList.length
+        for(var i=0 ; i<response.data.messageReportList.length ; i++){
+          var string=response.data.messageReportList[i].reportsendtime.split("T")
+          this.messageReportList.push({
+            reportId:response.data.messageReportList[i].reportid,
+            sendTime:string[0],
+            description:response.data.messageReportList[i].reportDescription,
+            category:response.data.messageReportList[i].reportcategory,
+            original: response.data.messageReportList[i].reportMessageid})
+          if(this.messageReportList[i].category===1){
+            this.messageReportList[i].category='包含色情信息'
+          }else if(this.messageReportList[i].category===2){
+            this.messageReportList[i].category='恶意辱骂'
+          }else if(this.messageReportList[i].category===3){
+            this.messageReportList[i].category='发表反动言论'
+          }else{
+            this.messageReportList[i].category='其它'
+          }
+        }
+        this.$options.methods.solveMessageProblem(that,a)
+        for(var i=0 ; i<response.data.messageReportList.length ; i++) {
+          this.messageReportTableData.push(this.messageReportList[i])
+        }
+      })
+    },
+    clickMessageReport:function (){
+      this.showUser = false
+      this.showGood = false
+      this.showNeed = false
+      this.showMessageReport=true
+      this.showGoodReport=false
+      this.showNeedReport=false
+      if(this.messageReportPage>0){
+      }
+      else{
+        this.messageReportPage=1
       }
       this.messageReportList.splice(0,this.messageReportList.length)
       this.messageReportTableData.splice(0,this.messageReportTableData.length)
@@ -928,6 +1078,51 @@ export default {
         },1000);
       })
     },
+    clickGoodReport:function () {
+      this.showUser = false
+      this.showGood = false
+      this.showNeed = false
+      this.showMessageReport=false
+      this.showGoodReport=true
+      this.showNeedReport=false
+      if(!this.goodReportPage>0){
+        this.goodReportPage=1
+      }
+      this.goodReportList.splice(0,this.goodReportList.length)
+      this.goodReportTableData.splice(0,this.goodReportTableData.length)
+      let url='http://123.56.42.47:10492/admin/goodReport/'+this.goodReportPage
+      this.axios.get(url, {
+        params:{PageNumber:this.goodReportPage},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then(response=>{
+        const that=this
+        const a=response.data.goodReportList.length
+        for(var i=0 ; i<response.data.goodReportList.length ; i++){
+          var string=response.data.goodReportList[i].reportsendtime.split("T")
+          this.goodReportList.push({
+            reportId:response.data.goodReportList[i].reportid,
+            sendTime:string[0],
+            description:response.data.goodReportList[i].reportDescription,
+            category:response.data.goodReportList[i].reportcategory,
+            goodId:response.data.goodReportList[i].reportgoodid})
+          if(this.goodReportList[i].category===1){
+            this.goodReportList[i].category='违禁品'
+          }else if(this.goodReportList[i].category===2){
+            this.goodReportList[i].category='包含不文明用语'
+          }else if(this.goodReportList[i].category===3){
+            this.goodReportList[i].category='图片违规'
+          }else{
+            this.goodReportList[i].category='其它'
+          }
+        }
+        this.$options.methods.solveGoodProblem(that,a)
+        setTimeout(() =>{
+          for(var i=0 ; i<response.data.goodReportList.length ; i++) {
+            this.goodReportTableData.push(this.goodReportList[i])
+          }
+        },1000);
+      })
+    },
     solveGoodProblem:async function (that,a){
       for(var i=0 ; i<a ; i++){
         await that.axios.get('http://123.56.42.47:10492/goodInfo/'+that.goodReportList[i].goodId,{
@@ -1102,6 +1297,51 @@ export default {
       this.showNeedReport=true
       if(this.needReportPage<=0||this.needReportPage>this.needReportTotalPage){
         this.$alert("请输入正确的页码")
+      }
+      this.needReportList.splice(0,this.needReportList.length)
+      this.needReportTableData.splice(0,this.needReportTableData.length)
+      this.axios.get('http://123.56.42.47:10492/admin/needReport/'+this.needReportPage, {
+        params:{PageNumber:this.needReportPage},
+        headers:{'Authorization':this.$store.state.Authorization}
+      }).then(response=>{
+        const that=this
+        const a=response.data.needReportList.length
+        for(var i=0 ; i<response.data.needReportList.length ; i++){
+          var string=response.data.needReportList[i].reportsendtime.split("T")
+          this.needReportList.push({
+            reportId:response.data.needReportList[i].reportid,
+            sendTime:string[0],
+            description:response.data.needReportList[i].reportDescription,
+            category:response.data.needReportList[i].reportcategory,
+            needId:response.data.needReportList[i].reportneedid})
+          if(this.needReportList[i].category===1){
+            this.needReportList[i].category='违禁品'
+          }else if(this.needReportList[i].category===2){
+            this.needReportList[i].category='包含不文明用语'
+          }else if(this.needReportList[i].category===3){
+            this.needReportList[i].category='图片违规'
+          }else{
+            this.needReportList[i].category='其它'
+          }
+        }
+        this.$options.methods.solveNeedProblem(that,a)
+        setTimeout(() =>{
+          for(var i=0 ; i<response.data.needReportList.length ; i++) {
+            this.needReportTableData.push(this.needReportList[i])
+          }
+        },1000);
+
+      })
+    },
+    clickNeedReport:function (){
+      this.showUser = false
+      this.showGood = false
+      this.showNeed = false
+      this.showMessageReport=false
+      this.showGoodReport=false
+      this.showNeedReport=true
+      if(!this.needReportPage>0){
+        this.needReportPage=1
       }
       this.needReportList.splice(0,this.needReportList.length)
       this.needReportTableData.splice(0,this.needReportTableData.length)
