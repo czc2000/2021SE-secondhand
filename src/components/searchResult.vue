@@ -1,5 +1,8 @@
 <template>
 	<div>
+    <h1 style="margin: 40px auto 0;width: 75%;text-align: left;font-weight: 400">搜索关键词：
+      <span style="font-weight: bold;color:coral">{{$store.state.searchParams.keyWord}}</span>
+    </h1>
 		<div class="GZone_goodcontainer" v-show="type==1">
 		      <Goodbox_goodshelf class="Zone_good" v-for="(item,index) in goodlist" :key="item.goodid"
 		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
@@ -12,7 +15,7 @@
                          :needid="item.needid" :needDescription="item.needdescription">
       </needbox_needShelf>
     </div>
-    <div class="changePage">
+    <div class="changePage" v-if="goodlist.length!=0&&type==1||needlist.length!=0&&type==2">
       <a @click="turnToLastPage" class="page-link link-left">
         <span><i class="el-icon-caret-left"></i></span>
       </a>
@@ -20,6 +23,7 @@
         <span><i class="el-icon-caret-right"></i></span>
       </a>
     </div>
+    <div v-else style="margin-top: 50px; font-size: 25px;color: #666666;">抱歉，暂时没有相关物品</div>
   </div>
 </template>
 
