@@ -71,8 +71,8 @@
 					<el-radio-group v-model="searchForm.searchType">
 						<el-radio label="1">从旧到新</el-radio>
 						<el-radio label="2">从新到旧</el-radio>
-						<el-radio label="3">价格降序</el-radio>
-						<el-radio label="4">价格升序</el-radio>
+						<el-radio label="3" v-show="select==1">价格降序</el-radio>
+						<el-radio label="4" v-show="select==1">价格升序</el-radio>
 					</el-radio-group>
 				</el-form-item>
 			</el-form>
@@ -175,6 +175,7 @@ export default {
 				pageNum:1,
 				searchType:this.searchForm.searchType,
 			});
+			this.$store.commit('changeSearchType',this.select);
 			this.$store.commit('newSearch');
 			this.$router.push('/searchResult');
 			this.searching=false;

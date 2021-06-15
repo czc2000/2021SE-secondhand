@@ -1,11 +1,17 @@
 <template>
 	<div>
-		<div class="GZone_goodcontainer" v-show="show">
+		<div class="GZone_goodcontainer" v-show="type==1">
 		      <Goodbox_goodshelf class="Zone_good" v-for="(item,index) in goodlist" :key="item.goodid"
 		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
 										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)" @wantobuy="createIntention(item.goodid,index)">
 		      </Goodbox_goodshelf>
 		</div>
+    <div class="NZone_goodcontainer" v-show="type==2">
+      <needbox_needShelf class="Zone_need" v-for="(item,index) in needlist" :key="item.needid"
+                         :needpicurl="'http://123.56.42.47:10492'+item.needpicurl" :needname="item.needname" :needsenderid="item.needsenderid"
+                         :needid="item.needid" :needDescription="item.needdescription">
+      </needbox_needShelf>
+    </div>
     <div class="changePage">
       <a @click="turnToLastPage" class="page-link link-left">
         <span><i class="el-icon-caret-left"></i></span>
@@ -19,22 +25,27 @@
 
 <script>
 import Goodbox_goodshelf from "@/components/Goodbox_goodshelf";
+import needbox_needShelf from "@/components/needbox_needShelf";
 export default {
-	name: "goodsZone",
+	name: "searchResult",
 	components:{
 		Goodbox_goodshelf,
+		needbox_needShelf,
 	}, 
 	data: function(){
 		return{
 			pageNow:null,
 			pageMax:null,
 			goodlist:[],
-			show:true
+			needlist:[],
 		}
 	},
 	computed:{
 		newSearch(){
 			return this.$store.state.newSearch;
+		},
+		type(){
+			return this.$store.state.searchType;
 		}
 	},
 	watch:{
@@ -92,55 +103,60 @@ export default {
 			}
 			this.pageNow=page;
 			this.$store.commit('changeSearchPage',page);
-			var urlGet='http://123.56.42.47:10492/good/search';
-			var urlCheck= 'http://123.56.42.47:10492/user/isfavorite';
+			var urlGet1='http://123.56.42.47:10492/good/search',urlGet2='http://123.56.42.47:10492/need/search';
+			var urlCheck= 'http://123.56.42.47:10492/user/isfavorite',urlGet=this.$store.state.searchType==1?urlGet1:urlGet2;
 			var vm=this;
 			procedure();
 			async function procedure(){
 				await vm.postChange();
 				var response=await vm.axios.get(urlGet,{params:vm.$store.state.searchParams});
-				await new Promise(function(resolve,reject){
-					console.log(response.data.goodList);
-					vm.goodlist=response.data.goodList;
-					resolve();
-				})
-				await new Promise(function(resolve,reject){
-					for(var i=0;i<vm.goodlist.length;i++){
-						new Promise(function(resolve,reject){
-							var temp=JSON.parse(JSON.stringify(vm.goodlist[i]));
-							temp.favorite=false;
-							temp.favoriteNow=false;
-							temp.index=i;
-							resolve(temp);
-						}).then(function(temp){
-							if(!vm.$store.state.login) return temp;
-							//console.log(vm.$store.state.userid+' '+temp.goodid);
-							vm.axios.post(urlCheck+'/'+vm.$store.state.userid+'/'+temp.goodid).then(function(response){
-							temp.favorite=response.data.isfavorite;
-							temp.favoriteNow=temp.favorite;
-							return temp;
+				if(vm.$store.state.searchType==2){
+					vm.needlist=response.data.needList;
+				}
+				else{
+					await new Promise(function(resolve,reject){
+						console.log(response.data.goodList);
+						vm.goodlist=response.data.goodList;
+						resolve();
+					})
+					await new Promise(function(resolve,reject){
+						for(var i=0;i<vm.goodlist.length;i++){
+							new Promise(function(resolve,reject){
+								var temp=JSON.parse(JSON.stringify(vm.goodlist[i]));
+								temp.favorite=false;
+								temp.favoriteNow=false;
+								temp.index=i;
+								resolve(temp);
 							}).then(function(temp){
-								//console.log('temp.i: '+temp.index+' temp.goodid: '+temp.goodid+' favorite: '+temp.favorite);
+								if(!vm.$store.state.login) return temp;
+								//console.log(vm.$store.state.userid+' '+temp.goodid);
+								vm.axios.post(urlCheck+'/'+vm.$store.state.userid+'/'+temp.goodid).then(function(response){
+								temp.favorite=response.data.isfavorite;
+								temp.favoriteNow=temp.favorite;
 								return temp;
-							}).then(function(temp){
-								vm.$set(vm.goodlist,temp.index,temp);
+								}).then(function(temp){
+									//console.log('temp.i: '+temp.index+' temp.goodid: '+temp.goodid+' favorite: '+temp.favorite);
+									return temp;
+								}).then(function(temp){
+									vm.$set(vm.goodlist,temp.index,temp);
+								})
 							})
-						})
-					}
-					resolve();
-				})
+						}
+						resolve();
+					})
+				}
 			}
 		},
 		getPageNum: function(index){
-			var urlGet='http://123.56.42.47:10492/good/search';
-			var vm=this;
+			var urlGet1='http://123.56.42.47:10492/good/search',urlGet2='http://123.56.42.47:10492/need/search';
+			var vm=this,urlGet=this.$store.state.searchType==1?urlGet1:urlGet2;
 			this.axios.get(urlGet,{params:this.$store.state.searchParams}).then(function(response){
 				vm.pageMax=response.data.pageNum;
 				console.log(vm.pageMax);
 			})
 		},
 		postChange: function(){
-			if(this.$store.state.login){
+			if(this.$store.state.login&&this.store.state.searchType==1){
 				var urlAdd='http://123.56.42.47:10492/addtoFavorite';
 				var urlCancel='http://123.56.42.47:10492/removeFavorite';
 				var vm=this;
@@ -190,6 +206,125 @@ export default {
 </script>
 
 <style>
+.NZone_banner{
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.NZone_menu{
+  width: 75%;
+  height: 80px;
+  margin: 50px auto 0;
+  background-color: #364f6b;
+  border-radius: 8px;
+}
+.nz-Menu{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  width: 50%;
+  margin: 0 auto ;
+}
+.nz-Menu li{
+  display: inline-block;
+}
+.nz-Menu a {
+  position: relative;
+  color: #0e153a;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 5px;
+  background-color: white;
+  transition: background-color 0.8s;
+  cursor: pointer;
+}
+.nz-Menu .activeItem a{
+  color: white;
+  background-color: #ee4c80;
+}
+.nz-Menu a:hover {
+  color: white;
+  background-color: #ee4c80;
+}
+
+.nz-Menu a::before {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ee4c80;
+  border-width: 0 0 3px 3px;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.nz-Menu a::after {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ee4c80;
+  border-width: 3px 3px 0 0;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.nz-Menu a:hover::before {
+  left: -12px;
+  bottom: -12px;
+  opacity: 1;
+}
+
+.nz-Menu a:hover::after {
+  top: -12px;
+  right: -12px;
+  opacity: 1;
+}
+.NZone_goodcontainer{
+  width: 80%;
+  margin: 0 auto;
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: start;
+  flex-wrap:wrap;
+}
+.Zone_need{
+  margin-top: 60px;
+  margin-left: 50px;
+}
+.changePage{
+  height: 60px;
+  margin: 60px auto;
+}
+.page-link{
+  display: inline-block;
+  font-size: 40px;
+  padding: 0 5px;
+  margin-left: 20px;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.8s;
+
+}
+.link-left{
+  border-top-right-radius: 0rem;
+  border-bottom-right-radius: 0rem;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.page-link:hover{
+  background-color: #5c2678;
+  color: white;
+}
 .GZone_banner{
   max-width: 100%;
   overflow-x: hidden;

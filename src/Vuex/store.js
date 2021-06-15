@@ -26,7 +26,8 @@ const state = {
 	temporaryContact:null,
 	loadUserdataDone:false,
 	searchParams:null,
-	newSearch:false
+	newSearch:false,
+	searchType:null
 }
 const mutations = {
 	storeMessageId(state,messageid){
@@ -156,9 +157,14 @@ const mutations = {
 		this.state.searchParams=params;
 		window.localStorage.setItem("searchParams",JSON.stringify(params));
 	},
+	changeSearchType(state,type){
+		this.state.searchType=type;
+		window.localStorage.setItem("searchType",type);
+	},
 	clearSearchParams(state){
 		this.state.searchParams=null;
 		window.localStorage.removeItem("searchParams");
+		window.localStorage.removeItem("searchType");
 	},
 	changeSearchPage(state,pageNum){
 		this.state.searchParams.pageNum=pageNum;
@@ -166,6 +172,7 @@ const mutations = {
 	},
 	loadSearchParams(state){
 		this.state.searchParams=JSON.parse(window.localStorage.getItem("searchParams"));
+		this.state.searchType=window.localStorage.getItem("searchType");
 	},
 	newSearch(state){
 		this.state.newSearch=true;
