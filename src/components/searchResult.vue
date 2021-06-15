@@ -156,7 +156,7 @@ export default {
 			})
 		},
 		postChange: function(){
-			if(this.$store.state.login&&this.store.state.searchType==1){
+			if(this.$store.state.login&&this.$store.state.searchType==1){
 				var urlAdd='http://123.56.42.47:10492/addtoFavorite';
 				var urlCancel='http://123.56.42.47:10492/removeFavorite';
 				var vm=this;
