@@ -417,7 +417,7 @@ export default {
 }
 .Zone_good1{
   float: left;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 .changePage{
   height: 60px;

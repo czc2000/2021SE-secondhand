@@ -77,7 +77,7 @@ export default {
 .goodbox{
   width: 266px;
   height: 376px;
-  margin-left: 40px;
+  margin-left: 33px;
 }
 .box{
   overflow:hidden;
