@@ -35,7 +35,7 @@
         <div id="inputbox" contenteditable=true @keyup.enter="submitMsg"></div>
         <div class="pressDownButton" @click="submitMsg"><i class="el-icon-chat-line-round"></i>发送</div>
       </div>
-      <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px">
+      <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px" :modal-append-to-body='false'>
         <el-form :model="form">
           <el-form-item label="举报描述" :label-width="formLabelWidth">
             <el-input v-model="form.description" placeholder="请描述举报内容" autocomplete="off"></el-input>
