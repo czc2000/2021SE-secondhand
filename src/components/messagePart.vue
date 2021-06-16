@@ -35,7 +35,7 @@
         <div id="inputbox" contenteditable=true @keyup.enter="submitMsg"></div>
         <div class="pressDownButton" @click="submitMsg"><i class="el-icon-chat-line-round"></i>发送</div>
       </div>
-      <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px">
+      <el-dialog title="举报聊天消息" :visible.sync="reportFormVisible" style="margin-top: 80px" :modal-append-to-body='false'>
         <el-form :model="form">
           <el-form-item label="举报描述" :label-width="formLabelWidth">
             <el-input v-model="form.description" placeholder="请描述举报内容" autocomplete="off"></el-input>
@@ -220,10 +220,9 @@ export default{
 				this.$set(this.scrollTop,id,-1);
 			else this.$set(this.scrollTop,id,box.scrollTop)
 		},
-		finishRead:function(){
+		finishRead:function(id){
 			//console.log('?');
 			//console.log('finish read');
-			var id=this.choosen;
 			var url='http://123.56.42.47:10492/read';
 			var len=this.history[id].length,vm=this,num=this.unreadNumOf[id];
 			//console.log('before: '+this.unreadCatched);
@@ -249,7 +248,7 @@ export default{
 			if(this.scrollTop[this.choosen]==-1&&this.unreadNumOf[this.choosen]!=0)
 			{
 				//console.log('should finishRead');
-				this.finishRead();
+				this.finishRead(this.choosen);
 			}
 		},
 		chooseContact:function(id,index){
@@ -271,7 +270,7 @@ export default{
 			if(this.scrollTop[id]==-1)
 			{
 				this.setScrollOfMsgBoxTop();
-				if(this.isContact[id]) this.finishRead();
+				if(this.isContact[id]) this.finishRead(id);
 			}
 			else this.resumeScrollTop(id);
 			//console.log('history['+this.choosen+']: '+this.history[this.choosen].length);
@@ -292,6 +291,7 @@ export default{
 			}
 			this.tpContactNum--;
 			this.$store.commit('clearTPContact');
+			this.finishRead(id);
 			if(index!=-1) this.choosen=0;
 		},
 		removeContact:function(id,index){
@@ -300,6 +300,7 @@ export default{
 			this.$set(this.isContact,id,undefined);
 			this.choosen=0;
 			this.contactList.splice(index,1);
+			this.finishRead(id);
 			var url="http://123.56.42.47:10492/removeContact",vm=this;
 			this.axios.post(url,null,{
 				params:{contactId:id},
@@ -456,7 +457,7 @@ export default{
 			if(this.scrollTop[id]==-1)
 			{
 				this.setScrollOfMsgBoxTop();
-				if(this.isContact[id]==true) this.finishRead();
+				if(this.isContact[id]==true) this.finishRead(id);
 			}
 		},
 	}
