@@ -55,10 +55,23 @@
       </div>
       <div class="senderinfo"  @click="addTemporaryContact">
         <div class="price">￥{{good.goodprice}}</div>
-        <el-tooltip content="联系卖家" placement="bottom" effect="light">
-        <div class="sendername">{{senderinfo.username}}</div>
+        <div class="rate">
+          <el-rate
+              v-if="this.senderinfo.userrank>0"
+              v-model="this.senderinfo.userrank"
+              disabled
+              show-score
+              score-template="信用评分：{value}"
+              text-color="#ff9900"
+              :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
+          </el-rate>
+          <span v-else style="color: #a0a0a0">该用户暂无交易</span>
+        </div>
+          <el-tooltip content="联系卖家" placement="bottom" effect="light">
+            <div class="sendername">{{senderinfo.username}}</div>
         </el-tooltip>
-        <img :src="this.senderinfo.useravatarurl" class="Show_circleImg">
+          <img :src="this.senderinfo.useravatarurl" class="Show_circleImg">
+
       </div>
       <el-divider></el-divider>
       <div class="description">
@@ -80,7 +93,7 @@
         <div class="horizontalOverlay2" @click="addTemporaryContact"><span>了解更多</span></div>
       </div>
       <transition name="el-fade-in">
-      <div ref="pop" class="createIntentionInput" v-show="intentionInputShow">
+      <div ref="pop" class="createIntentionInput" v-show="intentionInputShow&&this.senderinfo.userid!=this.$store.state.userid">
         <h1>发出意向</h1>
         <p>向卖家发出你的购买意向和你的心水价格，卖家接受后就会自动创建订单</p>
         <div class="input">
@@ -170,7 +183,7 @@ export default {
 			nameediting:false,
 			priceediting:false,
 			descriptionediting:false,
-      bid:0
+      bid:0,
     }
   },
   computed: {
@@ -203,6 +216,7 @@ export default {
 				if(this.good.goodtags===null) this.good.goodtags=[];
         this.axios.get(url).then((response)=>{
           this.senderinfo=response.data.user;
+          console.log(this.senderinfo)
           this.senderinfo.useravatarurl='http://123.56.42.47:10492'+this.senderinfo.useravatarurl
         })
       }
@@ -463,11 +477,11 @@ export default {
   width: 590px;
 }
 .editname_input .el-input{
-  width: 80%;
+  width: 90%;
 }
 .editprice{
 	position: absolute;
-	top: 72px;
+	top: 80px;
   left: 20px;
 }
 .editprice_input{
