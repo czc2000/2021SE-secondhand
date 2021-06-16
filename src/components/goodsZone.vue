@@ -285,8 +285,7 @@ export default {
   flex-wrap: wrap;
 }
 .Zone_good{
-  margin-top: 60px;
-  margin-left: 50px;
+  margin-top: 40px;
 }
 .changePage{
   height: 60px;

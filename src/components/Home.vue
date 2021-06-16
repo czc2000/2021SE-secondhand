@@ -201,7 +201,7 @@ export default {
   font-weight: 700;
 }
 .divider2{
-  width: 1920px;
+  width: 100%;
   height: 850px;
 }
 .slide-top {
@@ -328,5 +328,4 @@ export default {
   transform: scale(1);
   opacity  : 1;
 }
-
 </style>
