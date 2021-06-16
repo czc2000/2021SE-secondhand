@@ -75,8 +75,9 @@ export default {
 
 <style scoped>
 .goodbox{
-  width: 240px;
-  height: 350px;
+  width: 266px;
+  height: 376px;
+  margin-left: 40px;
 }
 .box{
   overflow:hidden;

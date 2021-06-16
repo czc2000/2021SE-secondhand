@@ -4,7 +4,7 @@
       <span style="font-weight: bold;color:coral">{{$store.state.searchParams.keyWord}}</span>
     </h1>
 		<div class="GZone_goodcontainer" v-show="type==1">
-		      <Goodbox_goodshelf class="Zone_good" v-for="(item,index) in goodlist" :key="item.goodid"
+		      <Goodbox_goodshelf class="Zone_good1" v-for="(item,index) in goodlist" :key="item.goodid"
 		               :goodpicurl="'http://123.56.42.47:10492'+item.goodpicurl" :goodname="item.goodname" :favorite="item.favoriteNow" :goodprice="item.goodprice" :goodsenderid="item.goodsenderid"
 										:goodid="item.goodid" @favoriteOrNot="turnFavoriteState(index)" @wantobuy="createIntention(item.goodid,index)">
 		      </Goodbox_goodshelf>
@@ -415,10 +415,9 @@ export default {
   background-color: white;
   overflow: hidden;
 }
-.Zone_good{
+.Zone_good1{
   float: left;
   margin-top: 60px;
-  margin-left: 50px;
 }
 .changePage{
   height: 60px;

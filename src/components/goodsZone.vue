@@ -286,7 +286,6 @@ export default {
 }
 .Zone_good{
   margin-top: 60px;
-  margin-left: 50px;
 }
 .changePage{
   height: 60px;
